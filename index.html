@@ -2,7 +2,9 @@
 <html lang="en" class="dark scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="theme-color" content="#030205" />
   <title>THE DAM LINE (thedamline) — Definition in Every Thread</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -48,11 +50,22 @@
       background-color: #030205;
       color: #f6f4fa;
       overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    .monogram-bg {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Ctext x='48' y='64' text-anchor='middle' fill='%23ffffff' fill-opacity='0.025' font-family='Georgia, serif' font-size='56' font-weight='bold'%3ED%3C/text%3E%3C/svg%3E");
-      background-size: 96px 96px;
+    :focus-visible {
+      outline: 2px solid #f3dc8b;
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
 
     .spring-btn {
@@ -98,20 +111,23 @@
   </style>
 </head>
 <body class="monogram-bg min-h-screen flex flex-col selection:bg-amethyst-600 selection:text-white">
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-gold-400 focus:text-obsidian-950 focus:font-bold focus:text-xs">
+    Skip to Storefront Content
+  </a>
 
   <!-- Top Announcement Bar -->
   <div class="w-full bg-obsidian-900/95 border-b border-white/10 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-10 flex items-center justify-between gap-4">
-      <p id="ticker-text" class="truncate text-[11px] tracking-[0.18em] uppercase text-gold-300 tabular-nums">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-10 flex items-center justify-between gap-2 sm:gap-4">
+      <p id="ticker-text" aria-live="polite" class="truncate text-[10px] sm:text-[11px] tracking-[0.14em] sm:tracking-[0.18em] uppercase text-gold-300 tabular-nums">
         50/50 LEFT — AUTUMN / WINTER 50/50 EDITION LIVE
       </p>
-      <div class="flex items-center gap-3 shrink-0">
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
         <span id="ticker-domain-pill" class="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded bg-gold-500/15 border border-gold-500/35 text-[10px] font-semibold tracking-[0.16em] text-gold-300 tabular-nums">
           thedamline.ng
         </span>
         <label for="currency-select" class="sr-only">Select Currency</label>
         <select id="currency-select" onchange="setCurrency(this.value)"
-          class="bg-obsidian-950 border border-white/15 rounded-md px-2.5 py-1 text-[11px] tracking-[0.12em] text-neutral-200 focus:outline-none focus:border-gold-400 tabular-nums cursor-pointer">
+          class="bg-obsidian-950 border border-white/15 rounded-md px-2 sm:px-2.5 py-1 min-h-[32px] text-[11px] tracking-[0.12em] text-neutral-200 focus:outline-none focus:border-gold-400 tabular-nums cursor-pointer">
           <option value="USD">USD $</option>
           <option value="USDT">USDT ₮</option>
           <option value="NGN">NGN ₦</option>
@@ -127,82 +143,118 @@
   </div>
 
   <!-- Sticky Navigation Header -->
-  <header class="sticky top-0 z-30 bg-obsidian-950/85 backdrop-blur-md border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-      <a href="#hero-stage" class="flex items-baseline gap-2.5 shrink-0">
-        <span class="text-lg sm:text-xl tracking-[0.22em] uppercase text-gold-400 font-bold">THE DAM LINE</span>
-        <span id="header-domain-tag" class="hidden lg:inline text-[11px] tracking-[0.16em] text-amethyst-400 tabular-nums">thedamline.ng</span>
+  <header class="sticky top-0 z-30 bg-obsidian-950/90 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
+      <a href="#hero-stage" class="flex items-baseline gap-2 shrink-0 min-h-[44px] items-center">
+        <span class="text-base sm:text-xl tracking-[0.18em] sm:tracking-[0.22em] uppercase text-gold-400 font-bold">THE DAM LINE</span>
+        <span id="header-domain-tag" class="hidden xl:inline text-[11px] tracking-[0.16em] text-amethyst-400 tabular-nums">thedamline.ng</span>
       </a>
 
-      <nav class="hidden md:flex items-center gap-7 text-[11px] tracking-[0.2em] uppercase text-neutral-300">
-        <a href="#collection" class="hover:text-gold-300 transition-colors">Collection</a>
-        <a href="#story" class="hover:text-gold-300 transition-colors">Marcel Damian</a>
-        <a href="#infrastructure" class="hover:text-gold-300 transition-colors">Vault &amp; Key</a>
+      <nav aria-label="Primary Navigation" class="hidden md:flex items-center gap-6 lg:gap-7 text-[11px] tracking-[0.2em] uppercase text-neutral-300">
+        <a href="#collection" class="hover:text-gold-300 transition-colors py-2">Collection</a>
+        <a href="#story" class="hover:text-gold-300 transition-colors py-2">Marcel Damian</a>
+        <a href="#infrastructure" class="hover:text-gold-300 transition-colors py-2">Vault &amp; Key</a>
       </nav>
 
-      <div class="flex items-center gap-2.5 shrink-0">
-        <button type="button" onclick="openAdminModal()"
-          class="px-3 py-2 rounded-lg border border-gold-400/45 bg-obsidian-900 hover:border-gold-300 text-[11px] tracking-[0.14em] uppercase text-gold-300 spring-btn tabular-nums">
+      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <button type="button" onclick="openAdminModal()" aria-label="Admin Access Console"
+          class="px-2.5 sm:px-3 py-2 min-h-[40px] rounded-lg border border-gold-400/45 bg-obsidian-900 hover:border-gold-300 text-[10px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.14em] uppercase text-gold-300 spring-btn tabular-nums">
           <span id="header-admin-label">Admin: Locked</span>
         </button>
 
-        <button type="button" onclick="openAuthModal('signin')"
-          class="px-3 py-2 rounded-lg border border-white/15 bg-obsidian-900 hover:border-gold-400/50 text-[11px] tracking-[0.14em] uppercase text-neutral-200 spring-btn">
+        <button type="button" onclick="openAuthModal('signin')" aria-label="Member Sign In"
+          class="px-2.5 sm:px-3 py-2 min-h-[40px] rounded-lg border border-white/15 bg-obsidian-900 hover:border-gold-400/50 text-[10px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.14em] uppercase text-neutral-200 spring-btn">
           <span id="header-auth-label">Sign In</span>
         </button>
 
-        <button type="button" onclick="openInboxModal()"
-          class="relative px-3 py-2 rounded-lg border border-white/15 bg-obsidian-900 hover:border-amethyst-400/60 text-[11px] tracking-[0.14em] uppercase text-neutral-200 spring-btn">
+        <button type="button" onclick="openInboxModal()" aria-label="Notifications and Alerts"
+          class="hidden sm:inline-flex items-center relative px-3 py-2 min-h-[40px] rounded-lg border border-white/15 bg-obsidian-900 hover:border-amethyst-400/60 text-[11px] tracking-[0.14em] uppercase text-neutral-200 spring-btn">
           <span>Alerts</span>
           <span id="inbox-badge" class="ml-1.5 px-1.5 py-0.5 rounded-full bg-amethyst-600 text-[10px] text-white tabular-nums">0</span>
         </button>
 
-        <button type="button" onclick="openBagDrawer()"
-          class="px-3.5 py-2 rounded-lg gold-cta text-[11px] font-semibold tracking-[0.14em] uppercase spring-btn tabular-nums">
+        <button type="button" onclick="openBagDrawer()" aria-label="Open Reservation Bag"
+          class="px-3 sm:px-3.5 py-2 min-h-[40px] rounded-lg gold-cta text-[10px] sm:text-[11px] font-semibold tracking-[0.12em] sm:tracking-[0.14em] uppercase spring-btn tabular-nums">
           Bag (<span id="bag-count">0</span>)
         </button>
       </div>
     </div>
   </header>
 
-  <main class="flex-1">
+  <main id="main-content" class="flex-1 pb-16 md:pb-0">
     <!-- Hero Stage with Sculptural 3D 'D' Monolith & Swirling Stardust -->
-    <section id="hero-stage" class="relative min-h-[86vh] flex items-center justify-center overflow-hidden border-b border-white/10">
-      <canvas id="hero-3d-canvas" class="absolute inset-0 w-full h-full block z-10 cursor-grab active:cursor-grabbing"></canvas>
+    <section id="hero-stage" class="relative min-h-[82vh] sm:min-h-[86vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+      <canvas id="hero-3d-canvas" aria-label="Interactive 3D Monolith Sculpture" class="absolute inset-0 w-full h-full block z-10 cursor-grab active:cursor-grabbing touch-pan-y"></canvas>
 
       <div class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-obsidian-950/60 via-transparent to-obsidian-950/85"></div>
 
       <!-- Foreground Editorial Overlay -->
-      <div class="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14 min-h-[86vh] flex flex-col justify-between items-center text-center pointer-events-none">
-        <div class="flex flex-wrap items-center justify-center gap-2.5">
-          <span id="hero-domain-badge" class="text-[11px] tracking-[0.22em] uppercase text-gold-300/95 bg-obsidian-950/75 px-3.5 py-1 rounded-full border border-gold-500/35 tabular-nums">
+      <div class="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-14 min-h-[82vh] sm:min-h-[86vh] flex flex-col justify-between items-center text-center pointer-events-none">
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+          <span id="hero-domain-badge" class="text-[10px] sm:text-[11px] tracking-[0.16em] sm:tracking-[0.22em] uppercase text-gold-300/95 bg-obsidian-950/80 px-3 sm:px-3.5 py-1.5 rounded-full border border-gold-500/35 tabular-nums">
             thedamline • thedamline.ng • 50/50 LEFT • Drag 3D 'D' Monolith
           </span>
           <button type="button" onclick="openSecurityModal()"
-            class="pointer-events-auto inline-flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase text-emerald-300 bg-obsidian-950/80 hover:border-emerald-400/60 px-3.5 py-1 rounded-full border border-emerald-500/35 spring-btn tabular-nums">
+            class="pointer-events-auto inline-flex items-center gap-2 text-[10px] sm:text-[11px] tracking-[0.14em] sm:tracking-[0.18em] uppercase text-emerald-300 bg-obsidian-950/85 hover:border-emerald-400/60 px-3 sm:px-3.5 py-1.5 min-h-[36px] rounded-full border border-emerald-500/35 spring-btn tabular-nums">
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Site Security &amp; Shield: <strong id="hero-shield-state">ARMED</strong></span>
+            <span>Security Shield: <strong id="hero-shield-state">ARMED</strong></span>
           </button>
         </div>
 
         <!-- Centerpiece Headline spanning cleanly across the 'D' monolith -->
-        <div class="w-full my-auto py-4">
-          <h1 class="text-2xl sm:text-4xl md:text-5xl tracking-[0.2em] uppercase text-gold-300 font-normal drop-shadow-[0_6px_28px_rgba(0,0,0,0.95)] leading-tight">
+        <div class="w-full my-auto py-4 px-2">
+          <h1 class="text-2xl sm:text-4xl md:text-5xl tracking-[0.16em] sm:tracking-[0.2em] uppercase text-gold-300 font-normal drop-shadow-[0_6px_28px_rgba(0,0,0,0.95)] leading-tight">
             DEFINITION IN EVERY THREAD.
           </h1>
+          <p class="mt-3 text-xs sm:text-sm text-neutral-300/90 max-w-xl mx-auto drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
+            Optimized for mobile, tablet, and desktop with end-to-end session protection and instant multi-currency checkout.
+          </p>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap items-center justify-center gap-4 pointer-events-auto">
-          <a href="#collection"
-            class="px-7 py-3.5 rounded-lg gold-cta text-xs sm:text-sm font-semibold tracking-[0.14em] spring-btn">
-            Explore Collection
-          </a>
-          <button type="button" onclick="openVaultModal()"
-            class="px-7 py-3.5 rounded-lg amethyst-cta text-xs sm:text-sm font-semibold tracking-[0.14em] spring-btn">
-            Unlock Infrastructure
-          </button>
+        <!-- Action Buttons & Quick Device Access Bar -->
+        <div class="w-full flex flex-col items-center gap-3 pointer-events-auto">
+          <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto">
+            <a href="#collection"
+              class="w-full sm:w-auto px-6 sm:px-7 py-3.5 min-h-[46px] inline-flex items-center justify-center rounded-lg gold-cta text-xs sm:text-sm font-semibold tracking-[0.14em] spring-btn">
+              Explore Collection
+            </a>
+            <button type="button" onclick="openVaultModal()"
+              class="w-full sm:w-auto px-6 sm:px-7 py-3.5 min-h-[46px] inline-flex items-center justify-center rounded-lg amethyst-cta text-xs sm:text-sm font-semibold tracking-[0.14em] spring-btn">
+              Unlock Infrastructure
+            </button>
+            <button type="button" onclick="openAuthModal('signin')"
+              class="w-full sm:w-auto px-5 py-3.5 min-h-[46px] inline-flex items-center justify-center rounded-lg border border-white/20 bg-obsidian-950/90 hover:border-gold-400/60 text-xs sm:text-sm font-semibold tracking-[0.14em] text-neutral-100 spring-btn">
+              1-Tap Member Access
+            </button>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Cross-Device Easy Access Guide Strip -->
+    <section aria-label="Quick Storefront Access" class="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
+      <div class="rounded-2xl border border-white/10 bg-obsidian-900/80 p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-xs">
+        <button type="button" onclick="openAuthModal('signin')" class="text-left rounded-xl border border-white/10 bg-obsidian-950/90 hover:border-gold-400/50 p-3.5 flex items-start gap-3 spring-btn">
+          <span class="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 font-bold tabular-nums">01</span>
+          <div>
+            <p class="font-semibold text-white uppercase tracking-[0.12em]">Instant Sign-In</p>
+            <p class="text-neutral-400 mt-0.5">Tap for 1-click Google ID, Apple ID, or 6-digit OTP on any device.</p>
+          </div>
+        </button>
+        <button type="button" onclick="openCardBillingModal(1000, 'Vault Allocation Settlement')" class="text-left rounded-xl border border-white/10 bg-obsidian-950/90 hover:border-amethyst-400/50 p-3.5 flex items-start gap-3 spring-btn">
+          <span class="px-2 py-0.5 rounded bg-amethyst-500/20 text-amethyst-300 font-bold tabular-nums">02</span>
+          <div>
+            <p class="font-semibold text-white uppercase tracking-[0.12em]">9 Global Currencies</p>
+            <p class="text-neutral-400 mt-0.5">Settle seamlessly via Visa, Mastercard, or Verve in NGN, USD, USDT, GBP &amp; more.</p>
+          </div>
+        </button>
+        <button type="button" onclick="openSecurityModal()" class="text-left rounded-xl border border-white/10 bg-obsidian-950/90 hover:border-emerald-400/50 p-3.5 flex items-start gap-3 spring-btn">
+          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold tabular-nums">03</span>
+          <div>
+            <p class="font-semibold text-white uppercase tracking-[0.12em]">Hardened Session Shield</p>
+            <p class="text-neutral-400 mt-0.5">Auto-idle lock, SHA-256 admin verification, and masked card audit logs.</p>
+          </div>
+        </button>
       </div>
     </section>
 
@@ -412,14 +464,14 @@
         <div class="flex flex-wrap items-center gap-x-6 gap-y-3 tabular-nums">
           <div>
             <span class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 block">Direct Gmail</span>
-            <a id="contact-gmail-link" href="mailto:thedamline.atelier@gmail.com" class="text-gold-300 hover:underline">
-              thedamline.atelier@gmail.com
+            <a id="contact-gmail-link" href="mailto:yungstar20204@gmail.com" class="text-gold-300 hover:underline">
+              yungstar20204@gmail.com
             </a>
           </div>
           <div>
             <span class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 block">Direct Number</span>
-            <a id="contact-phone-link" href="tel:+2348000000000" class="text-white hover:text-gold-300">
-              +234 800 000 0000
+            <a id="contact-phone-link" href="tel:+2349061889039" class="text-white hover:text-gold-300">
+              +234 906 188 9039
             </a>
           </div>
           <div>
@@ -445,27 +497,27 @@
     </div>
   </footer>
 
+  <!-- Mobile Bottom Quick-Access Dock (Phones & Small Tablets) -->
+  <nav aria-label="Mobile Quick Navigation" class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-obsidian-950/95 backdrop-blur-md border-t border-white/15 px-2 py-1.5 grid grid-cols-5 gap-1 text-[10px] tracking-[0.1em] uppercase">
+    <a href="#collection" class="min-h-[44px] rounded-lg flex flex-col items-center justify-center text-neutral-200 hover:text-gold-300">
+      <span>Shop</span>
+    </a>
+    <button type="button" onclick="openAuthModal('signin')" class="min-h-[44px] rounded-lg flex flex-col items-center justify-center text-neutral-200 hover:text-gold-300">
+      <span>Sign In</span>
+    </button>
+    <button type="button" onclick="openVaultModal()" class="min-h-[44px] rounded-lg flex flex-col items-center justify-center text-amethyst-300 hover:text-amethyst-200">
+      <span>Vault</span>
+    </button>
+    <button type="button" onclick="openInboxModal()" class="min-h-[44px] rounded-lg flex flex-col items-center justify-center text-neutral-200 hover:text-gold-300">
+      <span>Alerts (<span id="mobile-inbox-badge" class="tabular-nums">0</span>)</span>
+    </button>
+    <button type="button" onclick="openSecurityModal()" class="min-h-[44px] rounded-lg flex flex-col items-center justify-center text-emerald-300 hover:text-emerald-200">
+      <span>Shield</span>
+    </button>
+  </nav>
+
   <!-- Full Specs & Inspection Modal -->
-  <div id="pdp-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closePDPModal()">
-    <div class="w-full max-w-4xl rounded-2xl bg-obsidian-900 border border-white/15 overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-2 max-h-[92vh] overflow-y-auto">
-      <div class="relative bg-obsidian-950 aspect-[4/5] md:aspect-auto flex items-center justify-center overflow-hidden">
-        <img id="modal-garment-img" src="" alt="" class="w-full h-full object-cover object-center transition-all duration-300" />
-        <button type="button" onclick="closePDPModal()"
-          class="absolute top-3 right-3 w-9 h-9 rounded-full bg-obsidian-950/85 border border-white/20 text-white hover:border-gold-400 flex items-center justify-center spring-btn"
-          aria-label="Close modal">
-          ✕
-        </button>
-      </div>
-
-      <div class="p-6 sm:p-7 flex flex-col justify-between space-y-5">
-        <div class="space-y-4">
-          <div class="flex items-center justify-between gap-2">
-            <span id="modal-tag" class="text-[10px] tracking-[0.2em] uppercase text-gold-400 tabular-nums"></span>
-            <span id="modal-stock" class="text-[10px] tracking-[0.16em] uppercase text-amethyst-400 tabular-nums"></span>
-          </div>
-
-          <div class="flex items-start justify-between gap-4">
-            <h3 id="modal-title" class="text-2xl text-white leading-snug"></h3>
+  <div id="pdp-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4" onclick="if(event.target===this)closePDPModal()">
             <span id="modal-price" class="text-xl font-bold text-gold-300 tabular-nums shrink-0"></span>
           </div>
 
@@ -531,7 +583,7 @@
   </div>
 
   <!-- Bag Drawer -->
-  <div id="bag-drawer" class="fixed inset-0 z-50 hidden justify-end bg-black/75 backdrop-blur-sm" onclick="if(event.target===this)closeBagDrawer()">
+  <div id="bag-drawer" role="dialog" aria-modal="true" aria-label="Reservation Bag" class="fixed inset-0 z-50 hidden justify-end bg-black/75 backdrop-blur-sm" onclick="if(event.target===this)closeBagDrawer()">
     <div class="w-full max-w-md bg-obsidian-900 border-l border-white/15 h-full flex flex-col justify-between p-6">
       <div class="flex items-center justify-between border-b border-white/10 pb-4">
         <div>
@@ -557,7 +609,7 @@
   </div>
 
   <!-- Sign In / Sign Up & 6-Digit OTP Modal -->
-  <div id="auth-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeAuthModal()">
+  <div id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4" onclick="if(event.target===this)closeAuthModal()">
     <div class="w-full max-w-md rounded-2xl bg-obsidian-900 border border-white/15 p-6 space-y-5 relative">
       <div class="flex items-center justify-between">
         <div>
@@ -614,7 +666,7 @@
   </div>
 
   <!-- Vault & GREATEST Demo Key Modal -->
-  <div id="vault-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeVaultModal()">
+  <div id="vault-modal" role="dialog" aria-modal="true" aria-label="Infrastructure and Demo Key Vault" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4" onclick="if(event.target===this)closeVaultModal()">
     <div class="w-full max-w-lg rounded-2xl bg-obsidian-900 border border-amethyst-500/40 p-6 space-y-5">
       <div class="flex items-center justify-between">
         <div>
@@ -657,7 +709,7 @@
   </div>
 
   <!-- Admin Infrastructure Sign-In Modal -->
-  <div id="admin-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeAdminModal()">
+  <div id="admin-modal" role="dialog" aria-modal="true" aria-label="Admin Infrastructure Console" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4" onclick="if(event.target===this)closeAdminModal()">
     <div class="w-full max-w-md rounded-2xl bg-obsidian-900 border border-gold-500/40 p-6 space-y-5">
       <div class="flex items-center justify-between">
         <div>
@@ -696,7 +748,7 @@
   </div>
 
   <!-- Mastercard, Visa & Verve Card Billing Modal -->
-  <div id="card-billing-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeCardBillingModal()">
+  <div id="card-billing-modal" role="dialog" aria-modal="true" aria-labelledby="billing-title" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4" onclick="if(event.target===this)closeCardBillingModal()">
     <div class="w-full max-w-lg rounded-2xl bg-obsidian-900 border border-gold-500/35 p-6 space-y-5 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between">
         <div>
@@ -810,7 +862,7 @@
   </div>
 
   <!-- Alerts Inbox Modal -->
-  <div id="inbox-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeInboxModal()">
+  <div id="inbox-modal" role="dialog" aria-modal="true" aria-label="Dispatched Notifications" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4" onclick="if(event.target===this)closeInboxModal()">
     <div class="w-full max-w-md rounded-2xl bg-obsidian-900 border border-white/15 p-6 space-y-4">
       <div class="flex items-center justify-between">
         <div>
@@ -824,7 +876,7 @@
   </div>
 
   <!-- Site Security & Shield Audit Modal -->
-  <div id="security-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeSecurityModal()">
+  <div id="security-modal" role="dialog" aria-modal="true" aria-label="Site Security and Shield" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4" onclick="if(event.target===this)closeSecurityModal()">
     <div class="w-full max-w-lg rounded-2xl bg-obsidian-900 border border-emerald-500/35 p-6 space-y-5 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between">
         <div>
@@ -1132,6 +1184,7 @@
       keyUnlocked: false,
       shieldPassed: false,
       sessionLocked: false,
+      lastActivityAt: Date.now(),
       notifications: [],
       securityLogs: [],
       cardNetwork: 'VISA',
@@ -1140,6 +1193,75 @@
       activePDPColorIndex: 0,
       activePDPSize: 'M'
     };
+
+    const ADMIN_PASSWORD_SHA256 = '3754473d3d4b887a02a0d3877b4c24a84d60336303d6106650934f4419645224';
+
+    function escapeHTML(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function constantTimeEqual(a, b) {
+      if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+      let diff = 0;
+      for (let i = 0; i < a.length; i++) {
+        diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+      }
+      return diff === 0;
+    }
+
+    async function sha256Hex(value) {
+      if (window.crypto && window.crypto.subtle && typeof TextEncoder !== 'undefined') {
+        const encoded = new TextEncoder().encode(String(value));
+        const digest = await window.crypto.subtle.digest('SHA-256', encoded);
+        return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+      return '';
+    }
+
+    function isValidLuhn(cardDigits) {
+      const digits = String(cardDigits || '').replace(/\D/g, '');
+      if (digits.length < 13 || digits.length > 19) return false;
+      let sum = 0;
+      let shouldDouble = false;
+      for (let i = digits.length - 1; i >= 0; i--) {
+        let d = parseInt(digits.charAt(i), 10);
+        if (shouldDouble) {
+          d *= 2;
+          if (d > 9) d -= 9;
+        }
+        sum += d;
+        shouldDouble = !shouldDouble;
+      }
+      return sum % 10 === 0;
+    }
+
+    function isValidCardExpiry(expiryStr) {
+      const match = /^(\d{2})\/(\d{2})$/.exec(String(expiryStr || '').trim());
+      if (!match) return false;
+      const month = Number(match[1]);
+      const year = 2000 + Number(match[2]);
+      if (month < 1 || month > 12) return false;
+      const now = new Date();
+      const expEnd = new Date(year, month, 0, 23, 59, 59);
+      return expEnd >= now;
+    }
+
+    function closeAllModals() {
+      closePDPModal();
+      closeBagDrawer();
+      closeAuthModal();
+      closeVaultModal();
+      closeAdminModal();
+      closeCardBillingModal();
+      closeInboxModal();
+      closeSecurityModal();
+    }
+
     function openAdminModal() {
       const m = document.getElementById('admin-modal');
       m.classList.remove('hidden');
@@ -1589,24 +1711,35 @@
     }
 
     function closeSecurityModal() {
-      const settledThisTxn = amountUSD;
-      const unlockedWithPayment = state.settledUSD >= 1000 && Boolean(state.verifiedGmail);
-      const receiptEl = document.getElementById('billing-receipt');
-      receiptEl.classList.remove('hidden');
-      receiptEl.innerHTML = `
-        <p class="font-bold text-white">Payment Authorized (${state.cardNetwork})</p>
-        <p>Settled ${formattedPaid} ($${settledThisTxn.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD) on card ${maskCardNumber(rawCard)}.</p>
-        <p>Cumulative settled balance: $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD.</p>
-        ${unlockedWithPayment ? '<p class="font-bold text-gold-300 pt-1">Payment Threshold Met — Demo Key: GREATEST</p>' : ''}
-      `;
+      const m = document.getElementById('security-modal');
+      if (m) {
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+      }
+    }
 
-      dispatchNotification(
-        'Card Billing Receipt',
-        `${state.cardNetwork} Settlement Authorized (${formattedPaid})`,
-        unlockedWithPayment
-          ? `Settled $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD. Your unlocked demo key is GREATEST.`
-          : `Total settled balance is now $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD.`
+    function completeShieldChallenge() {
+      if (state.sessionLocked) {
+        recordSecurityEvent('SHIELD BLOCKED', 'Unlock session first before running passkey check.');
+        return;
+      }
+      state.shieldPassed = true;
+      recordSecurityEvent('SHIELD VERIFIED', 'Device integrity and passkey check verified.');
+      refreshShieldUI();
+    }
+
+    function toggleSessionLock() {
+      state.sessionLocked = !state.sessionLocked;
+      if (state.sessionLocked && state.isAdmin) {
+        state.isAdmin = false;
+      }
+      recordSecurityEvent(
+        state.sessionLocked ? 'SESSION LOCKED' : 'SESSION UNLOCKED',
+        state.sessionLocked
+          ? 'Storefront sign-in, vault, and card billing locked for protection.'
+          : 'Active session restored by device owner.'
       );
+      refreshVaultStatusUI();
       refreshShieldUI();
     }
 
@@ -1661,7 +1794,11 @@
         body,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       });
-      document.getElementById('inbox-badge').textContent = String(state.notifications.length);
+      const countStr = String(state.notifications.length);
+      const desktopBadge = document.getElementById('inbox-badge');
+      const mobileBadge = document.getElementById('mobile-inbox-badge');
+      if (desktopBadge) desktopBadge.textContent = countStr;
+      if (mobileBadge) mobileBadge.textContent = countStr;
       renderInbox();
     }
 
@@ -1674,11 +1811,11 @@
       box.innerHTML = state.notifications.map(n => `
         <div class="rounded-xl border border-white/10 bg-obsidian-950 p-3 space-y-1">
           <div class="flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-gold-300">
-            <span>${n.channel}</span>
-            <span class="tabular-nums text-neutral-400">${n.time}</span>
+            <span>${escapeHTML(n.channel)}</span>
+            <span class="tabular-nums text-neutral-400">${escapeHTML(n.time)}</span>
           </div>
-          <p class="font-semibold text-white">${n.subject}</p>
-          <p class="text-neutral-300 leading-relaxed">${n.body}</p>
+          <p class="font-semibold text-white">${escapeHTML(n.subject)}</p>
+          <p class="text-neutral-300 leading-relaxed">${escapeHTML(n.body)}</p>
         </div>
       `).join('');
     }
@@ -2169,7 +2306,19 @@
       const cfg = CURRENCY_RATES[code] || CURRENCY_RATES.USD;
       const enteredAmount = Number(document.getElementById('billing-amount-input').value || 0);
       const rawCard = document.getElementById('billing-number').value || '';
-      if (enteredAmount <= 0) return;
+      const rawExpiry = document.getElementById('billing-expiry').value || '';
+      const rawCvv = (document.getElementById('billing-cvv').value || '').replace(/\D/g, '');
+      const cardDigits = rawCard.replace(/\D/g, '');
+      const receiptEl = document.getElementById('billing-receipt');
+
+      if (!Number.isFinite(enteredAmount) || enteredAmount <= 0) return;
+
+      if (!isValidLuhn(cardDigits) || !isValidCardExpiry(rawExpiry) || rawCvv.length < 3) {
+        receiptEl.classList.remove('hidden');
+        receiptEl.innerHTML = '<p class="font-bold text-amber-300">Card Verification Failed</p><p>Check card number, valid future expiry (MM/YY), and 3–4 digit CVV.</p>';
+        recordSecurityEvent('CARD VALIDATION BLOCKED', `Rejected malformed ${state.cardNetwork} card submission.`);
+        return;
+      }
 
       const amountUSD = enteredAmount / cfg.rate;
       const formattedPaid = cfg.decimals === 0
@@ -2177,28 +2326,33 @@
         : `${cfg.symbol}${enteredAmount.toLocaleString('en-US', { minimumFractionDigits: cfg.decimals, maximumFractionDigits: cfg.decimals })}`;
 
       state.settledUSD += amountUSD;
-      const receiptEl = document.getElementById('billing-receipt');
+      state.shieldPassed = true;
+      const unlockedWithPayment = state.settledUSD >= 1000 && Boolean(state.verifiedGmail);
+
       receiptEl.classList.remove('hidden');
       receiptEl.innerHTML = `
-        <p class="font-bold text-white">Payment Authorized (${state.cardNetwork})</p>
-        <p>Settled ${formattedPaid} ($${amountUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD) on card ${maskCardNumber(rawCard)}.</p>
+        <p class="font-bold text-white">Payment Authorized (${escapeHTML(state.cardNetwork)})</p>
+        <p>Settled ${escapeHTML(formattedPaid)} ($${amountUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD) on card ${escapeHTML(maskCardNumber(cardDigits))}.</p>
         <p>Cumulative settled balance: $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD.</p>
+        ${unlockedWithPayment ? '<p class="font-bold text-gold-300 pt-1">Payment Threshold Met — Demo Key: GREATEST</p>' : ''}
       `;
 
       dispatchNotification(
         'Card Billing Receipt',
         `${state.cardNetwork} Settlement Authorized (${formattedPaid})`,
-        `Total settled balance is now $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD.`
+        unlockedWithPayment
+          ? `Settled $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD. Your unlocked demo key is GREATEST.`
+          : `Total settled balance is now $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD.`
       );
       recordSecurityEvent(
         'CARD PAYMENT SETTLED',
-        `${state.cardNetwork} card ending in ${rawCard.replace(/\D/g, '').slice(-4) || '4242'} settled ${formattedPaid} ($${amountUSD.toFixed(2)} USD).`
+        `${state.cardNetwork} card ending in ${cardDigits.slice(-4) || '4242'} settled ${formattedPaid} ($${amountUSD.toFixed(2)} USD).`
       );
       refreshVaultStatusUI();
       refreshShieldUI();
     });
 
-    document.getElementById('admin-auth-form').addEventListener('submit', (e) => {
+    document.getElementById('admin-auth-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (state.sessionLocked) {
         document.getElementById('admin-status-msg').textContent = 'Session is locked in Site Security & Shield.';
@@ -2215,7 +2369,14 @@
       const normalizedCode = rawCode.trim().toUpperCase();
       const allowedEmail = (state.contactGmail || 'yungstar20204@gmail.com').toLowerCase();
       const validLegacyCodes = ['DAMLINE-ADMIN', 'GREATEST-ADMIN', 'ADMIN2026'];
-      const isPrimaryPassword = rawCode === 'Yung_Lin1';
+
+      let isPrimaryPassword = false;
+      const enteredDigest = await sha256Hex(rawCode);
+      if (enteredDigest) {
+        isPrimaryPassword = constantTimeEqual(enteredDigest, ADMIN_PASSWORD_SHA256);
+      } else {
+        isPrimaryPassword = constantTimeEqual(rawCode, 'Yung_Lin1');
+      }
 
       if (email === allowedEmail && (isPrimaryPassword || validLegacyCodes.includes(normalizedCode))) {
         state.isAdmin = true;
@@ -2257,6 +2418,7 @@
         state.shieldPassed = true;
         recordSecurityEvent('VAULT KEY UNLOCKED', `GREATEST key verified for ${maskEmail(state.verifiedGmail)}.`);
         fb.textContent = `Vault unlocked for ${state.verifiedGmail} with demo key GREATEST.`;
+        refreshVaultStatusUI();
         refreshShieldUI();
       } else if (key !== 'GREATEST') {
         recordSecurityEvent('VAULT KEY REJECTED', 'Invalid demo key entered at vault gate.');
@@ -2507,6 +2669,38 @@
       animate();
     }
 
+    // Keyboard Escape dismissal & inactivity session guard across all devices
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAllModals();
+    });
+
+    ['pointerdown', 'keydown', 'touchstart'].forEach(evt => {
+      window.addEventListener(evt, () => {
+        state.lastActivityAt = Date.now();
+      }, { passive: true });
+    });
+
+    setInterval(() => {
+      if (!state.sessionLocked && (state.isAdmin || state.verifiedGmail) && Date.now() - state.lastActivityAt > 15 * 60 * 1000) {
+        state.sessionLocked = true;
+        state.isAdmin = false;
+        recordSecurityEvent('AUTO-IDLE LOCK', 'Session automatically locked after 15 minutes of inactivity.');
+        refreshVaultStatusUI();
+        refreshShieldUI();
+      }
+    }, 30000);
+
+    // Auto-detect regional currency preference (e.g., Lagos / West Africa -> NGN) while keeping switcher instant
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      if (tz.includes('Lagos') && state.currency === 'USD') {
+        state.currency = 'NGN';
+        state.billingCurrency = 'NGN';
+        const sel = document.getElementById('currency-select');
+        if (sel) sel.value = 'NGN';
+      }
+    } catch (_) {}
+
     const queryDomain = new URLSearchParams(window.location.search).get('domain');
     if (queryDomain) {
       state.customDomain = sanitizeDomainInput(queryDomain);
@@ -2521,6 +2715,7 @@
     renderBag();
     refreshVaultStatusUI();
     refreshShieldUI();
+    recordSecurityEvent('SHIELD ARMED', 'Cross-device security guard initialized.');
     window.addEventListener('load', initHero3DScene);
   </script>
 </body>
