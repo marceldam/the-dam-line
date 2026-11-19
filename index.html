@@ -108,6 +108,20 @@
     .tabular-nums {
       font-variant-numeric: tabular-nums;
     }
+
+    @keyframes bagFloat {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+
+    .bag-3d-shell {
+      animation: bagFloat 3.6s ease-in-out infinite;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55), inset 0 0 22px rgba(192, 132, 252, 0.14);
+    }
   </style>
 </head>
 <body class="monogram-bg min-h-screen flex flex-col selection:bg-amethyst-600 selection:text-white">
@@ -174,8 +188,9 @@
         </button>
 
         <button type="button" onclick="openBagDrawer()" aria-label="Open Reservation Bag"
-          class="px-3 sm:px-3.5 py-2 min-h-[40px] rounded-lg gold-cta text-[10px] sm:text-[11px] font-semibold tracking-[0.12em] sm:tracking-[0.14em] uppercase spring-btn tabular-nums">
-          Bag (<span id="bag-count">0</span>)
+          class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 min-h-[40px] rounded-lg gold-cta text-[10px] sm:text-[11px] font-semibold tracking-[0.12em] sm:tracking-[0.14em] uppercase spring-btn tabular-nums">
+          <canvas id="bag-btn-3d-canvas" width="24" height="24" aria-hidden="true" class="w-5 h-5 rounded block shrink-0"></canvas>
+          <span>Bag (<span id="bag-count">0</span>)</span>
         </button>
       </div>
     </div>
@@ -223,7 +238,7 @@
               Unlock Infrastructure
             </button>
             <button type="button" onclick="openAuthModal('signin')"
-              class="w-full sm:w-auto px-5 py-3.5 min-h-[46px] inline-flex items-center justify-center rounded-lg border border-white/20 bg-obsidian-950/90 hover:border-gold-400/60 text-xs sm:text-sm font-semibold tracking-[0.14em] text-neutral-100 spring-btn">
+              class="w-full sm:w-auto px-5 sm:px-7 py-3.5 min-h-[46px] inline-flex items-center justify-center rounded-lg border border-white/20 bg-obsidian-950/90 hover:border-gold-400/60 text-xs sm:text-sm font-semibold tracking-[0.14em] text-neutral-100 spring-btn">
               1-Tap Member Access
             </button>
           </div>
@@ -518,6 +533,22 @@
 
   <!-- Full Specs & Inspection Modal -->
   <div id="pdp-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4" onclick="if(event.target===this)closePDPModal()">
+    <div class="w-full max-w-4xl rounded-2xl bg-obsidian-900 border border-white/15 p-5 sm:p-6 max-h-[92vh] overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+      <button type="button" onclick="closePDPModal()" aria-label="Close Full Specs" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full border border-white/15 bg-obsidian-950/90 text-neutral-300 hover:text-white">✕</button>
+
+      <div class="rounded-xl overflow-hidden bg-obsidian-950 border border-white/10 aspect-[4/5]">
+        <img id="modal-garment-img" src="" alt="" class="w-full h-full object-cover object-center" />
+      </div>
+
+      <div class="flex flex-col justify-between space-y-4">
+        <div class="space-y-3 pr-6">
+          <div class="flex flex-wrap items-center gap-2 text-[10px] tracking-[0.18em] uppercase">
+            <span id="modal-tag" class="text-amethyst-400"></span>
+            <span id="modal-stock" class="px-2 py-0.5 rounded bg-obsidian-950 border border-white/10 text-gold-300 tabular-nums"></span>
+          </div>
+
+          <div class="flex items-start justify-between gap-3">
+            <h3 id="modal-title" class="text-2xl text-white leading-snug"></h3>
             <span id="modal-price" class="text-xl font-bold text-gold-300 tabular-nums shrink-0"></span>
           </div>
 
@@ -595,9 +626,30 @@
 
       <div id="bag-items" class="flex-1 overflow-y-auto py-4 space-y-3"></div>
 
+      <!-- Live 3D 'D' Monolith Stage inside Reservation Bag Drawer -->
+      <div class="bag-3d-shell rounded-xl border border-amethyst-400/35 bg-obsidian-950/95 p-3 mb-3">
+        <div class="flex items-center justify-between text-[10px] tracking-[0.18em] uppercase text-gold-300 mb-1.5 px-1">
+          <span>THE DAM LINE • 3D 'D'</span>
+          <span id="bag-3d-status" class="text-amethyst-400 tabular-nums">0 Pieces • 50/50 Active</span>
+        </div>
+        <div class="relative h-28 w-full rounded-lg overflow-hidden border border-white/10 bg-obsidian-950">
+          <canvas id="bag-3d-canvas" aria-label="3D Dam Line Monolith inside Reservation Bag" class="w-full h-full block"></canvas>
+        </div>
+      </div>
+
       <div class="border-t border-white/10 pt-4 space-y-4">
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-neutral-400">Subtotal</span>
+        <div class="space-y-1.5 text-xs">
+          <div class="flex items-center justify-between text-neutral-400">
+            <span>Items Subtotal</span>
+            <span id="bag-items-subtotal" class="tabular-nums">$0.00</span>
+          </div>
+          <div class="flex items-center justify-between text-neutral-400">
+            <span>Express Atelier Delivery</span>
+            <span id="bag-delivery-fee" class="text-amethyst-400 tabular-nums">$0.00</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between text-sm pt-1 border-t border-white/10">
+          <span class="text-neutral-300">Total (Incl. Delivery)</span>
           <span id="bag-subtotal" class="text-lg font-bold text-gold-300 tabular-nums">$0.00</span>
         </div>
         <button type="button" onclick="checkoutBagWithCard()"
@@ -932,6 +984,8 @@
       ZAR: { symbol: 'R', rate: 18.2, decimals: 2 }
     };
 
+    const DELIVERY_FEE_USD = 35;
+
     const PRODUCTS = [
       {
         id: 'dl-jkt-01',
@@ -1184,7 +1238,7 @@
       keyUnlocked: false,
       shieldPassed: false,
       sessionLocked: false,
-      lastActivityAt: Date.now(),
+      unreadCount: 0,
       notifications: [],
       securityLogs: [],
       cardNetwork: 'VISA',
@@ -1360,7 +1414,6 @@
     function refreshVaultStatusUI() {
       const gmailOk = Boolean(state.verifiedGmail);
       const spendOk = state.settledUSD >= 1000;
-      const infraUnlocked = canViewInfrastructure();
 
       document.getElementById('vault-checklist').innerHTML = `
         <div class="flex items-center justify-between">
@@ -1693,10 +1746,10 @@
           logBox.innerHTML = state.securityLogs.map(ev => `
             <div class="rounded-lg border border-white/10 bg-obsidian-950 p-2.5 space-y-0.5">
               <div class="flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-emerald-300">
-                <span>${ev.action}</span>
-                <span class="text-neutral-400 tabular-nums">${ev.time}</span>
+                <span>${escapeHTML(ev.action)}</span>
+                <span class="text-neutral-400 tabular-nums">${escapeHTML(ev.time)}</span>
               </div>
-              <p class="text-neutral-300">${ev.detail}</p>
+              <p class="text-neutral-300">${escapeHTML(ev.detail)}</p>
             </div>
           `).join('');
         }
@@ -1794,12 +1847,22 @@
         body,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       });
-      const countStr = String(state.notifications.length);
+      state.unreadCount += 1;
+      syncAlertBadges();
+      renderInbox();
+    }
+
+    function syncAlertBadges() {
+      const countStr = String(Math.max(0, state.unreadCount));
       const desktopBadge = document.getElementById('inbox-badge');
       const mobileBadge = document.getElementById('mobile-inbox-badge');
       if (desktopBadge) desktopBadge.textContent = countStr;
       if (mobileBadge) mobileBadge.textContent = countStr;
-      renderInbox();
+    }
+
+    function markAlertsRead() {
+      state.unreadCount = 0;
+      syncAlertBadges();
     }
 
     function renderInbox() {
@@ -2004,21 +2067,55 @@
       `).join('');
     }
 
-    function addToBag(item, size, colorName) {
-      state.bag.push({
-        id: item.id,
-        name: item.name,
-        priceUSD: item.priceUSD,
-        size: size || 'M',
-        color: colorName || item.colorways[0].name
-      });
+    function getTotalBagUnits() {
+      return state.bag.reduce((sum, entry) => sum + (entry.qty || 1), 0);
+    }
+
+    function addToBag(item, size, colorName, qtyToAdd) {
+      const targetSize = size || 'M';
+      const targetColor = colorName || item.colorways[0].name;
+      const inc = Math.max(1, Number(qtyToAdd || 1));
+      const existing = state.bag.find(
+        entry => entry.id === item.id && entry.size === targetSize && entry.color === targetColor
+      );
+      if (existing) {
+        existing.qty = (existing.qty || 1) + inc;
+      } else {
+        state.bag.push({
+          id: item.id,
+          name: item.name,
+          priceUSD: item.priceUSD,
+          size: targetSize,
+          color: targetColor,
+          qty: inc
+        });
+      }
       renderBag();
       openBagDrawer();
     }
 
+    function incrementBagItem(index) {
+      const entry = state.bag[index];
+      if (!entry) return;
+      entry.qty = (entry.qty || 1) + 1;
+      renderBag();
+    }
+
+    function decrementBagItem(index) {
+      const entry = state.bag[index];
+      if (!entry) return;
+      const nextQty = (entry.qty || 1) - 1;
+      if (nextQty <= 0) {
+        state.bag.splice(index, 1);
+      } else {
+        entry.qty = nextQty;
+      }
+      renderBag();
+    }
+
     function quickAddFromCard(id) {
       const item = ALL_CATALOG.find(p => p.id === id);
-      if (item) addToBag(item, 'M', item.colorways[0].name);
+      if (item) addToBag(item, 'M', item.colorways[0].name, 1);
     }
 
     function removeBagItem(index) {
@@ -2028,43 +2125,102 @@
 
     function openBagDrawer() {
       const d = document.getElementById('bag-drawer');
+      if (!d) return;
       d.classList.remove('hidden');
       d.classList.add('flex');
+      renderBag();
+      requestAnimationFrame(() => {
+        initBag3DScene();
+        if (typeof bag3DResize === 'function') bag3DResize();
+      });
     }
 
     function closeBagDrawer() {
       const d = document.getElementById('bag-drawer');
+      if (!d) return;
       d.classList.add('hidden');
       d.classList.remove('flex');
     }
 
+    function getDeliveryFeeUSD() {
+      return getTotalBagUnits() > 0 ? DELIVERY_FEE_USD : 0;
+    }
+
+    function getBagTotalUSD() {
+      const itemsUSD = state.bag.reduce((sum, entry) => sum + entry.priceUSD * (entry.qty || 1), 0);
+      return itemsUSD + getDeliveryFeeUSD();
+    }
+
     function renderBag() {
-      document.getElementById('bag-count').textContent = String(state.bag.length);
+      const totalUnits = getTotalBagUnits();
+      document.getElementById('bag-count').textContent = String(totalUnits);
+      const bag3DStatus = document.getElementById('bag-3d-status');
+      if (bag3DStatus) {
+        bag3DStatus.textContent = totalUnits === 1
+          ? '1 Piece • 50/50 Active'
+          : `${totalUnits} Pieces • 50/50 Active`;
+      }
       const container = document.getElementById('bag-items');
-      const totalUSD = state.bag.reduce((sum, entry) => sum + entry.priceUSD, 0);
+      const itemsUSD = state.bag.reduce((sum, entry) => sum + entry.priceUSD * (entry.qty || 1), 0);
+      const deliveryUSD = getDeliveryFeeUSD();
+      const totalUSD = itemsUSD + deliveryUSD;
+      const itemsSubEl = document.getElementById('bag-items-subtotal');
+      const deliveryEl = document.getElementById('bag-delivery-fee');
+      if (itemsSubEl) itemsSubEl.textContent = formatPrice(itemsUSD);
+      if (deliveryEl) deliveryEl.textContent = formatPrice(deliveryUSD);
       document.getElementById('bag-subtotal').textContent = formatPrice(totalUSD);
 
+      const inline3DMarkup = `
+        <div class="bag-3d-shell rounded-xl border border-amethyst-400/35 bg-obsidian-950/95 p-3">
+          <div class="flex items-center justify-between text-[10px] tracking-[0.18em] uppercase text-gold-300 mb-1.5 px-1">
+            <span>THE DAM LINE • 3D 'D'</span>
+            <span class="text-amethyst-400 tabular-nums">${totalUnits === 1 ? '1 Piece • 50/50 Active' : `${totalUnits} Pieces • 50/50 Active`}</span>
+          </div>
+          <div class="relative h-28 w-full rounded-lg overflow-hidden border border-white/10 bg-obsidian-950">
+            <canvas id="bag-items-3d-canvas" aria-label="3D Dam Line Monolith inside Bag Items" class="w-full h-full block"></canvas>
+          </div>
+        </div>
+      `;
+
       if (!state.bag.length) {
-        container.innerHTML = '<p class="text-xs text-neutral-400 py-8 text-center">Your bag is empty. Select any silhouette to begin.</p>';
+        container.innerHTML = `
+          <p class="text-xs text-neutral-400 py-3 text-center">Your bag is empty. Tap + Bag on any silhouette to begin.</p>
+          ${inline3DMarkup}
+        `;
+        requestAnimationFrame(() => initBagItems3DScene());
         return;
       }
 
-      container.innerHTML = state.bag.map((entry, idx) => `
-        <div class="rounded-xl border border-white/10 bg-obsidian-950 p-3.5 flex items-center justify-between gap-3">
-          <div>
-            <p class="text-sm text-white">${entry.name}</p>
-            <p class="text-[11px] text-neutral-400">Size ${entry.size} • ${entry.color} • 50/50 LEFT</p>
-            <p class="text-xs text-gold-300 tabular-nums mt-0.5">${formatPrice(entry.priceUSD)}</p>
-          </div>
-          <button type="button" onclick="removeBagItem(${idx})" class="text-xs text-neutral-400 hover:text-white px-2 py-1">Remove</button>
-        </div>
-      `).join('');
+      container.innerHTML = `
+        ${inline3DMarkup}
+        ${state.bag.map((entry, idx) => {
+          const unitCount = entry.qty || 1;
+          return `
+            <div class="rounded-xl border border-white/10 bg-obsidian-950 p-3.5 flex items-center justify-between gap-3">
+              <div>
+                <p class="text-sm text-white">${escapeHTML(entry.name)}</p>
+                <p class="text-[11px] text-neutral-400">Size ${escapeHTML(entry.size)} • ${escapeHTML(entry.color)} • 50/50 LEFT</p>
+                <p class="text-xs text-gold-300 tabular-nums mt-0.5">${formatPrice(entry.priceUSD * unitCount)} <span class="text-neutral-400">(${formatPrice(entry.priceUSD)} each)</span></p>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0 tabular-nums">
+                <button type="button" onclick="decrementBagItem(${idx})" aria-label="Decrease quantity"
+                  class="w-7 h-7 rounded-lg border border-white/15 bg-obsidian-900 text-xs text-neutral-200 hover:border-gold-400 spring-btn">−</button>
+                <span class="px-1.5 text-xs font-bold text-white">${unitCount}</span>
+                <button type="button" onclick="incrementBagItem(${idx})" aria-label="Add one more to bag"
+                  class="w-7 h-7 rounded-lg gold-cta text-xs font-bold spring-btn">+</button>
+                <button type="button" onclick="removeBagItem(${idx})" class="text-xs text-neutral-400 hover:text-white px-1.5 py-1">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      `;
+      requestAnimationFrame(() => initBagItems3DScene());
     }
 
     function checkoutBagWithCard() {
-      const totalUSD = state.bag.reduce((sum, entry) => sum + entry.priceUSD, 0);
+      const totalUSD = getBagTotalUSD();
       closeBagDrawer();
-      openCardBillingModal(totalUSD > 0 ? totalUSD : 1000, 'Bag Allocation Settlement');
+      openCardBillingModal(totalUSD > 0 ? totalUSD : 1000, 'Bag Allocation & Delivery Settlement');
     }
 
     function openAuthModal(mode) {
@@ -2195,6 +2351,7 @@
     }
 
     function openInboxModal() {
+      markAlertsRead();
       renderInbox();
       const m = document.getElementById('inbox-modal');
       m.classList.remove('hidden');
@@ -2202,6 +2359,7 @@
     }
 
     function closeInboxModal() {
+      markAlertsRead();
       const m = document.getElementById('inbox-modal');
       m.classList.add('hidden');
       m.classList.remove('flex');
@@ -2244,7 +2402,7 @@
       const item = ALL_CATALOG.find(p => p.id === state.activePDPId);
       if (!item) return;
       const cw = item.colorways[state.activePDPColorIndex] || item.colorways[0];
-      addToBag(item, state.activePDPSize, cw.name);
+      addToBag(item, state.activePDPSize, cw.name, 1);
       closePDPModal();
     });
 
@@ -2471,6 +2629,13 @@
         metalness: 0.9,
         roughness: 0.2
       });
+      const crystalMat = new THREE.MeshStandardMaterial({
+        color: 0xc084fc,
+        emissive: 0x7e22ce,
+        emissiveIntensity: 0.55,
+        metalness: 0.3,
+        roughness: 0.14
+      });
 
       const spine = new THREE.Mesh(new THREE.BoxGeometry(0.46, 2.58, 0.44), darkMetalMat);
       spine.position.set(-0.66, 0, 0);
@@ -2545,17 +2710,26 @@
       goldRim.position.set(-0.44, 0, 0.24);
       monolithGroup.add(goldRim);
 
+      const orbitGoldRing = new THREE.Mesh(
+        new THREE.TorusGeometry(2.15, 0.018, 14, 96),
+        goldMat
+      );
+      orbitGoldRing.rotation.x = Math.PI * 0.36;
+      orbitGoldRing.rotation.y = Math.PI * 0.14;
+      monolithGroup.add(orbitGoldRing);
+
+      const orbitAmethystRing = new THREE.Mesh(
+        new THREE.TorusGeometry(2.42, 0.015, 14, 96),
+        crystalMat
+      );
+      orbitAmethystRing.rotation.x = -Math.PI * 0.28;
+      orbitAmethystRing.rotation.y = -Math.PI * 0.18;
+      monolithGroup.add(orbitAmethystRing);
+
       monolithGroup.scale.setScalar(1.08);
       scene.add(monolithGroup);
 
       const crystalGroup = new THREE.Group();
-      const crystalMat = new THREE.MeshStandardMaterial({
-        color: 0xc084fc,
-        emissive: 0x7e22ce,
-        emissiveIntensity: 0.55,
-        metalness: 0.3,
-        roughness: 0.14
-      });
       const crystal = new THREE.Mesh(new THREE.OctahedronGeometry(0.28, 0), crystalMat);
       crystal.scale.set(0.85, 1.45, 0.85);
       crystalGroup.add(crystal);
@@ -2657,6 +2831,8 @@
         monolithGroup.rotation.y = rotY + Math.sin(t * 0.55) * 0.24;
         monolithGroup.rotation.x = rotX + Math.cos(t * 0.4) * 0.06;
         monolithGroup.position.y = Math.sin(t * 1.2) * 0.08;
+        orbitGoldRing.rotation.z = t * 0.28;
+        orbitAmethystRing.rotation.z = -t * 0.22;
 
         crystalGroup.position.y = -1.08 + Math.sin(t * 1.8) * 0.1;
         crystalGroup.rotation.y = t * 1.1;
@@ -2667,6 +2843,212 @@
         renderer.render(scene, camera);
       }
       animate();
+    }
+
+    let bag3DInitialized = false;
+    let bag3DResize = null;
+    let bagItems3DAnimId = null;
+
+    function initBagItems3DScene() {
+      const canvas = document.getElementById('bag-items-3d-canvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+      if (bagItems3DAnimId) cancelAnimationFrame(bagItems3DAnimId);
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      const w = canvas.clientWidth || canvas.parentElement.clientWidth || 320;
+      const h = canvas.clientHeight || canvas.parentElement.clientHeight || 112;
+      renderer.setSize(w, h, false);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 50);
+      camera.position.set(0, 0, 4.5);
+
+      scene.add(new THREE.AmbientLight(0xd8b4fe, 0.9));
+      const key = new THREE.DirectionalLight(0xf3dc8b, 1.75);
+      key.position.set(2.5, 3, 4);
+      scene.add(key);
+
+      const emblemGroup = new THREE.Group();
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x241736, metalness: 0.84, roughness: 0.22 });
+      const goldTrimMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.92, roughness: 0.18 });
+
+      const spine = new THREE.Mesh(new THREE.BoxGeometry(0.3, 1.55, 0.28), bodyMat);
+      spine.position.set(-0.36, 0, 0);
+      emblemGroup.add(spine);
+
+      const arch = new THREE.Mesh(
+        new THREE.TorusGeometry(0.76, 0.2, 18, 48, Math.PI),
+        bodyMat
+      );
+      arch.rotation.z = -Math.PI / 2;
+      arch.position.set(-0.22, 0, 0);
+      emblemGroup.add(arch);
+
+      const goldHalo = new THREE.Mesh(
+        new THREE.TorusGeometry(0.92, 0.025, 12, 48),
+        goldTrimMat
+      );
+      goldHalo.rotation.x = Math.PI / 3;
+      emblemGroup.add(goldHalo);
+
+      emblemGroup.position.x = 0.06;
+      scene.add(emblemGroup);
+
+      const clock = new THREE.Clock();
+      function animateInlineBag() {
+        bagItems3DAnimId = requestAnimationFrame(animateInlineBag);
+        const t = clock.getElapsedTime();
+        const boost = 1 + Math.min(getTotalBagUnits(), 6) * 0.12;
+        emblemGroup.rotation.y = t * 0.85 * boost;
+        emblemGroup.rotation.x = Math.sin(t * 1.1) * 0.2;
+        goldHalo.rotation.z = -t * 0.7;
+        renderer.render(scene, camera);
+      }
+      animateInlineBag();
+    }
+
+    function initBag3DScene() {
+      const canvas = document.getElementById('bag-3d-canvas');
+      if (!canvas || typeof THREE === 'undefined' || bag3DInitialized) return;
+      bag3DInitialized = true;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 50);
+      camera.position.set(0, 0, 4.6);
+
+      scene.add(new THREE.AmbientLight(0xd8b4fe, 0.85));
+      const key = new THREE.DirectionalLight(0xf3dc8b, 1.7);
+      key.position.set(2.5, 3, 4);
+      scene.add(key);
+      const rim = new THREE.PointLight(0xc084fc, 2.4, 12);
+      rim.position.set(-2, -1.5, 3);
+      scene.add(rim);
+
+      const emblemGroup = new THREE.Group();
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x241736, metalness: 0.84, roughness: 0.22 });
+      const goldTrimMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.92, roughness: 0.18 });
+
+      const spine = new THREE.Mesh(new THREE.BoxGeometry(0.3, 1.55, 0.28), bodyMat);
+      spine.position.set(-0.36, 0, 0);
+      emblemGroup.add(spine);
+
+      const arch = new THREE.Mesh(
+        new THREE.TorusGeometry(0.76, 0.2, 18, 48, Math.PI),
+        bodyMat
+      );
+      arch.rotation.z = -Math.PI / 2;
+      arch.position.set(-0.22, 0, 0);
+      emblemGroup.add(arch);
+
+      const goldHalo = new THREE.Mesh(
+        new THREE.TorusGeometry(0.92, 0.025, 12, 48),
+        goldTrimMat
+      );
+      goldHalo.rotation.x = Math.PI / 3;
+      emblemGroup.add(goldHalo);
+
+      emblemGroup.position.x = 0.06;
+      scene.add(emblemGroup);
+
+      const starCount = 260;
+      const starPos = new Float32Array(starCount * 3);
+      for (let i = 0; i < starCount; i++) {
+        const angle = (i / starCount) * Math.PI * 6;
+        const r = 0.95 + (i % 7) * 0.11;
+        starPos[i * 3] = Math.cos(angle) * r;
+        starPos[i * 3 + 1] = ((i / starCount) - 0.5) * 1.4;
+        starPos[i * 3 + 2] = Math.sin(angle) * r * 0.7;
+      }
+      const starGeo = new THREE.BufferGeometry();
+      starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+      const starPoints = new THREE.Points(
+        starGeo,
+        new THREE.PointsMaterial({ color: 0xf3dc8b, size: 0.045, transparent: true, opacity: 0.85 })
+      );
+      scene.add(starPoints);
+
+      function resizeBagCanvas() {
+        const w = canvas.clientWidth || canvas.parentElement.clientWidth || 320;
+        const h = canvas.clientHeight || canvas.parentElement.clientHeight || 112;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h, false);
+      }
+      bag3DResize = resizeBagCanvas;
+      resizeBagCanvas();
+      window.addEventListener('resize', resizeBagCanvas);
+
+      const bagClock = new THREE.Clock();
+      function animateBag() {
+        requestAnimationFrame(animateBag);
+        const t = bagClock.getElapsedTime();
+        const boost = 1 + Math.min(getTotalBagUnits(), 6) * 0.12;
+        emblemGroup.rotation.y = t * 0.85 * boost;
+        emblemGroup.rotation.x = Math.sin(t * 1.1) * 0.22;
+        goldHalo.rotation.z = -t * 0.7;
+        starPoints.rotation.y = -t * 0.35;
+        renderer.render(scene, camera);
+      }
+      animateBag();
+    }
+
+    function initBagButton3DScene() {
+      const canvas = document.getElementById('bag-btn-3d-canvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(24, 24, false);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 20);
+      camera.position.set(0, 0, 3.4);
+
+      scene.add(new THREE.AmbientLight(0xf3dc8b, 1.1));
+      const key = new THREE.DirectionalLight(0xffffff, 1.4);
+      key.position.set(2, 2.5, 3);
+      scene.add(key);
+
+      const btnMonolith = new THREE.Group();
+      const darkMat = new THREE.MeshStandardMaterial({ color: 0x161221, metalness: 0.85, roughness: 0.22 });
+      const goldTrim = new THREE.MeshStandardMaterial({ color: 0x08070c, metalness: 0.6, roughness: 0.35 });
+
+      const spine = new THREE.Mesh(new THREE.BoxGeometry(0.28, 1.45, 0.24), darkMat);
+      spine.position.set(-0.32, 0, 0);
+      btnMonolith.add(spine);
+
+      const arch = new THREE.Mesh(
+        new THREE.TorusGeometry(0.7, 0.18, 14, 36, Math.PI),
+        darkMat
+      );
+      arch.rotation.z = -Math.PI / 2;
+      arch.position.set(-0.18, 0, 0);
+      btnMonolith.add(arch);
+
+      const halo = new THREE.Mesh(
+        new THREE.TorusGeometry(0.88, 0.035, 10, 36),
+        goldTrim
+      );
+      halo.rotation.x = Math.PI / 3;
+      btnMonolith.add(halo);
+
+      btnMonolith.position.x = 0.08;
+      scene.add(btnMonolith);
+
+      const clock = new THREE.Clock();
+      function animateBtn() {
+        requestAnimationFrame(animateBtn);
+        const t = clock.getElapsedTime();
+        const spinBoost = 1 + Math.min(getTotalBagUnits(), 6) * 0.18;
+        btnMonolith.rotation.y = t * 1.35 * spinBoost;
+        halo.rotation.z = -t * 1.1;
+        renderer.render(scene, camera);
+      }
+      animateBtn();
     }
 
     // Keyboard Escape dismissal & inactivity session guard across all devices
@@ -2716,7 +3098,10 @@
     refreshVaultStatusUI();
     refreshShieldUI();
     recordSecurityEvent('SHIELD ARMED', 'Cross-device security guard initialized.');
-    window.addEventListener('load', initHero3DScene);
+    window.addEventListener('load', () => {
+      initHero3DScene();
+      initBagButton3DScene();
+    });
   </script>
 </body>
 </html>
