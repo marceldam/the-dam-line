@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE DAM LINE (thedamline) — Definition in Every Thread</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: {
+              950: '#030205',
+              900: '#08070c',
+              850: '#0d0b14',
+              800: '#14111f'
+            },
+            amethyst: {
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#7e22ce'
+            },
+            gold: {
+              300: '#f3dc8b',
+              400: '#e5be6b',
+              500: '#d4af37',
+              600: '#a88420'
+            }
+          },
+          fontFamily: {
+            serif: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
+            sans: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * {
+      font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #030205;
+      color: #f6f4fa;
+      overflow-x: hidden;
+    }
+
+    .monogram-bg {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Ctext x='48' y='64' text-anchor='middle' fill='%23ffffff' fill-opacity='0.025' font-family='Georgia, serif' font-size='56' font-weight='bold'%3ED%3C/text%3E%3C/svg%3E");
+      background-size: 96px 96px;
+    }
+
+    .spring-btn {
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.24s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.24s ease, border-color 0.24s ease;
+    }
+
+    .spring-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .spring-btn:active {
+      transform: scale(0.97);
+    }
+
+    .gold-cta {
+      background: linear-gradient(135deg, #f3dc8b 0%, #d4af37 52%, #a88420 100%);
+      color: #08070c;
+      box-shadow: 0 10px 28px rgba(212, 175, 55, 0.24);
+    }
+
+    .amethyst-cta {
+      background: rgba(12, 10, 18, 0.88);
+      border: 1px solid rgba(192, 132, 252, 0.72);
+      color: #f6efff;
+      box-shadow: 0 0 24px rgba(168, 85, 247, 0.35), inset 0 0 14px rgba(168, 85, 247, 0.16);
+    }
+
+    .atelier-card {
+      background: linear-gradient(180deg, rgba(20, 17, 31, 0.88) 0%, rgba(8, 7, 12, 0.96) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.32s ease, box-shadow 0.32s ease;
+    }
+
+    .atelier-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.42);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.65), 0 0 24px rgba(168, 85, 247, 0.14);
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="monogram-bg min-h-screen flex flex-col selection:bg-amethyst-600 selection:text-white">
+
+  <!-- Top Announcement Bar -->
+  <div class="w-full bg-obsidian-900/95 border-b border-white/10 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-10 flex items-center justify-between gap-4">
+      <p id="ticker-text" class="truncate text-[11px] tracking-[0.18em] uppercase text-gold-300 tabular-nums">
+        50/50 LEFT — AUTUMN / WINTER 50/50 EDITION LIVE
+      </p>
+      <div class="flex items-center gap-3 shrink-0">
+        <span id="ticker-domain-pill" class="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded bg-gold-500/15 border border-gold-500/35 text-[10px] font-semibold tracking-[0.16em] text-gold-300 tabular-nums">
+          thedamline.ng
+        </span>
+        <label for="currency-select" class="sr-only">Select Currency</label>
+        <select id="currency-select" onchange="setCurrency(this.value)"
+          class="bg-obsidian-950 border border-white/15 rounded-md px-2.5 py-1 text-[11px] tracking-[0.12em] text-neutral-200 focus:outline-none focus:border-gold-400 tabular-nums cursor-pointer">
+          <option value="USD">USD $</option>
+          <option value="EUR">EUR €</option>
+          <option value="GBP">GBP £</option>
+          <option value="NGN">NGN ₦</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Navigation Header -->
+  <header class="sticky top-0 z-30 bg-obsidian-950/85 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <a href="#hero-stage" class="flex items-baseline gap-2.5 shrink-0">
+        <span class="text-lg sm:text-xl tracking-[0.22em] uppercase text-gold-400 font-bold">THE DAM LINE</span>
+        <span id="header-domain-tag" class="hidden lg:inline text-[11px] tracking-[0.16em] text-amethyst-400 tabular-nums">thedamline.ng</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-7 text-[11px] tracking-[0.2em] uppercase text-neutral-300">
+        <a href="#collection" class="hover:text-gold-300 transition-colors">Collection</a>
+        <a href="#story" class="hover:text-gold-300 transition-colors">Marcel Damian</a>
+        <a href="#infrastructure" class="hover:text-gold-300 transition-colors">Vault &amp; Key</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5 shrink-0">
+        <button type="button" onclick="openAuthModal('signin')"
+          class="px-3 py-2 rounded-lg border border-white/15 bg-obsidian-900 hover:border-gold-400/50 text-[11px] tracking-[0.14em] uppercase text-neutral-200 spring-btn">
+          <span id="header-auth-label">Sign In</span>
+        </button>
+
+        <button type="button" onclick="openInboxModal()"
+          class="relative px-3 py-2 rounded-lg border border-white/15 bg-obsidian-900 hover:border-amethyst-400/60 text-[11px] tracking-[0.14em] uppercase text-neutral-200 spring-btn">
+          <span>Alerts</span>
+          <span id="inbox-badge" class="ml-1.5 px-1.5 py-0.5 rounded-full bg-amethyst-600 text-[10px] text-white tabular-nums">0</span>
+        </button>
+
+        <button type="button" onclick="openBagDrawer()"
+          class="px-3.5 py-2 rounded-lg gold-cta text-[11px] font-semibold tracking-[0.14em] uppercase spring-btn tabular-nums">
+          Bag (<span id="bag-count">0</span>)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <!-- Hero Stage with Sculptural 3D 'D' Monolith & Swirling Stardust -->
+    <section id="hero-stage" class="relative min-h-[86vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+      <canvas id="hero-3d-canvas" class="absolute inset-0 w-full h-full block z-10 cursor-grab active:cursor-grabbing"></canvas>
+
+      <div class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-obsidian-950/60 via-transparent to-obsidian-950/85"></div>
+
+      <!-- Foreground Editorial Overlay -->
+      <div class="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14 min-h-[86vh] flex flex-col justify-between items-center text-center pointer-events-none">
+        <div class="flex flex-wrap items-center justify-center gap-2.5">
+          <span id="hero-domain-badge" class="text-[11px] tracking-[0.22em] uppercase text-gold-300/95 bg-obsidian-950/75 px-3.5 py-1 rounded-full border border-gold-500/35 tabular-nums">
+            thedamline • thedamline.ng • 50/50 LEFT • Drag 3D 'D' Monolith
+          </span>
+          <button type="button" onclick="openSecurityModal()"
+            class="pointer-events-auto inline-flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase text-emerald-300 bg-obsidian-950/80 hover:border-emerald-400/60 px-3.5 py-1 rounded-full border border-emerald-500/35 spring-btn tabular-nums">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Site Security &amp; Shield: <strong id="hero-shield-state">ARMED</strong></span>
+          </button>
+        </div>
+
+        <!-- Centerpiece Headline spanning cleanly across the 'D' monolith -->
+        <div class="w-full my-auto py-4">
+          <h1 class="text-2xl sm:text-4xl md:text-5xl tracking-[0.2em] uppercase text-gold-300 font-normal drop-shadow-[0_6px_28px_rgba(0,0,0,0.95)] leading-tight">
+            DEFINITION IN EVERY THREAD.
+          </h1>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-4 pointer-events-auto">
+          <a href="#collection"
+            class="px-7 py-3.5 rounded-lg gold-cta text-xs sm:text-sm font-semibold tracking-[0.14em] spring-btn">
+            Explore Collection
+          </a>
+          <button type="button" onclick="openVaultModal()"
+            class="px-7 py-3.5 rounded-lg amethyst-cta text-xs sm:text-sm font-semibold tracking-[0.14em] spring-btn">
+            Unlock Infrastructure
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Producer, Product & Why I Made It Section -->
+    <section id="story" class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 border-b border-white/10">
+      <div class="mb-10">
+        <p class="text-[11px] tracking-[0.22em] uppercase text-amethyst-400 mb-2">Atelier Manifesto • <span id="story-domain-label" class="tabular-nums">thedamline.ng</span></p>
+        <h2 class="text-2xl sm:text-4xl text-white">Marcel Damian &amp; The Craft</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <article class="atelier-card rounded-2xl p-6 sm:p-7">
+          <p class="text-[11px] tracking-[0.2em] uppercase text-gold-400 mb-2">01 / Leadership</p>
+          <h3 class="text-2xl text-white mb-3">CEO OF THE DAM LINE</h3>
+          <p class="text-sm text-neutral-300 leading-relaxed">
+            Led by Marcel Damian as CEO OF THE DAM LINE, the house approaches garment-making with architectural discipline—treating cut, proportion, fabric weight, and seam tension as permanent structural details rather than fleeting seasonal noise.
+          </p>
+        </article>
+
+        <article class="atelier-card rounded-2xl p-6 sm:p-7">
+          <p class="text-[11px] tracking-[0.2em] uppercase text-gold-400 mb-2">02 / Silhouette Lineup</p>
+          <h3 class="text-2xl text-white mb-3">THE BRAND</h3>
+          <p class="text-sm text-neutral-300 leading-relaxed">
+            THE BRAND delivers structured jackets, wide-leg baggy trousers, extended knee-cut jogger jorts (with 50/50 LEFT marked right above the extended knee cut), knit polos, and structured caps—cut from dense weaves with clean drapes and intentional hardware.
+          </p>
+        </article>
+
+        <article class="atelier-card rounded-2xl p-6 sm:p-7">
+          <p class="text-[11px] tracking-[0.2em] uppercase text-gold-400 mb-2">03 / Why I Made It</p>
+          <h3 class="text-2xl text-white mb-3">Definition Over Hype</h3>
+          <p class="text-sm text-neutral-300 leading-relaxed">
+            I created THE DAM LINE because too much modern clothing feels disposable, thin, and forgettable. I wanted pieces that hold their shape, feel substantial on the body, and carry unmistakable identity from the first wear.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Curated Silhouettes Grid -->
+    <section id="collection" class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div>
+          <p class="text-[11px] tracking-[0.22em] uppercase text-gold-400 mb-2">50/50 Edition • 50/50 Left</p>
+          <h2 class="text-2xl sm:text-4xl text-white">Curated Silhouettes</h2>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" data-filter="ALL" onclick="filterByCategory('ALL')"
+            class="filter-pill px-4 py-2 rounded-full text-xs tracking-[0.14em] uppercase border border-gold-400 bg-gold-500 text-obsidian-950 font-semibold spring-btn">
+            All Pieces
+          </button>
+          <button type="button" data-filter="JACKETS" onclick="filterByCategory('JACKETS')"
+            class="filter-pill px-4 py-2 rounded-full text-xs tracking-[0.14em] uppercase border border-white/15 bg-obsidian-900 text-neutral-300 hover:border-gold-400/50 spring-btn">
+            Jackets
+          </button>
+          <button type="button" data-filter="TROUSERS" onclick="filterByCategory('TROUSERS')"
+            class="filter-pill px-4 py-2 rounded-full text-xs tracking-[0.14em] uppercase border border-white/15 bg-obsidian-900 text-neutral-300 hover:border-gold-400/50 spring-btn">
+            Baggy Trousers
+          </button>
+          <button type="button" data-filter="JORTS" onclick="filterByCategory('JORTS')"
+            class="filter-pill px-4 py-2 rounded-full text-xs tracking-[0.14em] uppercase border border-white/15 bg-obsidian-900 text-neutral-300 hover:border-gold-400/50 spring-btn">
+            Jogger Jorts
+          </button>
+          <button type="button" data-filter="POLOS_CAPS" onclick="filterByCategory('POLOS_CAPS')"
+            class="filter-pill px-4 py-2 rounded-full text-xs tracking-[0.14em] uppercase border border-white/15 bg-obsidian-900 text-neutral-300 hover:border-gold-400/50 spring-btn">
+            Polos &amp; Caps
+          </button>
+        </div>
+      </div>
+
+      <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"></div>
+    </section>
+
+    <!-- Vault & Demo Key Infrastructure Banner -->
+    <section id="infrastructure" class="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+      <div class="rounded-2xl border border-amethyst-500/35 bg-gradient-to-r from-obsidian-900 via-obsidian-850 to-obsidian-900 p-6 sm:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-2xl">
+          <p class="text-[11px] tracking-[0.22em] uppercase text-amethyst-400 tabular-nums">
+            Private Client Access • 50/50 Vault
+          </p>
+          <h2 class="text-2xl sm:text-3xl text-white">Unlock Demo Key via Verified Gmail &amp; $1,000+ Settlement</h2>
+          <p class="text-sm text-neutral-300 leading-relaxed">
+            Sign in with a verified Gmail address and complete at least <span class="text-gold-300 tabular-nums">$1,000 USD</span> in card billing (Visa, Mastercard, or Verve) to receive the private <span class="text-gold-300 font-semibold">GREATEST</span> demo key directly in your Gmail notification log.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+          <button type="button" onclick="openCardBillingModal(1000, 'Vault Allocation Settlement')"
+            class="px-5 py-3 rounded-xl border border-gold-400/50 bg-obsidian-950 hover:bg-obsidian-800 text-xs font-semibold tracking-[0.14em] uppercase text-gold-300 spring-btn tabular-nums">
+            Settle $1,000 Card
+          </button>
+          <button type="button" onclick="openVaultModal()"
+            class="px-6 py-3 rounded-xl gold-cta text-xs font-semibold tracking-[0.14em] uppercase spring-btn">
+            Open Key Vault
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 bg-obsidian-950 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col gap-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-neutral-400">
+        <div class="tracking-[0.18em] uppercase text-gold-400 tabular-nums">THE DAM LINE (<span id="footer-brand-slug">thedamline</span>) • 50/50 LEFT</div>
+        <div>Produced by Marcel Damian • Gmail &amp; Apple ID Alerts Enabled</div>
+      </div>
+
+      <!-- Custom Domain & Share / Google Lookup Bar -->
+      <div class="rounded-xl border border-gold-500/25 bg-obsidian-900/90 p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4 text-xs">
+        <div class="space-y-1 tabular-nums">
+          <span class="text-[10px] tracking-[0.18em] uppercase text-amethyst-400 block">Custom Domain Identity</span>
+          <div class="flex flex-wrap items-center gap-2">
+            <a id="active-domain-link" href="https://thedamline.ng" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-gold-300 hover:underline">
+              https://thedamline.ng
+            </a>
+            <span id="domain-status-note" class="text-[11px] text-neutral-400">(Ready for DNS &amp; GitHub Pages binding)</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="copyShareLink()"
+            class="px-3 py-2 rounded-lg border border-white/15 bg-obsidian-950 hover:border-gold-400/50 text-[11px] tracking-[0.12em] uppercase text-neutral-200 spring-btn">
+            <span id="copy-link-label">Copy Share Link</span>
+          </button>
+          <a id="google-search-link" href="https://www.google.com/search?q=thedamline+thedamline.ng" target="_blank" rel="noopener noreferrer"
+            class="px-3 py-2 rounded-lg border border-amethyst-400/40 bg-obsidian-950 hover:bg-obsidian-800 text-[11px] tracking-[0.12em] uppercase text-amethyst-400 spring-btn">
+            Check on Google
+          </a>
+          <button type="button" onclick="toggleDomainEditor()"
+            class="px-3.5 py-2 rounded-lg border border-gold-400/40 bg-obsidian-950 hover:bg-obsidian-800 text-[11px] tracking-[0.12em] uppercase text-gold-300 spring-btn">
+            Set Custom Domain
+          </button>
+        </div>
+      </div>
+
+      <form id="domain-edit-form" class="hidden rounded-xl border border-amethyst-500/35 bg-obsidian-900 p-4 grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <label class="sm:col-span-2 text-neutral-300">
+          Your Custom Domain (.ng, .com.ng, or .com)
+          <input id="edit-domain-input" type="text" required placeholder="thedamline.ng"
+            class="mt-1 w-full rounded-lg bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white tabular-nums focus:outline-none focus:border-gold-400" />
+        </label>
+        <div class="flex items-end gap-2">
+          <button type="submit" class="flex-1 py-2 px-4 rounded-lg gold-cta text-xs font-semibold tracking-[0.14em] uppercase spring-btn">
+            Apply Domain
+          </button>
+          <button type="button" onclick="toggleDomainEditor(false)" class="py-2 px-3 rounded-lg border border-white/15 bg-obsidian-950 text-neutral-300">
+            Cancel
+          </button>
+        </div>
+      </form>
+
+      <!-- Direct Gmail & Phone Contact Bar -->
+      <div class="rounded-xl border border-white/10 bg-obsidian-900/90 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs">
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-3 tabular-nums">
+          <div>
+            <span class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 block">Direct Gmail</span>
+            <a id="contact-gmail-link" href="mailto:thedamline.atelier@gmail.com" class="text-gold-300 hover:underline">
+              thedamline.atelier@gmail.com
+            </a>
+          </div>
+          <div>
+            <span class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 block">Direct Number</span>
+            <a id="contact-phone-link" href="tel:+2348000000000" class="text-white hover:text-gold-300">
+              +234 800 000 0000
+            </a>
+          </div>
+          <div>
+            <span class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 block mb-1">Accepted Cards</span>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-obsidian-950 border border-white/15 text-[10px] text-white">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-600 inline-block"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 -ml-1.5 inline-block"></span>
+                <span class="ml-0.5">Mastercard</span>
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-obsidian-950 border border-white/15 text-[10px] text-white">
+                <span class="w-3.5 h-3.5 rounded-full bg-red-600 text-white text-[9px] font-bold inline-flex items-center justify-center">V</span>
+                <span>Verve</span>
+              </span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded bg-obsidian-950 border border-white/15 text-[10px] font-bold tracking-wider text-amber-300">
+                VISA
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" onclick="toggleContactEditor()"
+          class="px-3.5 py-2 rounded-lg border border-gold-400/40 bg-obsidian-950 hover:bg-obsidian-800 text-[11px] tracking-[0.14em] uppercase text-gold-300 spring-btn self-start md:self-auto">
+          Edit Gmail &amp; Number
+        </button>
+      </div>
+
+      <form id="contact-edit-form" class="hidden rounded-xl border border-gold-500/30 bg-obsidian-900 p-4 grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <label class="text-neutral-300">
+          Your Gmail
+          <input id="edit-gmail-input" type="email" required placeholder="yourname@gmail.com"
+            class="mt-1 w-full rounded-lg bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-400" />
+        </label>
+        <label class="text-neutral-300">
+          Your Phone Number
+          <input id="edit-phone-input" type="tel" required placeholder="+234 801 234 5678"
+            class="mt-1 w-full rounded-lg bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-400" />
+        </label>
+        <div class="flex items-end gap-2">
+          <button type="submit" class="flex-1 py-2 px-4 rounded-lg gold-cta text-xs font-semibold tracking-[0.14em] uppercase spring-btn">
+            Save Contact
+          </button>
+          <button type="button" onclick="toggleContactEditor(false)" class="py-2 px-3 rounded-lg border border-white/15 bg-obsidian-950 text-neutral-300">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </footer>
+
+  <!-- Full Specs & Inspection Modal -->
+  <div id="pdp-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closePDPModal()">
+    <div class="w-full max-w-4xl rounded-2xl bg-obsidian-900 border border-white/15 overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-2 max-h-[92vh] overflow-y-auto">
+      <div class="relative bg-obsidian-950 aspect-[4/5] md:aspect-auto flex items-center justify-center overflow-hidden">
+        <img id="modal-garment-img" src="" alt="" class="w-full h-full object-cover object-center transition-all duration-300" />
+        <button type="button" onclick="closePDPModal()"
+          class="absolute top-3 right-3 w-9 h-9 rounded-full bg-obsidian-950/85 border border-white/20 text-white hover:border-gold-400 flex items-center justify-center spring-btn"
+          aria-label="Close modal">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-6 sm:p-7 flex flex-col justify-between space-y-5">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between gap-2">
+            <span id="modal-tag" class="text-[10px] tracking-[0.2em] uppercase text-gold-400 tabular-nums"></span>
+            <span id="modal-stock" class="text-[10px] tracking-[0.16em] uppercase text-amethyst-400 tabular-nums"></span>
+          </div>
+
+          <div class="flex items-start justify-between gap-4">
+            <h3 id="modal-title" class="text-2xl text-white leading-snug"></h3>
+            <span id="modal-price" class="text-xl font-bold text-gold-300 tabular-nums shrink-0"></span>
+          </div>
+
+          <!-- Catchy Customer Hook inside Full Specs -->
+          <div class="rounded-xl border border-gold-500/35 bg-gold-500/10 p-3.5">
+            <p class="text-[10px] tracking-[0.2em] uppercase text-gold-300 mb-1">Why It Commands The Room</p>
+            <p id="modal-hook" class="text-sm text-white leading-relaxed"></p>
+          </div>
+
+          <p id="modal-desc" class="text-sm text-neutral-300 leading-relaxed"></p>
+
+          <div class="rounded-xl border border-white/10 bg-obsidian-950/80 p-3">
+            <p class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 mb-1">Fabric &amp; Construction</p>
+            <p id="modal-fabric" class="text-xs text-neutral-200"></p>
+          </div>
+
+          <!-- Angle Switcher -->
+          <div>
+            <p class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 mb-2">View Angle</p>
+            <div class="flex items-center gap-2">
+              <button type="button" data-angle="FRONT" onclick="setPDPAngle('FRONT')"
+                class="angle-btn px-3 py-1.5 rounded-lg text-xs tracking-[0.12em] uppercase border border-gold-400 bg-gold-500 text-obsidian-950 font-semibold spring-btn">
+                Front
+              </button>
+              <button type="button" data-angle="DETAIL" onclick="setPDPAngle('DETAIL')"
+                class="angle-btn px-3 py-1.5 rounded-lg text-xs tracking-[0.12em] uppercase border border-white/15 bg-obsidian-950 text-neutral-300 spring-btn">
+                Detail
+              </button>
+              <button type="button" data-angle="BACK" onclick="setPDPAngle('BACK')"
+                class="angle-btn px-3 py-1.5 rounded-lg text-xs tracking-[0.12em] uppercase border border-white/15 bg-obsidian-950 text-neutral-300 spring-btn">
+                Back
+              </button>
+            </div>
+          </div>
+
+          <!-- Colorway Swatches -->
+          <div>
+            <p class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 mb-2">
+              Finish: <span id="modal-color-name" class="text-gold-300"></span>
+            </p>
+            <div id="modal-swatches" class="flex items-center gap-2.5"></div>
+          </div>
+
+          <!-- Size Selector -->
+          <div>
+            <p class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 mb-2">Select Size</p>
+            <div class="grid grid-cols-5 gap-2">
+              <button type="button" data-size="XS" onclick="selectPDPSize('XS')" class="size-btn py-2 rounded-lg text-xs border border-white/15 bg-obsidian-950 text-neutral-200 spring-btn">XS</button>
+              <button type="button" data-size="S" onclick="selectPDPSize('S')" class="size-btn py-2 rounded-lg text-xs border border-white/15 bg-obsidian-950 text-neutral-200 spring-btn">S</button>
+              <button type="button" data-size="M" onclick="selectPDPSize('M')" class="size-btn py-2 rounded-lg text-xs border border-gold-400 bg-gold-500 text-obsidian-950 font-semibold spring-btn">M</button>
+              <button type="button" data-size="L" onclick="selectPDPSize('L')" class="size-btn py-2 rounded-lg text-xs border border-white/15 bg-obsidian-950 text-neutral-200 spring-btn">L</button>
+              <button type="button" data-size="XL" onclick="selectPDPSize('XL')" class="size-btn py-2 rounded-lg text-xs border border-white/15 bg-obsidian-950 text-neutral-200 spring-btn">XL</button>
+            </div>
+          </div>
+        </div>
+
+        <button id="modal-add-btn" type="button"
+          class="w-full py-3.5 rounded-xl gold-cta text-xs font-bold tracking-[0.16em] uppercase spring-btn tabular-nums">
+          Add to Bag
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bag Drawer -->
+  <div id="bag-drawer" class="fixed inset-0 z-50 hidden justify-end bg-black/75 backdrop-blur-sm" onclick="if(event.target===this)closeBagDrawer()">
+    <div class="w-full max-w-md bg-obsidian-900 border-l border-white/15 h-full flex flex-col justify-between p-6">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div>
+          <h3 class="text-lg text-white">Reservation Bag</h3>
+          <p class="text-[11px] tracking-[0.16em] uppercase text-gold-400 tabular-nums">50/50 LEFT ALLOCATION</p>
+        </div>
+        <button type="button" onclick="closeBagDrawer()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300 hover:text-white">✕</button>
+      </div>
+
+      <div id="bag-items" class="flex-1 overflow-y-auto py-4 space-y-3"></div>
+
+      <div class="border-t border-white/10 pt-4 space-y-4">
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-neutral-400">Subtotal</span>
+          <span id="bag-subtotal" class="text-lg font-bold text-gold-300 tabular-nums">$0.00</span>
+        </div>
+        <button type="button" onclick="checkoutBagWithCard()"
+          class="w-full py-3.5 rounded-xl gold-cta text-xs font-bold tracking-[0.16em] uppercase spring-btn">
+          Pay with Card (Visa / Mastercard / Verve)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign In / Sign Up & 6-Digit OTP Modal -->
+  <div id="auth-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeAuthModal()">
+    <div class="w-full max-w-md rounded-2xl bg-obsidian-900 border border-white/15 p-6 space-y-5 relative">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[10px] tracking-[0.2em] uppercase text-amethyst-400">Gmail &amp; Apple ID Alerts</p>
+          <h3 id="auth-title" class="text-xl text-white">Member Sign In</h3>
+        </div>
+        <button type="button" onclick="closeAuthModal()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300">✕</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <button type="button" onclick="providerQuickAuth('Google ID', state.contactGmail || 'thedamline.atelier@gmail.com')"
+          class="py-2.5 px-3 rounded-xl border border-white/15 bg-obsidian-950 hover:border-gold-400 text-xs text-white spring-btn">
+          Continue with Google
+        </button>
+        <button type="button" onclick="providerQuickAuth('Apple ID', 'client.id@icloud.com')"
+          class="py-2.5 px-3 rounded-xl border border-white/15 bg-obsidian-950 hover:border-amethyst-400 text-xs text-white spring-btn">
+          Continue with Apple ID
+        </button>
+      </div>
+
+      <div id="auth-otp-banner" class="hidden rounded-xl border border-gold-400/40 bg-gold-500/10 p-3 flex items-center justify-between gap-3">
+        <div class="text-xs text-gold-200">
+          OTP Code: <span id="auth-live-code" class="font-bold tracking-[0.24em] text-gold-300 tabular-nums">------</span>
+        </div>
+        <button type="button" onclick="autoFillOTP()" class="px-2.5 py-1 rounded bg-gold-500 text-obsidian-950 text-[11px] font-semibold spring-btn">
+          Auto-Fill
+        </button>
+      </div>
+
+      <form id="auth-request-form" class="space-y-3">
+        <label class="block text-xs text-neutral-300">
+          Gmail or Apple ID Email
+          <input id="auth-email-input" type="email" required placeholder="name@gmail.com or name@icloud.com"
+            class="mt-1.5 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-gold-400" />
+        </label>
+        <button type="submit" class="w-full py-3 rounded-xl gold-cta text-xs font-bold tracking-[0.14em] uppercase spring-btn">
+          Send 6-Digit Verification Code
+        </button>
+      </form>
+
+      <form id="auth-step-otp" class="hidden space-y-3">
+        <label class="block text-xs text-neutral-300">
+          Enter 6-Digit Code
+          <input id="auth-otp-input" type="text" maxlength="6" inputmode="numeric" placeholder="000000"
+            class="mt-1.5 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3.5 py-2.5 text-center text-lg tracking-[0.35em] text-white tabular-nums focus:outline-none focus:border-amethyst-400" />
+        </label>
+        <button type="submit" class="w-full py-3 rounded-xl amethyst-cta text-xs font-bold tracking-[0.14em] uppercase spring-btn">
+          Verify &amp; Activate Alerts
+        </button>
+      </form>
+
+      <p id="auth-status-msg" class="text-xs text-neutral-400"></p>
+    </div>
+  </div>
+
+  <!-- Vault & GREATEST Demo Key Modal -->
+  <div id="vault-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeVaultModal()">
+    <div class="w-full max-w-lg rounded-2xl bg-obsidian-900 border border-amethyst-500/40 p-6 space-y-5">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[10px] tracking-[0.2em] uppercase text-amethyst-400">50/50 Vault Access</p>
+          <h3 class="text-xl text-white">Infrastructure &amp; Demo Key</h3>
+        </div>
+        <button type="button" onclick="closeVaultModal()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300">✕</button>
+      </div>
+
+      <div id="vault-checklist" class="space-y-2 text-xs rounded-xl bg-obsidian-950 border border-white/10 p-4 tabular-nums"></div>
+
+      <div id="vault-key-box" class="hidden rounded-xl border border-gold-400/50 bg-gold-500/10 p-4 space-y-1">
+        <p class="text-[10px] tracking-[0.2em] uppercase text-gold-300">Dispatched to Verified Gmail</p>
+        <p class="text-lg font-bold tracking-[0.24em] text-white tabular-nums">DEMO KEY: GREATEST</p>
+      </div>
+
+      <form id="vault-unlock-form" class="space-y-3">
+        <label class="block text-xs text-neutral-300">
+          Enter Demo Key
+          <input id="vault-key-input" type="text" placeholder="Enter GREATEST"
+            class="mt-1.5 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3.5 py-2.5 text-sm uppercase tracking-[0.2em] text-white focus:outline-none focus:border-gold-400" />
+        </label>
+        <div class="flex flex-wrap gap-2.5">
+          <button type="submit" class="flex-1 py-3 rounded-xl gold-cta text-xs font-bold tracking-[0.14em] uppercase spring-btn">
+            Unlock Vault
+          </button>
+          <button type="button" onclick="closeVaultModal(); openCardBillingModal(1000, 'Vault Allocation Settlement');"
+            class="py-3 px-4 rounded-xl border border-white/15 bg-obsidian-950 text-xs text-gold-300 spring-btn tabular-nums">
+            Pay $1,000+
+          </button>
+        </div>
+      </form>
+
+      <p id="vault-feedback" class="text-xs text-neutral-300"></p>
+    </div>
+  </div>
+
+  <!-- Mastercard, Visa & Verve Card Billing Modal -->
+  <div id="card-billing-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeCardBillingModal()">
+    <div class="w-full max-w-lg rounded-2xl bg-obsidian-900 border border-gold-500/35 p-6 space-y-5 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[10px] tracking-[0.2em] uppercase text-gold-400">Card Settlement</p>
+          <h3 id="billing-title" class="text-xl text-white">Pay with Card</h3>
+        </div>
+        <button type="button" onclick="closeCardBillingModal()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300">✕</button>
+      </div>
+
+      <!-- Visual Card Face -->
+      <div id="visual-card-face" class="rounded-2xl p-5 border border-white/15 bg-gradient-to-br from-obsidian-800 via-obsidian-950 to-amethyst-600/30 space-y-6">
+        <div class="flex items-center justify-between gap-3">
+          <span class="text-[11px] tracking-[0.2em] uppercase text-gold-300">THE DAM LINE</span>
+          <div id="card-network-visual" class="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-obsidian-950/90 border border-white/15">
+            <span class="px-1.5 py-0.5 rounded bg-blue-900 text-[10px] font-bold tracking-wider text-amber-300">VISA</span>
+            <span id="card-network-badge" class="text-[11px] font-bold tracking-[0.14em] text-white">VISA</span>
+          </div>
+        </div>
+        <p id="card-preview-number" class="text-lg sm:text-xl tracking-[0.22em] text-white tabular-nums">•••• •••• •••• 4242</p>
+        <div class="flex items-center justify-between text-xs text-neutral-300 tabular-nums">
+          <span id="card-preview-holder">CARDHOLDER NAME</span>
+          <span id="card-preview-expiry">08/29</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <button type="button" data-net="VISA" onclick="selectCardNetwork('VISA')"
+          class="net-btn py-2.5 px-2 rounded-xl text-xs font-semibold border border-gold-400 bg-gold-500 text-obsidian-950 spring-btn flex items-center justify-center gap-1.5">
+          <span class="px-1.5 py-0.5 rounded bg-blue-900 text-[10px] font-bold tracking-wider text-amber-300">VISA</span>
+          <span>Visa</span>
+        </button>
+        <button type="button" data-net="MASTERCARD" onclick="selectCardNetwork('MASTERCARD')"
+          class="net-btn py-2.5 px-2 rounded-xl text-xs font-semibold border border-white/15 bg-obsidian-950 text-neutral-200 spring-btn flex items-center justify-center gap-1.5">
+          <span class="inline-flex items-center">
+            <span class="w-3 h-3 rounded-full bg-red-600 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-amber-400 -ml-1 inline-block"></span>
+          </span>
+          <span>Mastercard</span>
+        </button>
+        <button type="button" data-net="VERVE" onclick="selectCardNetwork('VERVE')"
+          class="net-btn py-2.5 px-2 rounded-xl text-xs font-semibold border border-white/15 bg-obsidian-950 text-neutral-200 spring-btn flex items-center justify-center gap-1.5">
+          <span class="w-4 h-4 rounded-full bg-red-600 text-white text-[10px] font-bold inline-flex items-center justify-center">V</span>
+          <span>Verve</span>
+        </button>
+      </div>
+
+      <form id="card-billing-form" class="space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="block text-xs text-neutral-300">
+            Cardholder Name
+            <input id="billing-name" type="text" required placeholder="Marcel Damian" oninput="syncCardPreview()"
+              class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-400" />
+          </label>
+          <label class="block text-xs text-neutral-300">
+            Settlement Amount (USD)
+            <input id="billing-amount-usd" type="number" min="1" step="1" required placeholder="1000"
+              class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white tabular-nums focus:outline-none focus:border-gold-400" />
+          </label>
+        </div>
+
+        <label class="block text-xs text-neutral-300">
+          Card Number
+          <input id="billing-number" type="text" required maxlength="19" placeholder="4532 0192 8471 4242" oninput="syncCardPreview()"
+            class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white tabular-nums focus:outline-none focus:border-gold-400" />
+        </label>
+
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block text-xs text-neutral-300">
+            Expiry (MM/YY)
+            <input id="billing-expiry" type="text" required maxlength="5" placeholder="08/29" oninput="syncCardPreview()"
+              class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white tabular-nums focus:outline-none focus:border-gold-400" />
+          </label>
+          <label class="block text-xs text-neutral-300">
+            CVV
+            <input id="billing-cvv" type="password" required maxlength="4" placeholder="888"
+              class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white tabular-nums focus:outline-none focus:border-gold-400" />
+          </label>
+        </div>
+
+        <div class="flex items-center justify-between gap-2 pt-1">
+          <button type="button" onclick="fillDemoCard()" class="text-xs text-amethyst-400 hover:underline">
+            Fill Demo Card Details
+          </button>
+          <span class="text-[11px] text-neutral-400 tabular-nums">$1,000+ unlocks GREATEST key</span>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl gold-cta text-xs font-bold tracking-[0.15em] uppercase spring-btn">
+          Authorize &amp; Complete Payment
+        </button>
+      </form>
+
+      <div id="billing-receipt" class="hidden rounded-xl border border-gold-400/40 bg-gold-500/10 p-3.5 text-xs text-gold-200 space-y-1"></div>
+    </div>
+  </div>
+
+  <!-- Alerts Inbox Modal -->
+  <div id="inbox-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeInboxModal()">
+    <div class="w-full max-w-md rounded-2xl bg-obsidian-900 border border-white/15 p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[10px] tracking-[0.2em] uppercase text-gold-400">Gmail &amp; Apple ID Feed</p>
+          <h3 class="text-lg text-white">Dispatched Notifications</h3>
+        </div>
+        <button type="button" onclick="closeInboxModal()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300">✕</button>
+      </div>
+      <div id="inbox-list" class="max-h-72 overflow-y-auto space-y-2.5 text-xs"></div>
+    </div>
+  </div>
+
+  <!-- Site Security & Shield Audit Modal -->
+  <div id="security-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeSecurityModal()">
+    <div class="w-full max-w-lg rounded-2xl bg-obsidian-900 border border-emerald-500/35 p-6 space-y-5 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[10px] tracking-[0.2em] uppercase text-emerald-400">Site Security &amp; Shield</p>
+          <h3 class="text-xl text-white">Session Guard &amp; Security Log</h3>
+        </div>
+        <button type="button" onclick="closeSecurityModal()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300">✕</button>
+      </div>
+
+      <div class="rounded-xl border border-white/10 bg-obsidian-950 p-4 space-y-3 text-xs tabular-nums">
+        <div class="flex items-center justify-between">
+          <span class="text-neutral-300">Passkey / Shield Challenge</span>
+          <span id="shield-challenge-status" class="text-amber-300">Pending Check</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-neutral-300">Verified @gmail.com</span>
+          <span id="shield-gmail-status" class="text-amber-300">Not Verified</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-neutral-300">$1,000+ Card Settlement</span>
+          <span id="shield-spend-status" class="text-amber-300">$0 / $1,000</span>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2.5">
+        <button type="button" onclick="completeShieldChallenge()"
+          class="flex-1 py-2.5 px-3 rounded-xl gold-cta text-xs font-bold tracking-[0.12em] uppercase spring-btn">
+          Verify Security Passkey Check
+        </button>
+        <button type="button" onclick="toggleSessionLock()"
+          class="py-2.5 px-4 rounded-xl border border-white/15 bg-obsidian-950 hover:border-amethyst-400 text-xs uppercase tracking-[0.12em] text-neutral-200 spring-btn">
+          <span id="session-lock-btn-label">Lock Session</span>
+        </button>
+      </div>
+
+      <div>
+        <p class="text-[10px] tracking-[0.2em] uppercase text-neutral-400 mb-2">Masked Security Audit Log</p>
+        <div id="security-log-list" class="max-h-48 overflow-y-auto space-y-2 text-xs"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CURRENCY_RATES = {
+      USD: { symbol: '$', rate: 1 },
+      EUR: { symbol: '€', rate: 0.92 },
+      GBP: { symbol: '£', rate: 0.79 },
+      NGN: { symbol: '₦', rate: 1620 }
+    };
+
+    const PRODUCTS = [
+      {
+        id: 'dl-jkt-01',
+        category: 'JACKETS',
+        tag: 'OUTERWEAR • 50/50 LEFT',
+        name: 'Obsidian Cropped Atelier Jacket',
+        priceUSD: 640,
+        stock: '50/50 LEFT',
+        hook: 'Boxy cropped shoulders and crisp lapel structure that give every outfit immediate authority.',
+        description: 'Structured mid-weight technical twill jacket tailored with a clean boxy crop, concealed placket, and satin-lined interior.',
+        fabric: '68% Structured Cotton Twill, 32% Recycled Poly-Weave • Matte Gunmetal Hardware',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Void Obsidian', primary: '#141219', swatch: '#09080c', filter: 'none' },
+          { name: 'Amethyst Shadow', primary: '#3b154a', swatch: '#ba2ae6', filter: 'hue-rotate(245deg) saturate(1.15)' }
+        ]
+      },
+      {
+        id: 'dl-jkt-02',
+        category: 'JACKETS',
+        tag: 'TECHNICAL SHELL • 50/50 LEFT',
+        name: 'Aegis Storm Bomber Jacket',
+        priceUSD: 580,
+        stock: '50/50 LEFT',
+        hook: 'Clean structured shoulders and a sharp cropped cut that command attention in any room.',
+        description: 'High-density woven bomber jacket with articulated sleeves, welt utility pockets, and tonal gold zipper pulls.',
+        fabric: '100% Water-Repellent Micro-Twill • Custom Brushed Gold Pulls',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Carbon Slate', primary: '#191b22', swatch: '#2c303d', filter: 'none' },
+          { name: 'Royal Plum', primary: '#2d143b', swatch: '#ba2ae6', filter: 'hue-rotate(255deg) contrast(1.06)' }
+        ]
+      },
+      {
+        id: 'dl-trs-01',
+        category: 'TROUSERS',
+        tag: 'SIGNATURE DRAPE • 50/50 LEFT',
+        name: 'Monolith Wide Baggy Trouser',
+        priceUSD: 490,
+        stock: '50/50 LEFT',
+        hook: 'Deep flowing pleats and wide leg volume that stack naturally with effortless presence.',
+        description: 'Relaxed high-rise baggy trousers crafted from fluid suiting gabardine with deep front pleats and generous leg opening.',
+        fabric: '74% Combed Wool-Blend Gabardine, 26% Viscose • Horn Waist Clasp',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Pitch Noir', primary: '#121216', swatch: '#070709', filter: 'none' },
+          { name: 'Amethyst Weave', primary: '#2c1238', swatch: '#ba2ae6', filter: 'hue-rotate(250deg)' }
+        ]
+      },
+      {
+        id: 'dl-trs-02',
+        category: 'TROUSERS',
+        tag: 'RELAXED FIT • 50/50 LEFT',
+        name: 'Vortex Pleated Baggy Pant',
+        priceUSD: 520,
+        stock: '50/50 LEFT',
+        hook: 'Full-cut architectural trousers with fluid movement that hold their shape all day.',
+        description: 'Oversized wide-leg trousers featuring extended tab waistbands, deep side entry pockets, and clean unfinished-look hems.',
+        fabric: '360 GSM Heavy Cotton-Tencel Drape • Reinforced Seam Tape',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Charcoal Ash', primary: '#252429', swatch: '#524f5c', filter: 'none' },
+          { name: 'Gold Thread', primary: '#262014', swatch: '#d4af37', filter: 'sepia(0.22)' }
+        ]
+      },
+      {
+        id: 'dl-jrt-01',
+        category: 'JORTS',
+        tag: 'EXTENDED KNEE CUT • 50/50 LEFT',
+        aboveLabel: '50/50 LEFT',
+        name: 'Longline Jogger Jorts',
+        priceUSD: 340,
+        stock: '50/50 LEFT',
+        hook: 'Longer-length denim cut past the knee with a relaxed jogger waist built for standout daily wear.',
+        description: 'Longer-length denim jogger jorts cut past the knee with an elasticated drawcord waist, gusseted crotch, and clean raw hems.',
+        fabric: '13.5 oz Ring-Spun Indigo Denim • Cotton Grosgrain Drawcord',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1565084888279-aca607ecce0c?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Washed Indigo', primary: '#27354d', swatch: '#3d547a', filter: 'none' },
+          { name: 'Faded Onyx', primary: '#1c1b20', swatch: '#0b0a0d', filter: 'grayscale(0.75) contrast(1.08)' }
+        ]
+      },
+      {
+        id: 'dl-plc-01',
+        category: 'POLOS_CAPS',
+        tag: 'KNIT POLO & CAP SET • 50/50 LEFT',
+        name: 'Gilded Knit Polo & Structured Cap',
+        priceUSD: 390,
+        stock: '50/50 LEFT',
+        hook: 'Textured knit polo and crisp structured cap paired to finish a sharp silhouette without effort.',
+        description: 'Breathable fine-gauge knit polo with a clean collar placket and gold thread trim, accompanied by a structured brimmed cap.',
+        fabric: 'Mercerized Pima Knit & Brushed Cotton Twill • Gold Embroidery',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Obsidian & Gold', primary: '#16141c', swatch: '#d4af37', filter: 'none' },
+          { name: 'Amethyst Crest', primary: '#2b1338', swatch: '#ba2ae6', filter: 'hue-rotate(240deg)' }
+        ]
+      }
+    ];
+
+    const state = {
+      currency: 'USD',
+      filter: 'ALL',
+      bag: [],
+      customDomain: 'thedamline.ng',
+      domainApplied: false,
+      contactGmail: 'thedamline.atelier@gmail.com',
+      contactPhone: '+234 800 000 0000',
+      userEmail: null,
+      verifiedGmail: null,
+      provider: null,
+      pendingOTP: null,
+      pendingEmail: null,
+      otpAttempts: 0,
+      settledUSD: 0,
+      keyUnlocked: false,
+      shieldPassed: false,
+      sessionLocked: false,
+      notifications: [],
+      securityLogs: [],
+      cardNetwork: 'VISA',
+      activePDPId: null,
+      activePDPAngle: 'FRONT',
+      activePDPColorIndex: 0,
+      activePDPSize: 'M'
+    };
+
+    function sanitizeDomainInput(raw) {
+      const cleaned = String(raw || '')
+        .trim()
+        .toLowerCase()
+        .replace(/^https?:\/\//, '')
+        .replace(/\/.*$/, '')
+        .replace(/[^a-z0-9.-]/g, '');
+      return cleaned || 'thedamline.ng';
+    }
+
+    function getBrandSlug(domain) {
+      const base = String(domain || 'thedamline.ng').split('.')[0] || 'thedamline';
+      return base.includes('thedamline') ? 'thedamline' : base;
+    }
+
+    function getShareUrl() {
+      const origin = window.location.origin;
+      if (origin && origin.startsWith('http')) {
+        return `${origin}${window.location.pathname}?domain=${encodeURIComponent(state.customDomain)}`;
+      }
+      return `https://${state.customDomain}`;
+    }
+
+    function renderDomainIdentity() {
+      const domain = state.customDomain;
+      const slug = getBrandSlug(domain);
+      const fullUrl = `https://${domain}`;
+
+      document.title = `THE DAM LINE (${slug} • ${domain}) — Definition in Every Thread`;
+
+      const pill = document.getElementById('ticker-domain-pill');
+      const headerTag = document.getElementById('header-domain-tag');
+      const heroBadge = document.getElementById('hero-domain-badge');
+      const storyLabel = document.getElementById('story-domain-label');
+      const footerSlug = document.getElementById('footer-brand-slug');
+      const activeLink = document.getElementById('active-domain-link');
+      const statusNote = document.getElementById('domain-status-note');
+      const googleLink = document.getElementById('google-search-link');
+      const domainInput = document.getElementById('edit-domain-input');
+
+      if (pill) pill.textContent = domain;
+      if (headerTag) headerTag.textContent = domain;
+      if (heroBadge) {
+        heroBadge.textContent = `${slug} • ${domain} • 50/50 LEFT • Drag 3D 'D' Monolith`;
+      }
+      if (storyLabel) storyLabel.textContent = `${slug} (${domain})`;
+      if (footerSlug) footerSlug.textContent = `${slug} • ${domain}`;
+      if (activeLink) {
+        activeLink.textContent = fullUrl;
+        activeLink.href = fullUrl;
+      }
+      if (statusNote) {
+        statusNote.textContent = state.domainApplied
+          ? `(Active custom domain for ${slug} — point DNS A/CNAME to GitHub Pages)`
+          : `(Default preview domain for ${slug} — click Set Custom Domain once registered)`;
+      }
+      if (googleLink) {
+        googleLink.href = `https://www.google.com/search?q=${encodeURIComponent(`${slug} ${domain} THE DAM LINE`)}`;
+      }
+      if (domainInput) domainInput.value = domain;
+    }
+
+    function toggleDomainEditor(forceState) {
+      const form = document.getElementById('domain-edit-form');
+      if (!form) return;
+      const shouldShow = typeof forceState === 'boolean' ? forceState : form.classList.contains('hidden');
+      form.classList.toggle('hidden', !shouldShow);
+      form.classList.toggle('grid', shouldShow);
+      if (shouldShow) renderDomainIdentity();
+    }
+
+    function copyShareLink() {
+      const shareUrl = getShareUrl();
+      const label = document.getElementById('copy-link-label');
+      const finish = () => {
+        if (label) {
+          label.textContent = 'Link Copied';
+          setTimeout(() => { label.textContent = 'Copy Share Link'; }, 1800);
+        }
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(finish).catch(() => {
+          prompt('Copy your THE DAM LINE share link:', shareUrl);
+          finish();
+        });
+      } else {
+        prompt('Copy your THE DAM LINE share link:', shareUrl);
+        finish();
+      }
+    }
+
+    function renderContactInfo() {
+      const gmailLink = document.getElementById('contact-gmail-link');
+      const phoneLink = document.getElementById('contact-phone-link');
+      const gmailInput = document.getElementById('edit-gmail-input');
+      const phoneInput = document.getElementById('edit-phone-input');
+
+      if (gmailLink) {
+        gmailLink.textContent = state.contactGmail;
+        gmailLink.href = `mailto:${state.contactGmail}`;
+      }
+      if (phoneLink) {
+        phoneLink.textContent = state.contactPhone;
+        phoneLink.href = `tel:${state.contactPhone.replace(/[^+\d]/g, '')}`;
+      }
+      if (gmailInput) gmailInput.value = state.contactGmail;
+      if (phoneInput) phoneInput.value = state.contactPhone;
+    }
+
+    function toggleContactEditor(forceState) {
+      const form = document.getElementById('contact-edit-form');
+      if (!form) return;
+      const shouldShow = typeof forceState === 'boolean' ? forceState : form.classList.contains('hidden');
+      form.classList.toggle('hidden', !shouldShow);
+      form.classList.toggle('grid', shouldShow);
+      if (shouldShow) renderContactInfo();
+    }
+
+    function maskEmail(email) {
+      if (!email || !email.includes('@')) return 'unverified-account';
+      const [user, domain] = email.split('@');
+      const head = user.slice(0, 2);
+      return `${head}${'*'.repeat(Math.max(2, user.length - 2))}@${domain}`;
+    }
+
+    function maskCardNumber(raw) {
+      const digits = String(raw || '').replace(/\D/g, '');
+      const last4 = digits.slice(-4) || '4242';
+      return `•••• •••• •••• ${last4}`;
+    }
+
+    function recordSecurityEvent(action, detail) {
+      state.securityLogs.unshift({
+        action,
+        detail,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      });
+      renderSecurityPanel();
+    }
+
+    function refreshShieldUI() {
+      const heroState = document.getElementById('hero-shield-state');
+      if (heroState) {
+        if (state.sessionLocked) {
+          heroState.textContent = 'LOCKED';
+        } else if (state.shieldPassed) {
+          heroState.textContent = 'VERIFIED';
+        } else {
+          heroState.textContent = 'ARMED';
+        }
+      }
+      renderSecurityPanel();
+    }
+
+    function renderSecurityPanel() {
+      const chEl = document.getElementById('shield-challenge-status');
+      const gmEl = document.getElementById('shield-gmail-status');
+      const spEl = document.getElementById('shield-spend-status');
+      const lockBtn = document.getElementById('session-lock-btn-label');
+      const logBox = document.getElementById('security-log-list');
+
+      if (chEl) {
+        chEl.textContent = state.shieldPassed ? 'Verified' : 'Pending Check';
+        chEl.className = state.shieldPassed ? 'text-emerald-400' : 'text-amber-300';
+      }
+      if (gmEl) {
+        gmEl.textContent = state.verifiedGmail ? maskEmail(state.verifiedGmail) : 'Not Verified';
+        gmEl.className = state.verifiedGmail ? 'text-emerald-400' : 'text-amber-300';
+      }
+      if (spEl) {
+        spEl.textContent = `$${state.settledUSD.toLocaleString('en-US')} / $1,000`;
+        spEl.className = state.settledUSD >= 1000 ? 'text-emerald-400' : 'text-amber-300';
+      }
+      if (lockBtn) {
+        lockBtn.textContent = state.sessionLocked ? 'Unlock Session' : 'Lock Session';
+      }
+      if (logBox) {
+        if (!state.securityLogs.length) {
+          logBox.innerHTML = '<p class="text-neutral-400 py-3 text-center">No security events recorded yet.</p>';
+        } else {
+          logBox.innerHTML = state.securityLogs.map(ev => `
+            <div class="rounded-lg border border-white/10 bg-obsidian-950 p-2.5 space-y-0.5">
+              <div class="flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-emerald-300">
+                <span>${ev.action}</span>
+                <span class="text-neutral-400 tabular-nums">${ev.time}</span>
+              </div>
+              <p class="text-neutral-300">${ev.detail}</p>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    function openSecurityModal() {
+      renderSecurityPanel();
+      const m = document.getElementById('security-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeSecurityModal() {
+      const m = document.getElementById('security-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function completeShieldChallenge() {
+      state.shieldPassed = true;
+      state.sessionLocked = false;
+      recordSecurityEvent('PASSKEY SHIELD VERIFIED', 'Interactive client security check completed cleanly.');
+      refreshShieldUI();
+    }
+
+    function toggleSessionLock() {
+      state.sessionLocked = !state.sessionLocked;
+      recordSecurityEvent(
+        state.sessionLocked ? 'SESSION LOCKED' : 'SESSION RESTORED',
+        state.sessionLocked ? 'Vault & billing actions paused by shield.' : 'Session shield active and unlocked.'
+      );
+      refreshShieldUI();
+    }
+
+    function buildGarmentStudioDataUrl(item, cw) {
+      const fill = (cw && cw.primary) ? cw.primary : '#16141d';
+      let bodyShape = '';
+      if (item.category === 'JACKETS') {
+        bodyShape = `
+          <path d="M128 135 L168 112 L232 112 L272 135 L296 225 L262 232 L252 178 L252 385 L148 385 L148 178 L138 232 L104 225 Z" fill="${fill}" stroke="#d4af37" stroke-width="2.5"/>
+          <line x1="200" y1="112" x2="200" y2="385" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="5 4"/>
+        `;
+      } else if (item.category === 'TROUSERS') {
+        bodyShape = `
+          <path d="M142 125 L258 125 L278 405 L212 405 L200 220 L188 405 L122 405 Z" fill="${fill}" stroke="#d4af37" stroke-width="2.5"/>
+          <line x1="172" y1="130" x2="164" y2="395" stroke="#c084fc" stroke-width="1.2" opacity="0.65"/>
+          <line x1="228" y1="130" x2="236" y2="395" stroke="#c084fc" stroke-width="1.2" opacity="0.65"/>
+        `;
+      } else if (item.category === 'JORTS') {
+        bodyShape = `
+          <path d="M144 135 L256 135 L272 345 L210 345 L200 220 L190 345 L128 345 Z" fill="${fill}" stroke="#d4af37" stroke-width="2.5"/>
+          <line x1="126" y1="305" x2="274" y2="305" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="200" y="298" text-anchor="middle" fill="#f3dc8b" font-family="Georgia, serif" font-size="10" letter-spacing="2">50/50 LEFT</text>
+        `;
+      } else {
+        bodyShape = `
+          <path d="M138 145 L172 125 L200 148 L228 125 L262 145 L280 205 L252 215 L242 355 L158 355 L148 215 L120 205 Z" fill="${fill}" stroke="#d4af37" stroke-width="2.5"/>
+          <ellipse cx="200" cy="395" rx="56" ry="18" fill="${fill}" stroke="#c084fc" stroke-width="2"/>
+          <path d="M148 392 Q200 374 252 392" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+        `;
+      }
+
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 400 500">
+        <defs>
+          <radialGradient id="studioGlow" cx="50%" cy="45%" r="58%">
+            <stop offset="0%" stop-color="#ba2ae6" stop-opacity="0.22"/>
+            <stop offset="60%" stop-color="#13101c" stop-opacity="0.96"/>
+            <stop offset="100%" stop-color="#050408" stop-opacity="1"/>
+          </radialGradient>
+        </defs>
+        <rect width="400" height="500" fill="url(#studioGlow)"/>
+        ${bodyShape}
+        <text x="200" y="452" text-anchor="middle" fill="#f3dc8b" font-family="Georgia, serif" font-size="13" letter-spacing="3">THE DAM LINE • 50/50 LEFT</text>
+      </svg>`;
+
+      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    }
+
+    function formatPrice(usdAmount) {
+      const cfg = CURRENCY_RATES[state.currency] || CURRENCY_RATES.USD;
+      const converted = usdAmount * cfg.rate;
+      const formatted = state.currency === 'NGN'
+        ? Math.round(converted).toLocaleString('en-US')
+        : converted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return `${cfg.symbol}${formatted}`;
+    }
+
+    function setCurrency(code) {
+      if (CURRENCY_RATES[code]) {
+        state.currency = code;
+        renderProducts();
+        renderBag();
+        if (state.activePDPId) {
+          const item = PRODUCTS.find(p => p.id === state.activePDPId);
+          if (item) document.getElementById('modal-price').textContent = formatPrice(item.priceUSD);
+        }
+      }
+    }
+
+    function dispatchNotification(channel, subject, body) {
+      state.notifications.unshift({
+        channel,
+        subject,
+        body,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+      document.getElementById('inbox-badge').textContent = String(state.notifications.length);
+      renderInbox();
+    }
+
+    function renderInbox() {
+      const box = document.getElementById('inbox-list');
+      if (!state.notifications.length) {
+        box.innerHTML = '<p class="text-neutral-400 py-4 text-center">No notifications dispatched yet. Verify your Gmail or Apple ID to receive alerts.</p>';
+        return;
+      }
+      box.innerHTML = state.notifications.map(n => `
+        <div class="rounded-xl border border-white/10 bg-obsidian-950 p-3 space-y-1">
+          <div class="flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-gold-300">
+            <span>${n.channel}</span>
+            <span class="tabular-nums text-neutral-400">${n.time}</span>
+          </div>
+          <p class="font-semibold text-white">${n.subject}</p>
+          <p class="text-neutral-300 leading-relaxed">${n.body}</p>
+        </div>
+      `).join('');
+    }
+
+    function filterByCategory(category) {
+      state.filter = category;
+      document.querySelectorAll('.filter-pill').forEach(btn => {
+        const active = btn.dataset.filter === category;
+        btn.className = active
+          ? 'filter-pill px-4 py-2 rounded-full text-xs tracking-[0.14em] uppercase border border-gold-400 bg-gold-500 text-obsidian-950 font-semibold spring-btn'
+          : 'filter-pill px-4 py-2 rounded-full text-xs tracking-[0.14em] uppercase border border-white/15 bg-obsidian-900 text-neutral-300 hover:border-gold-400/50 spring-btn';
+      });
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('product-grid');
+      const items = state.filter === 'ALL' ? PRODUCTS : PRODUCTS.filter(p => p.category === state.filter);
+
+      grid.innerHTML = items.map(item => {
+        const defaultCw = item.colorways[0];
+        const studioFallback = buildGarmentStudioDataUrl(item, defaultCw);
+        const aboveHeader = item.aboveLabel
+          ? `<div class="mb-2 flex items-center justify-between gap-2 px-1">
+               <span class="text-[11px] font-semibold tracking-[0.22em] uppercase text-gold-300 tabular-nums">${item.aboveLabel}</span>
+               <span class="text-[10px] tracking-[0.16em] uppercase text-amethyst-400">Extended Knee Cut</span>
+             </div>`
+          : '';
+        return `
+          <div class="flex flex-col">
+            ${aboveHeader}
+            <article class="atelier-card rounded-2xl overflow-hidden flex flex-col justify-between flex-1">
+              <div>
+                <div class="relative aspect-[4/5] w-full overflow-hidden bg-obsidian-950">
+                  <img src="${item.images.FRONT}" alt="${item.name}"
+                    data-studio-fallback="${studioFallback}"
+                    onerror="this.onerror=null;this.src=this.dataset.studioFallback;"
+                    style="filter: ${defaultCw.filter};"
+                    class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" />
+                  <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-obsidian-950/85 border border-gold-500/30 text-[10px] tracking-[0.18em] uppercase text-gold-300">
+                    ${item.tag}
+                  </span>
+                  <span class="absolute top-3 right-3 px-2.5 py-1 rounded-md bg-obsidian-950/85 border border-white/10 text-[10px] tracking-[0.14em] uppercase text-neutral-300 tabular-nums">
+                    ${item.stock}
+                  </span>
+                </div>
+
+                <div class="p-5 space-y-2">
+                  <div class="flex items-start justify-between gap-3">
+                    <h3 class="text-lg text-white leading-snug">${item.name}</h3>
+                    <span class="text-sm font-semibold text-gold-400 tabular-nums shrink-0">${formatPrice(item.priceUSD)}</span>
+                  </div>
+                  <p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">${item.description}</p>
+                </div>
+              </div>
+
+              <div class="px-5 pb-5 pt-2 flex items-center gap-2.5">
+                <button type="button" onclick="openPDPModal('${item.id}')"
+                  class="flex-1 py-2.5 px-3 rounded-xl gold-cta text-xs font-semibold tracking-[0.14em] uppercase spring-btn text-center">
+                  Full Specs
+                </button>
+                <button type="button" onclick="quickAddFromCard('${item.id}')"
+                  class="py-2.5 px-3.5 rounded-xl border border-white/15 bg-obsidian-950 hover:border-amethyst-400 text-xs font-medium tracking-[0.12em] uppercase text-neutral-200 spring-btn">
+                  + Bag
+                </button>
+              </div>
+            </article>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openPDPModal(id) {
+      const item = PRODUCTS.find(p => p.id === id);
+      if (!item) return;
+      state.activePDPId = id;
+      state.activePDPAngle = 'FRONT';
+      state.activePDPColorIndex = 0;
+      state.activePDPSize = 'M';
+      refreshPDPModal();
+      const modal = document.getElementById('pdp-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closePDPModal() {
+      const modal = document.getElementById('pdp-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function setPDPAngle(angle) {
+      state.activePDPAngle = angle;
+      document.querySelectorAll('.angle-btn').forEach(btn => {
+        const active = btn.dataset.angle === angle;
+        btn.className = active
+          ? 'angle-btn px-3 py-1.5 rounded-lg text-xs tracking-[0.12em] uppercase border border-gold-400 bg-gold-500 text-obsidian-950 font-semibold spring-btn'
+          : 'angle-btn px-3 py-1.5 rounded-lg text-xs tracking-[0.12em] uppercase border border-white/15 bg-obsidian-950 text-neutral-300 spring-btn';
+      });
+      refreshPDPModal();
+    }
+
+    function selectPDPSize(size) {
+      state.activePDPSize = size;
+      document.querySelectorAll('.size-btn').forEach(btn => {
+        const active = btn.dataset.size === size;
+        btn.className = active
+          ? 'size-btn py-2 rounded-lg text-xs border border-gold-400 bg-gold-500 text-obsidian-950 font-semibold spring-btn'
+          : 'size-btn py-2 rounded-lg text-xs border border-white/15 bg-obsidian-950 text-neutral-200 spring-btn';
+      });
+    }
+
+    function refreshPDPModal() {
+      const item = PRODUCTS.find(p => p.id === state.activePDPId);
+      if (!item) return;
+      const cw = item.colorways[state.activePDPColorIndex] || item.colorways[0];
+
+      document.getElementById('modal-tag').textContent = item.tag;
+      document.getElementById('modal-stock').textContent = item.stock;
+      document.getElementById('modal-title').textContent = item.name;
+      document.getElementById('modal-price').textContent = formatPrice(item.priceUSD);
+      document.getElementById('modal-hook').textContent = item.hook;
+      document.getElementById('modal-desc').textContent = item.description;
+      document.getElementById('modal-fabric').textContent = item.fabric;
+      document.getElementById('modal-color-name').textContent = cw.name;
+
+      const imgEl = document.getElementById('modal-garment-img');
+      const studioFallback = buildGarmentStudioDataUrl(item, cw);
+      imgEl.src = item.images[state.activePDPAngle] || item.images.FRONT;
+      imgEl.alt = `${item.name} — ${state.activePDPAngle}`;
+      imgEl.style.filter = cw.filter || 'none';
+      imgEl.onerror = function () {
+        this.onerror = null;
+        this.src = studioFallback;
+      };
+
+      document.getElementById('modal-swatches').innerHTML = item.colorways.map((c, idx) => `
+        <button type="button" onclick="state.activePDPColorIndex=${idx}; refreshPDPModal();"
+          title="${c.name}"
+          style="background-color: ${c.swatch};"
+          class="w-7 h-7 rounded-full border-2 ${idx === state.activePDPColorIndex ? 'border-gold-300 scale-110' : 'border-white/25'} spring-btn"></button>
+      `).join('');
+    }
+
+    function addToBag(item, size, colorName) {
+      state.bag.push({
+        id: item.id,
+        name: item.name,
+        priceUSD: item.priceUSD,
+        size: size || 'M',
+        color: colorName || item.colorways[0].name
+      });
+      renderBag();
+      openBagDrawer();
+    }
+
+    function quickAddFromCard(id) {
+      const item = PRODUCTS.find(p => p.id === id);
+      if (item) addToBag(item, 'M', item.colorways[0].name);
+    }
+
+    function removeBagItem(index) {
+      state.bag.splice(index, 1);
+      renderBag();
+    }
+
+    function openBagDrawer() {
+      const d = document.getElementById('bag-drawer');
+      d.classList.remove('hidden');
+      d.classList.add('flex');
+    }
+
+    function closeBagDrawer() {
+      const d = document.getElementById('bag-drawer');
+      d.classList.add('hidden');
+      d.classList.remove('flex');
+    }
+
+    function renderBag() {
+      document.getElementById('bag-count').textContent = String(state.bag.length);
+      const container = document.getElementById('bag-items');
+      const totalUSD = state.bag.reduce((sum, entry) => sum + entry.priceUSD, 0);
+      document.getElementById('bag-subtotal').textContent = formatPrice(totalUSD);
+
+      if (!state.bag.length) {
+        container.innerHTML = '<p class="text-xs text-neutral-400 py-8 text-center">Your bag is empty. Select any silhouette to begin.</p>';
+        return;
+      }
+
+      container.innerHTML = state.bag.map((entry, idx) => `
+        <div class="rounded-xl border border-white/10 bg-obsidian-950 p-3.5 flex items-center justify-between gap-3">
+          <div>
+            <p class="text-sm text-white">${entry.name}</p>
+            <p class="text-[11px] text-neutral-400">Size ${entry.size} • ${entry.color} • 50/50 LEFT</p>
+            <p class="text-xs text-gold-300 tabular-nums mt-0.5">${formatPrice(entry.priceUSD)}</p>
+          </div>
+          <button type="button" onclick="removeBagItem(${idx})" class="text-xs text-neutral-400 hover:text-white px-2 py-1">Remove</button>
+        </div>
+      `).join('');
+    }
+
+    function checkoutBagWithCard() {
+      const totalUSD = state.bag.reduce((sum, entry) => sum + entry.priceUSD, 0);
+      closeBagDrawer();
+      openCardBillingModal(totalUSD > 0 ? totalUSD : 1000, 'Bag Allocation Settlement');
+    }
+
+    function openAuthModal(mode) {
+      document.getElementById('auth-title').textContent = mode === 'signup' ? 'Create Member Account' : 'Member Sign In';
+      const m = document.getElementById('auth-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeAuthModal() {
+      const m = document.getElementById('auth-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function providerQuickAuth(providerName, sampleEmail) {
+      if (state.sessionLocked) {
+        document.getElementById('auth-status-msg').textContent = 'Session is locked in Site Security & Shield. Unlock session first.';
+        return;
+      }
+      state.provider = providerName;
+      state.userEmail = sampleEmail;
+      if (sampleEmail.toLowerCase().endsWith('@gmail.com')) {
+        state.verifiedGmail = sampleEmail.toLowerCase();
+      }
+      document.getElementById('header-auth-label').textContent = sampleEmail.split('@')[0];
+      dispatchNotification(
+        providerName === 'Apple ID' ? 'Apple ID Relay' : 'Gmail Alert',
+        `Signed in with ${providerName}`,
+        `Notifications active for ${sampleEmail}.`
+      );
+      recordSecurityEvent(`${providerName.toUpperCase()} SIGN-IN`, `Authenticated account ${maskEmail(sampleEmail)}.`);
+      document.getElementById('auth-status-msg').textContent = `Connected via ${providerName} (${sampleEmail}).`;
+      refreshVaultStatusUI();
+      refreshShieldUI();
+    }
+
+    function autoFillOTP() {
+      if (state.pendingOTP) {
+        document.getElementById('auth-otp-input').value = state.pendingOTP;
+      }
+    }
+
+    function openVaultModal() {
+      refreshVaultStatusUI();
+      const m = document.getElementById('vault-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeVaultModal() {
+      const m = document.getElementById('vault-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function refreshVaultStatusUI() {
+      const gmailOk = Boolean(state.verifiedGmail);
+      const spendOk = state.settledUSD >= 1000;
+      document.getElementById('vault-checklist').innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="text-neutral-300">1. Verified @gmail.com</span>
+          <span class="${gmailOk ? 'text-emerald-400' : 'text-amber-300'}">${gmailOk ? state.verifiedGmail : 'Pending'}</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-neutral-300">2. Settled Card Billing ($1,000+ USD)</span>
+          <span class="${spendOk ? 'text-emerald-400' : 'text-amber-300'}">$${state.settledUSD.toLocaleString('en-US')} / $1,000</span>
+        </div>
+      `;
+
+      const keyBox = document.getElementById('vault-key-box');
+      if (gmailOk && spendOk) {
+        keyBox.classList.remove('hidden');
+      } else {
+        keyBox.classList.add('hidden');
+      }
+    }
+
+    function openCardBillingModal(amountUSD, label) {
+      document.getElementById('billing-title').textContent = label || 'Pay with Card';
+      document.getElementById('billing-amount-usd').value = String(Math.max(1, Math.round(amountUSD || 1000)));
+      document.getElementById('billing-receipt').classList.add('hidden');
+      const m = document.getElementById('card-billing-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+      syncCardPreview();
+    }
+
+    function closeCardBillingModal() {
+      const m = document.getElementById('card-billing-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function selectCardNetwork(net) {
+      state.cardNetwork = net;
+      const visualBox = document.getElementById('card-network-visual');
+      if (visualBox) {
+        if (net === 'MASTERCARD') {
+          visualBox.innerHTML = `<span class="inline-flex items-center"><span class="w-3.5 h-3.5 rounded-full bg-red-600 inline-block"></span><span class="w-3.5 h-3.5 rounded-full bg-amber-400 -ml-1.5 inline-block opacity-90"></span></span><span id="card-network-badge" class="text-[11px] font-bold tracking-[0.14em] text-white">MASTERCARD</span>`;
+        } else if (net === 'VERVE') {
+          visualBox.innerHTML = `<span class="w-4 h-4 rounded-full bg-red-600 text-white text-[10px] font-bold inline-flex items-center justify-center">V</span><span id="card-network-badge" class="text-[11px] font-bold tracking-[0.14em] text-white">VERVE</span>`;
+        } else {
+          visualBox.innerHTML = `<span class="px-1.5 py-0.5 rounded bg-blue-900 text-[10px] font-bold tracking-wider text-amber-300">VISA</span><span id="card-network-badge" class="text-[11px] font-bold tracking-[0.14em] text-white">VISA</span>`;
+        }
+      }
+      document.querySelectorAll('.net-btn').forEach(btn => {
+        const active = btn.dataset.net === net;
+        btn.className = active
+          ? 'net-btn py-2.5 px-2 rounded-xl text-xs font-semibold border border-gold-400 bg-gold-500 text-obsidian-950 spring-btn flex items-center justify-center gap-1.5'
+          : 'net-btn py-2.5 px-2 rounded-xl text-xs font-semibold border border-white/15 bg-obsidian-950 text-neutral-200 spring-btn flex items-center justify-center gap-1.5';
+      });
+    }
+
+    function syncCardPreview() {
+      const nameInput = document.getElementById('billing-name');
+      const numInput = document.getElementById('billing-number');
+      const expInput = document.getElementById('billing-expiry');
+      const holder = ((nameInput && nameInput.value) || 'CARDHOLDER NAME').toUpperCase();
+      const rawNum = ((numInput && numInput.value) || '').replace(/\D/g, '').slice(0, 16);
+      const exp = (expInput && expInput.value) || '08/29';
+      const padded = rawNum.padEnd(16, '•');
+      const grouped = padded.match(/.{1,4}/g).join(' ');
+      document.getElementById('card-preview-holder').textContent = holder;
+      document.getElementById('card-preview-number').textContent = grouped;
+      document.getElementById('card-preview-expiry').textContent = exp;
+    }
+
+    function fillDemoCard() {
+      document.getElementById('billing-name').value = 'Marcel Damian';
+      document.getElementById('billing-number').value = state.cardNetwork === 'VERVE'
+        ? '5061 0294 8812 3041'
+        : (state.cardNetwork === 'MASTERCARD' ? '5412 7510 9024 8819' : '4532 0192 8471 4242');
+      document.getElementById('billing-expiry').value = '09/29';
+      document.getElementById('billing-cvv').value = '742';
+      syncCardPreview();
+    }
+
+    function openInboxModal() {
+      renderInbox();
+      const m = document.getElementById('inbox-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeInboxModal() {
+      const m = document.getElementById('inbox-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    document.getElementById('domain-edit-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nextDomain = sanitizeDomainInput(document.getElementById('edit-domain-input').value);
+      state.customDomain = nextDomain;
+      state.domainApplied = true;
+      renderDomainIdentity();
+      toggleDomainEditor(false);
+      recordSecurityEvent('CUSTOM DOMAIN SET', `Bound storefront identity to ${nextDomain}.`);
+    });
+
+    document.getElementById('contact-edit-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nextGmail = document.getElementById('edit-gmail-input').value.trim();
+      const nextPhone = document.getElementById('edit-phone-input').value.trim();
+      if (!nextGmail || !nextPhone) return;
+      state.contactGmail = nextGmail;
+      state.contactPhone = nextPhone;
+      if (nextGmail.toLowerCase().endsWith('@gmail.com')) {
+        state.verifiedGmail = nextGmail.toLowerCase();
+      }
+      renderContactInfo();
+      toggleContactEditor(false);
+      recordSecurityEvent('CONTACT UPDATED', `Updated Gmail (${maskEmail(nextGmail)}) and phone line.`);
+      refreshVaultStatusUI();
+      refreshShieldUI();
+    });
+
+    document.getElementById('modal-add-btn').addEventListener('click', () => {
+      const item = PRODUCTS.find(p => p.id === state.activePDPId);
+      if (!item) return;
+      const cw = item.colorways[state.activePDPColorIndex] || item.colorways[0];
+      addToBag(item, state.activePDPSize, cw.name);
+      closePDPModal();
+    });
+
+    document.getElementById('auth-request-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (state.sessionLocked) {
+        document.getElementById('auth-status-msg').textContent = 'Session is locked in Site Security & Shield.';
+        return;
+      }
+      const email = document.getElementById('auth-email-input').value.trim().toLowerCase();
+      const code = String(Math.floor(100000 + Math.random() * 900000));
+      state.pendingEmail = email;
+      state.pendingOTP = code;
+      state.otpAttempts = 0;
+      document.getElementById('auth-live-code').textContent = code;
+      document.getElementById('auth-otp-banner').classList.remove('hidden');
+      document.getElementById('auth-step-otp').classList.remove('hidden');
+      const channel = email.endsWith('@gmail.com') ? 'Gmail Dispatch' : 'Apple ID / Email Dispatch';
+      dispatchNotification(channel, 'Your THE DAM LINE Verification Code', `Code ${code} sent to ${email}.`);
+      recordSecurityEvent('OTP DISPATCHED', `6-digit code sent to ${maskEmail(email)}.`);
+      document.getElementById('auth-status-msg').textContent = `Code sent to ${email}. Check Alerts or tap Auto-Fill.`;
+    });
+
+    document.getElementById('auth-step-otp').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (state.sessionLocked) {
+        document.getElementById('auth-status-msg').textContent = 'Session is locked in Site Security & Shield.';
+        return;
+      }
+      const entered = document.getElementById('auth-otp-input').value.trim();
+      if (entered && entered === state.pendingOTP) {
+        state.userEmail = state.pendingEmail;
+        state.shieldPassed = true;
+        if (state.userEmail.endsWith('@gmail.com')) {
+          state.verifiedGmail = state.userEmail;
+        }
+        document.getElementById('header-auth-label').textContent = state.userEmail.split('@')[0];
+        document.getElementById('auth-status-msg').textContent = `Verified ${state.userEmail}. Alerts active.`;
+        recordSecurityEvent('OTP VERIFIED', `Verified ${maskEmail(state.userEmail)} and armed shield.`);
+        refreshVaultStatusUI();
+        refreshShieldUI();
+        setTimeout(closeAuthModal, 450);
+      } else {
+        state.otpAttempts += 1;
+        recordSecurityEvent('OTP ATTEMPT FAILED', `Invalid code attempt #${state.otpAttempts} for ${maskEmail(state.pendingEmail)}.`);
+        document.getElementById('auth-status-msg').textContent = 'Enter the 6-digit code shown above.';
+      }
+    });
+
+    document.getElementById('card-billing-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (state.sessionLocked) {
+        const receiptEl = document.getElementById('billing-receipt');
+        receiptEl.classList.remove('hidden');
+        receiptEl.innerHTML = '<p class="font-bold">Session Locked</p><p>Unlock your session in Site Security &amp; Shield before authorizing card payments.</p>';
+        return;
+      }
+      const amount = Number(document.getElementById('billing-amount-usd').value || 0);
+      const rawCard = document.getElementById('billing-number').value || '';
+      if (amount <= 0) return;
+      state.settledUSD += amount;
+      state.shieldPassed = true;
+      const txId = `DL-${Math.floor(100000 + Math.random() * 900000)}`;
+      const receiptEl = document.getElementById('billing-receipt');
+      receiptEl.classList.remove('hidden');
+
+      let extraNote = '';
+      if (state.settledUSD >= 1000 && state.verifiedGmail) {
+        state.keyUnlocked = true;
+        extraNote = ` • Demo key "GREATEST" unlocked & sent to ${state.verifiedGmail}.`;
+        dispatchNotification('Gmail Vault Key', 'Demo Key: GREATEST', `Your vault key GREATEST is active for ${state.verifiedGmail}.`);
+      } else if (state.settledUSD >= 1000 && !state.verifiedGmail) {
+        extraNote = ' • Verify a @gmail.com address in Sign In to view demo key "GREATEST".';
+      }
+
+      recordSecurityEvent(
+        `CARD SETTLED (${state.cardNetwork})`,
+        `Card ${maskCardNumber(rawCard)} settled $${amount.toLocaleString('en-US')} USD (Ref ${txId}).`
+      );
+      receiptEl.innerHTML = `<p class="font-bold">Payment Approved (${state.cardNetwork})</p><p class="tabular-nums">Ref: ${txId} • Settled: $${amount.toLocaleString('en-US')} USD${extraNote}</p>`;
+      refreshVaultStatusUI();
+      refreshShieldUI();
+    });
+
+    document.getElementById('vault-unlock-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (state.sessionLocked) {
+        document.getElementById('vault-feedback').textContent = 'Session is locked. Restore session in Site Security & Shield first.';
+        return;
+      }
+      const key = document.getElementById('vault-key-input').value.trim().toUpperCase();
+      const fb = document.getElementById('vault-feedback');
+      if (key === 'GREATEST' && state.verifiedGmail && state.settledUSD >= 1000) {
+        state.keyUnlocked = true;
+        state.shieldPassed = true;
+        recordSecurityEvent('VAULT KEY UNLOCKED', `GREATEST key verified for ${maskEmail(state.verifiedGmail)}.`);
+        fb.textContent = `Vault unlocked for ${state.verifiedGmail} with demo key GREATEST.`;
+        refreshShieldUI();
+      } else if (key !== 'GREATEST') {
+        recordSecurityEvent('VAULT KEY REJECTED', 'Invalid demo key entered at vault gate.');
+        fb.textContent = 'Invalid demo key. Complete verified @gmail.com + $1,000+ settlement to unlock GREATEST.';
+      } else {
+        recordSecurityEvent('VAULT GATE BLOCKED', 'Missing verified @gmail.com or $1,000+ settlement.');
+        fb.textContent = 'Requires both a verified @gmail.com address and at least $1,000 USD in settled card billing.';
+      }
+    });
+
+    function initHero3DScene() {
+      const canvas = document.getElementById('hero-3d-canvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(canvas.clientWidth || window.innerWidth, canvas.clientHeight || window.innerHeight, false);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, (canvas.clientWidth || window.innerWidth) / (canvas.clientHeight || window.innerHeight), 0.1, 100);
+      camera.position.set(0, 0, 7.6);
+
+      const ambient = new THREE.AmbientLight(0xd8b4fe, 0.72);
+      scene.add(ambient);
+
+      const keyLight = new THREE.DirectionalLight(0xf3dc8b, 1.55);
+      keyLight.position.set(4, 5, 6);
+      scene.add(keyLight);
+
+      const rimLight = new THREE.PointLight(0xba2ae6, 2.6, 18);
+      rimLight.position.set(-3, -2, 4);
+      scene.add(rimLight);
+
+      const monolithGroup = new THREE.Group();
+
+      const darkMetalMat = new THREE.MeshStandardMaterial({
+        color: 0x1b1726,
+        metalness: 0.82,
+        roughness: 0.24
+      });
+      const violetMetalMat = new THREE.MeshStandardMaterial({
+        color: 0x38194a,
+        emissive: 0x240b33,
+        emissiveIntensity: 0.35,
+        metalness: 0.76,
+        roughness: 0.22
+      });
+      const goldMat = new THREE.MeshStandardMaterial({
+        color: 0xd4af37,
+        metalness: 0.9,
+        roughness: 0.2
+      });
+
+      const spine = new THREE.Mesh(new THREE.BoxGeometry(0.46, 2.58, 0.44), darkMetalMat);
+      spine.position.set(-0.66, 0, 0);
+      monolithGroup.add(spine);
+
+      const topBevelBlock = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.56, 0.52), violetMetalMat);
+      topBevelBlock.position.set(-0.66, 1.18, 0.04);
+      monolithGroup.add(topBevelBlock);
+
+      const topBevelGoldFrame = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.05, 0.54), goldMat);
+      topBevelGoldFrame.position.set(-0.66, 1.44, 0.04);
+      monolithGroup.add(topBevelGoldFrame);
+
+      const bottomBevelBlock = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.56, 0.52), violetMetalMat);
+      bottomBevelBlock.position.set(-0.66, -1.18, 0.04);
+      monolithGroup.add(bottomBevelBlock);
+
+      const bottomBevelGoldFrame = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.05, 0.54), goldMat);
+      bottomBevelGoldFrame.position.set(-0.66, -1.44, 0.04);
+      monolithGroup.add(bottomBevelGoldFrame);
+
+      const topBar = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.28, 0.44), darkMetalMat);
+      topBar.position.set(-0.18, 1.24, 0);
+      monolithGroup.add(topBar);
+
+      const bottomBar = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.28, 0.44), darkMetalMat);
+      bottomBar.position.set(-0.18, -1.24, 0);
+      monolithGroup.add(bottomBar);
+
+      const outerArch = new THREE.Mesh(
+        new THREE.TorusGeometry(1.24, 0.34, 24, 64, Math.PI),
+        darkMetalMat
+      );
+      outerArch.rotation.z = -Math.PI / 2;
+      outerArch.position.set(-0.44, 0, 0);
+      monolithGroup.add(outerArch);
+
+      const braidMat = new THREE.MeshStandardMaterial({
+        color: 0xcab6e8,
+        metalness: 0.72,
+        roughness: 0.28
+      });
+      const outerBraidArch = new THREE.Mesh(
+        new THREE.TorusGeometry(1.56, 0.045, 12, 72, Math.PI),
+        braidMat
+      );
+      outerBraidArch.rotation.z = -Math.PI / 2;
+      outerBraidArch.position.set(-0.44, 0, 0.14);
+      monolithGroup.add(outerBraidArch);
+
+      const innerBraidArch = new THREE.Mesh(
+        new THREE.TorusGeometry(0.86, 0.042, 12, 64, Math.PI),
+        braidMat
+      );
+      innerBraidArch.rotation.z = -Math.PI / 2;
+      innerBraidArch.position.set(-0.44, 0, 0.16);
+      monolithGroup.add(innerBraidArch);
+
+      const spineBraidLeft = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 2.52, 12), braidMat);
+      spineBraidLeft.position.set(-0.92, 0, 0.16);
+      monolithGroup.add(spineBraidLeft);
+
+      const spineBraidInner = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 1.72, 12), braidMat);
+      spineBraidInner.position.set(-0.42, 0, 0.18);
+      monolithGroup.add(spineBraidInner);
+
+      const goldRim = new THREE.Mesh(
+        new THREE.TorusGeometry(1.38, 0.036, 16, 64, Math.PI),
+        goldMat
+      );
+      goldRim.rotation.z = -Math.PI / 2;
+      goldRim.position.set(-0.44, 0, 0.24);
+      monolithGroup.add(goldRim);
+
+      monolithGroup.scale.setScalar(1.08);
+      scene.add(monolithGroup);
+
+      const crystalGroup = new THREE.Group();
+      const crystalMat = new THREE.MeshStandardMaterial({
+        color: 0xc084fc,
+        emissive: 0x7e22ce,
+        emissiveIntensity: 0.55,
+        metalness: 0.3,
+        roughness: 0.14
+      });
+      const crystal = new THREE.Mesh(new THREE.OctahedronGeometry(0.28, 0), crystalMat);
+      crystal.scale.set(0.85, 1.45, 0.85);
+      crystalGroup.add(crystal);
+      crystalGroup.position.set(1.85, -1.08, 0.8);
+      scene.add(crystalGroup);
+
+      const particleCount = 1600;
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+      const cViolet = new THREE.Color(0xba2ae6);
+      const cGold = new THREE.Color(0xf3dc8b);
+
+      for (let i = 0; i < particleCount; i++) {
+        const t = (i / particleCount) * Math.PI * 4;
+        const radius = 1.45 + (i % 14) * 0.11;
+        const spread = (Math.random() - 0.5) * 0.22;
+        positions[i * 3] = Math.cos(t) * (radius + spread) * 1.25;
+        positions[i * 3 + 1] = Math.sin(t * 0.85) * 1.15 + spread;
+        positions[i * 3 + 2] = Math.sin(t) * (radius + spread) * 0.65;
+
+        const mixed = i % 3 === 0 ? cGold : cViolet;
+        colors[i * 3] = mixed.r;
+        colors[i * 3 + 1] = mixed.g;
+        colors[i * 3 + 2] = mixed.b;
+      }
+
+      const vortexGeo = new THREE.BufferGeometry();
+      vortexGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      vortexGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      const vortexMat = new THREE.PointsMaterial({
+        size: 0.048,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.88
+      });
+      const vortexPoints = new THREE.Points(vortexGeo, vortexMat);
+      scene.add(vortexPoints);
+
+      const spiralThreadGroup = new THREE.Group();
+      const curvePts = [];
+      for (let i = 0; i <= 90; i++) {
+        const a = (i / 90) * Math.PI * 3;
+        curvePts.push(new THREE.Vector3(Math.cos(a) * 2.1, Math.sin(a * 0.8) * 1.05, Math.sin(a) * 0.9));
+      }
+      const spiralCurve = new THREE.CatmullRomCurve3(curvePts);
+      const spiralLine = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints(spiralCurve.getPoints(120)),
+        new THREE.LineBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.35 })
+      );
+      spiralThreadGroup.add(spiralLine);
+      scene.add(spiralThreadGroup);
+
+      let dragging = false;
+      let prevX = 0;
+      let prevY = 0;
+      let rotY = 0;
+      let rotX = 0;
+
+      canvas.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        prevX = e.clientX;
+        prevY = e.clientY;
+      });
+      window.addEventListener('pointerup', () => {
+        dragging = false;
+      });
+      window.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        rotY += (e.clientX - prevX) * 0.008;
+        rotX += (e.clientY - prevY) * 0.006;
+        prevX = e.clientX;
+        prevY = e.clientY;
+      });
+
+      window.addEventListener('resize', () => {
+        const w = canvas.clientWidth || window.innerWidth;
+        const h = canvas.clientHeight || window.innerHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h, false);
+      });
+
+      let tickerIdx = 0;
+      setInterval(() => {
+        const TICKER_MESSAGES = [
+          `50/50 LEFT — ${state.customDomain.toUpperCase()} • AUTUMN / WINTER 50/50 EDITION LIVE`,
+          '50/50 LEFT • VERIFIED GMAIL + $1,000 SETTLEMENT UNLOCKS DEMO KEY "GREATEST"',
+          '50/50 LEFT • VISA, MASTERCARD & VERVE CARD BILLING ENABLED'
+        ];
+        tickerIdx = (tickerIdx + 1) % TICKER_MESSAGES.length;
+        document.getElementById('ticker-text').textContent = TICKER_MESSAGES[tickerIdx];
+      }, 4500);
+
+      const clock = new THREE.Clock();
+      function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+
+        monolithGroup.rotation.y = rotY + Math.sin(t * 0.55) * 0.24;
+        monolithGroup.rotation.x = rotX + Math.cos(t * 0.4) * 0.06;
+        monolithGroup.position.y = Math.sin(t * 1.2) * 0.08;
+
+        crystalGroup.position.y = -1.08 + Math.sin(t * 1.8) * 0.1;
+        crystalGroup.rotation.y = t * 1.1;
+
+        vortexPoints.rotation.y = t * 0.16;
+        spiralThreadGroup.rotation.y = t * 0.16;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    const queryDomain = new URLSearchParams(window.location.search).get('domain');
+    if (queryDomain) {
+      state.customDomain = sanitizeDomainInput(queryDomain);
+      state.domainApplied = true;
+    }
+
+    renderDomainIdentity();
+    renderContactInfo();
+    renderProducts();
+    renderBag();
+    refreshVaultStatusUI();
+    refreshShieldUI();
+    window.addEventListener('load', initHero3DScene);
+  </script>
+</body>
+</html>
