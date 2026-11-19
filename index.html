@@ -401,6 +401,28 @@
           </button>
         </div>
 
+        <!-- Step-by-Step Unlock Status (2-Step Customer Gate vs Admin Bypass) -->
+        <div id="unlock-step-indicator" class="rounded-xl border border-white/10 bg-obsidian-950/85 p-4 space-y-2.5 text-xs tabular-nums">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-[10px] tracking-[0.2em] uppercase text-gold-300">Unlock Path Checklist</span>
+            <span id="unlock-path-summary" class="text-[11px] text-neutral-400">2 steps for customers • Free for Admin</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+            <div id="unlock-step-gmail" class="rounded-lg border border-white/10 bg-obsidian-900/90 px-3 py-2 flex items-center justify-between gap-2">
+              <span class="text-neutral-300">Step 1: Verified @gmail.com</span>
+              <span id="unlock-step-gmail-badge" class="text-[10px] uppercase tracking-[0.12em] text-amber-300 font-semibold">Pending</span>
+            </div>
+            <div id="unlock-step-spend" class="rounded-lg border border-white/10 bg-obsidian-900/90 px-3 py-2 flex items-center justify-between gap-2">
+              <span class="text-neutral-300">Step 2: $1,000+ USD Settled</span>
+              <span id="unlock-step-spend-badge" class="text-[10px] uppercase tracking-[0.12em] text-amber-300 font-semibold">$0 / $1,000</span>
+            </div>
+            <div id="unlock-step-admin" class="rounded-lg border border-white/10 bg-obsidian-900/90 px-3 py-2 flex items-center justify-between gap-2">
+              <span class="text-neutral-300">Or Admin Sign-In</span>
+              <span id="unlock-step-admin-badge" class="text-[10px] uppercase tracking-[0.12em] text-amethyst-300 font-semibold">Locked</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Gated Infrastructure Blueprint Panel: Visible to Admin immediately, paid/unlocked for customers -->
         <div id="infra-locked-panel" class="rounded-xl border border-white/10 bg-obsidian-950/90 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
           <div class="space-y-1">
@@ -1475,6 +1497,54 @@
     function refreshVaultStatusUI() {
       const gmailOk = Boolean(state.verifiedGmail);
       const spendOk = state.settledUSD >= 1000;
+
+      const stepGmailCard = document.getElementById('unlock-step-gmail');
+      const stepGmailBadge = document.getElementById('unlock-step-gmail-badge');
+      const stepSpendCard = document.getElementById('unlock-step-spend');
+      const stepSpendBadge = document.getElementById('unlock-step-spend-badge');
+      const stepAdminCard = document.getElementById('unlock-step-admin');
+      const stepAdminBadge = document.getElementById('unlock-step-admin-badge');
+      const pathSummary = document.getElementById('unlock-path-summary');
+
+      if (stepGmailCard && stepGmailBadge) {
+        stepGmailCard.className = gmailOk
+          ? 'rounded-lg border border-emerald-500/35 bg-emerald-500/10 px-3 py-2 flex items-center justify-between gap-2'
+          : 'rounded-lg border border-white/10 bg-obsidian-900/90 px-3 py-2 flex items-center justify-between gap-2';
+        stepGmailBadge.className = gmailOk
+          ? 'text-[10px] uppercase tracking-[0.12em] text-emerald-300 font-semibold'
+          : 'text-[10px] uppercase tracking-[0.12em] text-amber-300 font-semibold';
+        stepGmailBadge.textContent = gmailOk ? 'Verified' : 'Pending';
+      }
+
+      if (stepSpendCard && stepSpendBadge) {
+        stepSpendCard.className = spendOk
+          ? 'rounded-lg border border-emerald-500/35 bg-emerald-500/10 px-3 py-2 flex items-center justify-between gap-2'
+          : 'rounded-lg border border-white/10 bg-obsidian-900/90 px-3 py-2 flex items-center justify-between gap-2';
+        stepSpendBadge.className = spendOk
+          ? 'text-[10px] uppercase tracking-[0.12em] text-emerald-300 font-semibold'
+          : 'text-[10px] uppercase tracking-[0.12em] text-amber-300 font-semibold';
+        stepSpendBadge.textContent = spendOk ? 'Settled' : `$${Math.min(1000, Math.round(state.settledUSD)).toLocaleString('en-US')} / $1,000`;
+      }
+
+      if (stepAdminCard && stepAdminBadge) {
+        stepAdminCard.className = state.isAdmin
+          ? 'rounded-lg border border-emerald-500/35 bg-emerald-500/10 px-3 py-2 flex items-center justify-between gap-2'
+          : 'rounded-lg border border-white/10 bg-obsidian-900/90 px-3 py-2 flex items-center justify-between gap-2';
+        stepAdminBadge.className = state.isAdmin
+          ? 'text-[10px] uppercase tracking-[0.12em] text-emerald-300 font-semibold'
+          : 'text-[10px] uppercase tracking-[0.12em] text-amethyst-300 font-semibold';
+        stepAdminBadge.textContent = state.isAdmin ? 'Active' : 'Locked';
+      }
+
+      if (pathSummary) {
+        if (state.isAdmin) {
+          pathSummary.textContent = 'Admin bypass active — full infrastructure & Private Edit unlocked';
+        } else if (gmailOk && spendOk) {
+          pathSummary.textContent = 'Both customer steps complete — GREATEST key & Private Edit unlocked';
+        } else {
+          pathSummary.textContent = 'Complete Step 1 + Step 2 for customer unlock, or sign in as Admin';
+        }
+      }
 
       document.getElementById('vault-checklist').innerHTML = `
         <div class="flex items-center justify-between">
