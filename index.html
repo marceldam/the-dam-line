@@ -2212,51 +2212,37 @@
       document.getElementById('bag-subtotal').textContent = formatPrice(totalUSD);
       renderVaultProgressInBag(itemsUSD);
 
-      const inline3DMarkup = `
-        <div class="bag-3d-shell rounded-xl border border-amethyst-400/35 bg-obsidian-950/95 p-3">
-          <div class="flex items-center justify-between text-[10px] tracking-[0.18em] uppercase text-gold-300 mb-1.5 px-1">
-            <span>THE DAM LINE • 3D 'D'</span>
-            <span class="text-amethyst-400 tabular-nums">${totalUnits === 1 ? '1 Piece • 50/50 Active' : `${totalUnits} Pieces • 50/50 Active`}</span>
-          </div>
-          <div class="relative h-28 w-full rounded-lg overflow-hidden border border-white/10 bg-obsidian-950">
-            <canvas id="bag-items-3d-canvas" aria-label="3D Dam Line Monolith inside Bag Items" class="w-full h-full block"></canvas>
-          </div>
-        </div>
-      `;
-
       if (!state.bag.length) {
         container.innerHTML = `
-          <p class="text-xs text-neutral-400 py-3 text-center">Your bag is empty. Tap + Bag on any silhouette to begin.</p>
-          ${inline3DMarkup}
+          <div class="rounded-xl border border-white/10 bg-obsidian-950/80 p-5 text-center space-y-2">
+            <p class="text-[10px] tracking-[0.2em] uppercase text-gold-400">50/50 Allocation Ready</p>
+            <p class="text-sm text-white">Your reservation bag is currently empty.</p>
+            <p class="text-xs text-neutral-400 leading-relaxed">Select <span class="text-neutral-200">+ Bag</span> on any silhouette to add pieces and adjust quantities with <span class="text-gold-300">−</span> and <span class="text-gold-300">+</span>.</p>
+          </div>
         `;
-        requestAnimationFrame(() => initBagItems3DScene());
         return;
       }
 
-      container.innerHTML = `
-        ${inline3DMarkup}
-        ${state.bag.map((entry, idx) => {
-          const unitCount = entry.qty || 1;
-          return `
-            <div class="rounded-xl border border-white/10 bg-obsidian-950 p-3.5 flex items-center justify-between gap-3">
-              <div>
-                <p class="text-sm text-white">${escapeHTML(entry.name)}</p>
-                <p class="text-[11px] text-neutral-400">Size ${escapeHTML(entry.size)} • ${escapeHTML(entry.color)} • 50/50 LEFT</p>
-                <p class="text-xs text-gold-300 tabular-nums mt-0.5">${formatPrice(entry.priceUSD * unitCount)} <span class="text-neutral-400">(${formatPrice(entry.priceUSD)} each)</span></p>
-              </div>
-              <div class="flex items-center gap-1.5 shrink-0 tabular-nums">
-                <button type="button" onclick="decrementBagItem(${idx})" aria-label="Decrease quantity"
-                  class="w-7 h-7 rounded-lg border border-white/15 bg-obsidian-900 text-xs text-neutral-200 hover:border-gold-400 spring-btn">−</button>
-                <span class="px-1.5 text-xs font-bold text-white">${unitCount}</span>
-                <button type="button" onclick="incrementBagItem(${idx})" aria-label="Add one more to bag"
-                  class="w-7 h-7 rounded-lg gold-cta text-xs font-bold spring-btn">+</button>
-                <button type="button" onclick="removeBagItem(${idx})" class="text-xs text-neutral-400 hover:text-white px-1.5 py-1">✕</button>
-              </div>
+      container.innerHTML = state.bag.map((entry, idx) => {
+        const unitCount = entry.qty || 1;
+        return `
+          <div class="rounded-xl border border-white/10 bg-obsidian-950 p-3.5 flex items-center justify-between gap-3">
+            <div>
+              <p class="text-sm text-white">${escapeHTML(entry.name)}</p>
+              <p class="text-[11px] text-neutral-400">Size ${escapeHTML(entry.size)} • ${escapeHTML(entry.color)} • 50/50 LEFT</p>
+              <p class="text-xs text-gold-300 tabular-nums mt-0.5">${formatPrice(entry.priceUSD * unitCount)} <span class="text-neutral-400">(${formatPrice(entry.priceUSD)} each)</span></p>
             </div>
-          `;
-        }).join('')}
-      `;
-      requestAnimationFrame(() => initBagItems3DScene());
+            <div class="flex items-center gap-1.5 shrink-0 tabular-nums">
+              <button type="button" onclick="decrementBagItem(${idx})" aria-label="Decrease quantity"
+                class="w-7 h-7 rounded-lg border border-white/15 bg-obsidian-900 text-xs text-neutral-200 hover:border-gold-400 spring-btn">−</button>
+              <span class="px-1.5 text-xs font-bold text-white">${unitCount}</span>
+              <button type="button" onclick="incrementBagItem(${idx})" aria-label="Add one more to bag"
+                class="w-7 h-7 rounded-lg gold-cta text-xs font-bold spring-btn">+</button>
+              <button type="button" onclick="removeBagItem(${idx})" class="text-xs text-neutral-400 hover:text-white px-1.5 py-1">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function checkoutBagWithCard() {
@@ -2889,66 +2875,6 @@
 
     let bag3DInitialized = false;
     let bag3DResize = null;
-    let bagItems3DAnimId = null;
-
-    function initBagItems3DScene() {
-      const canvas = document.getElementById('bag-items-3d-canvas');
-      if (!canvas || typeof THREE === 'undefined') return;
-      if (bagItems3DAnimId) cancelAnimationFrame(bagItems3DAnimId);
-
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      const w = canvas.clientWidth || canvas.parentElement.clientWidth || 320;
-      const h = canvas.clientHeight || canvas.parentElement.clientHeight || 112;
-      renderer.setSize(w, h, false);
-
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 50);
-      camera.position.set(0, 0, 4.5);
-
-      scene.add(new THREE.AmbientLight(0xd8b4fe, 0.9));
-      const key = new THREE.DirectionalLight(0xf3dc8b, 1.75);
-      key.position.set(2.5, 3, 4);
-      scene.add(key);
-
-      const emblemGroup = new THREE.Group();
-      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x241736, metalness: 0.84, roughness: 0.22 });
-      const goldTrimMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.92, roughness: 0.18 });
-
-      const spine = new THREE.Mesh(new THREE.BoxGeometry(0.3, 1.55, 0.28), bodyMat);
-      spine.position.set(-0.36, 0, 0);
-      emblemGroup.add(spine);
-
-      const arch = new THREE.Mesh(
-        new THREE.TorusGeometry(0.76, 0.2, 18, 48, Math.PI),
-        bodyMat
-      );
-      arch.rotation.z = -Math.PI / 2;
-      arch.position.set(-0.22, 0, 0);
-      emblemGroup.add(arch);
-
-      const goldHalo = new THREE.Mesh(
-        new THREE.TorusGeometry(0.92, 0.025, 12, 48),
-        goldTrimMat
-      );
-      goldHalo.rotation.x = Math.PI / 3;
-      emblemGroup.add(goldHalo);
-
-      emblemGroup.position.x = 0.06;
-      scene.add(emblemGroup);
-
-      const clock = new THREE.Clock();
-      function animateInlineBag() {
-        bagItems3DAnimId = requestAnimationFrame(animateInlineBag);
-        const t = clock.getElapsedTime();
-        const boost = 1 + Math.min(getTotalBagUnits(), 6) * 0.12;
-        emblemGroup.rotation.y = t * 0.85 * boost;
-        emblemGroup.rotation.x = Math.sin(t * 1.1) * 0.2;
-        goldHalo.rotation.z = -t * 0.7;
-        renderer.render(scene, camera);
-      }
-      animateInlineBag();
-    }
 
     function initBag3DScene() {
       const canvas = document.getElementById('bag-3d-canvas');
