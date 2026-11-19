@@ -624,6 +624,20 @@
         <button type="button" onclick="closeBagDrawer()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300 hover:text-white">✕</button>
       </div>
 
+      <!-- Live Progress Toward $1,000 USD Vault Unlock -->
+      <div class="mt-3 rounded-xl border border-amethyst-500/30 bg-obsidian-950/90 p-3 space-y-2 tabular-nums">
+        <div class="flex items-center justify-between text-[10px] tracking-[0.16em] uppercase">
+          <span class="text-amethyst-400">Vault Unlock Progress</span>
+          <span id="bag-vault-pct" class="text-gold-300 font-semibold">0%</span>
+        </div>
+        <div class="w-full h-2 rounded-full bg-obsidian-800 overflow-hidden border border-white/10">
+          <div id="bag-vault-progress-bar" class="h-full w-0 rounded-full bg-gradient-to-r from-amethyst-500 via-gold-400 to-gold-300 transition-all duration-300"></div>
+        </div>
+        <p id="bag-vault-progress-text" class="text-[11px] text-neutral-300 leading-snug">
+          $0.00 of $1,000.00 USD toward Private Edit &amp; GREATEST key.
+        </p>
+      </div>
+
       <div id="bag-items" class="flex-1 overflow-y-auto py-4 space-y-3"></div>
 
       <!-- Live 3D 'D' Monolith Stage inside Reservation Bag Drawer -->
@@ -985,6 +999,7 @@
     };
 
     const DELIVERY_FEE_USD = 35;
+    const VAULT_THRESHOLD_USD = 1000;
 
     const PRODUCTS = [
       {
@@ -1450,6 +1465,7 @@
       }
 
       renderInfrastructureAccess();
+      renderBag();
     }
 
     function getBrandSlug(domain) {
@@ -2151,6 +2167,31 @@
       return itemsUSD + getDeliveryFeeUSD();
     }
 
+    function renderVaultProgressInBag(itemsUSD) {
+      const pctEl = document.getElementById('bag-vault-pct');
+      const barEl = document.getElementById('bag-vault-progress-bar');
+      const textEl = document.getElementById('bag-vault-progress-text');
+      if (!pctEl || !barEl || !textEl) return;
+
+      const effectiveUSD = Math.max(state.settledUSD || 0, itemsUSD || 0);
+      const ratio = Math.min(1, effectiveUSD / VAULT_THRESHOLD_USD);
+      const pct = Math.round(ratio * 100);
+      const remainingUSD = Math.max(0, VAULT_THRESHOLD_USD - effectiveUSD);
+
+      pctEl.textContent = state.keyUnlocked || state.settledUSD >= VAULT_THRESHOLD_USD ? '100% • UNLOCKED' : `${pct}%`;
+      barEl.style.width = `${state.keyUnlocked || state.settledUSD >= VAULT_THRESHOLD_USD ? 100 : pct}%`;
+
+      if (state.isAdmin) {
+        textEl.textContent = `Admin access active — Private Edit & ${formatPrice(VAULT_THRESHOLD_USD)} tier unlocked.`;
+      } else if (state.settledUSD >= VAULT_THRESHOLD_USD || state.keyUnlocked) {
+        textEl.textContent = `${formatPrice(effectiveUSD)} of ${formatPrice(VAULT_THRESHOLD_USD)} reached — Private Edit & GREATEST key unlocked.`;
+      } else if (remainingUSD > 0) {
+        textEl.textContent = `${formatPrice(effectiveUSD)} of ${formatPrice(VAULT_THRESHOLD_USD)} (${formatPrice(remainingUSD)} more to reach $1,000 USD tier).`;
+      } else {
+        textEl.textContent = `${formatPrice(effectiveUSD)} of ${formatPrice(VAULT_THRESHOLD_USD)} reached — settle with verified @gmail.com to unlock.`;
+      }
+    }
+
     function renderBag() {
       const totalUnits = getTotalBagUnits();
       document.getElementById('bag-count').textContent = String(totalUnits);
@@ -2169,6 +2210,7 @@
       if (itemsSubEl) itemsSubEl.textContent = formatPrice(itemsUSD);
       if (deliveryEl) deliveryEl.textContent = formatPrice(deliveryUSD);
       document.getElementById('bag-subtotal').textContent = formatPrice(totalUSD);
+      renderVaultProgressInBag(itemsUSD);
 
       const inline3DMarkup = `
         <div class="bag-3d-shell rounded-xl border border-amethyst-400/35 bg-obsidian-950/95 p-3">
