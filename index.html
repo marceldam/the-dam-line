@@ -113,9 +113,14 @@
         <select id="currency-select" onchange="setCurrency(this.value)"
           class="bg-obsidian-950 border border-white/15 rounded-md px-2.5 py-1 text-[11px] tracking-[0.12em] text-neutral-200 focus:outline-none focus:border-gold-400 tabular-nums cursor-pointer">
           <option value="USD">USD $</option>
-          <option value="EUR">EUR €</option>
-          <option value="GBP">GBP £</option>
+          <option value="USDT">USDT ₮</option>
           <option value="NGN">NGN ₦</option>
+          <option value="GBP">GBP £</option>
+          <option value="JPY">JPY ¥</option>
+          <option value="EUR">EUR €</option>
+          <option value="CAD">CAD CA$</option>
+          <option value="AUD">AUD A$</option>
+          <option value="ZAR">ZAR R</option>
         </select>
       </div>
     </div>
@@ -669,11 +674,28 @@
               class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-400" />
           </label>
           <label class="block text-xs text-neutral-300">
-            Settlement Amount (USD)
-            <input id="billing-amount-usd" type="number" min="1" step="1" required placeholder="1000"
-              class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white tabular-nums focus:outline-none focus:border-gold-400" />
+            Payment Currency
+            <select id="billing-currency-select" onchange="setBillingCurrency(this.value)"
+              class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white tabular-nums focus:outline-none focus:border-gold-400 cursor-pointer">
+              <option value="USD">USD ($)</option>
+              <option value="USDT">USDT (₮)</option>
+              <option value="NGN">NGN (₦)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="JPY">JPY (¥)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="CAD">CAD (CA$)</option>
+              <option value="AUD">AUD (A$)</option>
+              <option value="ZAR">ZAR (R)</option>
+            </select>
           </label>
         </div>
+
+        <label class="block text-xs text-neutral-300">
+          Settlement Amount (<span id="billing-currency-label" class="text-gold-300 tabular-nums">USD $</span>)
+          <input id="billing-amount-input" type="number" min="1" step="any" required placeholder="1000" oninput="syncBillingUsdEquivalent()"
+            class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white tabular-nums focus:outline-none focus:border-gold-400" />
+          <span id="billing-usd-equiv" class="mt-1 block text-[11px] text-neutral-400 tabular-nums">Equivalent to $1,000.00 USD</span>
+        </label>
 
         <label class="block text-xs text-neutral-300">
           Card Number
@@ -770,10 +792,15 @@
 
   <script>
     const CURRENCY_RATES = {
-      USD: { symbol: '$', rate: 1 },
-      EUR: { symbol: '€', rate: 0.92 },
-      GBP: { symbol: '£', rate: 0.79 },
-      NGN: { symbol: '₦', rate: 1620 }
+      USD: { symbol: '$', rate: 1, decimals: 2 },
+      USDT: { symbol: '₮', rate: 1, decimals: 2 },
+      NGN: { symbol: '₦', rate: 1620, decimals: 0 },
+      GBP: { symbol: '£', rate: 0.79, decimals: 2 },
+      JPY: { symbol: '¥', rate: 154, decimals: 0 },
+      EUR: { symbol: '€', rate: 0.92, decimals: 2 },
+      CAD: { symbol: 'CA$', rate: 1.39, decimals: 2 },
+      AUD: { symbol: 'A$', rate: 1.53, decimals: 2 },
+      ZAR: { symbol: 'R', rate: 18.2, decimals: 2 }
     };
 
     const PRODUCTS = [
@@ -902,6 +929,7 @@
 
     const state = {
       currency: 'USD',
+      billingCurrency: 'USD',
       filter: 'ALL',
       bag: [],
       customDomain: 'thedamline.ng',
@@ -957,7 +985,7 @@
 
       document.title = `THE DAM LINE (${slug} • ${domain}) — Definition in Every Thread`;
 
-      const pill = document.getElementById('ticker-domain-pill');
+      const tickerPill = document.getElementById('ticker-domain-pill');
       const headerTag = document.getElementById('header-domain-tag');
       const heroBadge = document.getElementById('hero-domain-badge');
       const storyLabel = document.getElementById('story-domain-label');
@@ -965,28 +993,26 @@
       const activeLink = document.getElementById('active-domain-link');
       const statusNote = document.getElementById('domain-status-note');
       const googleLink = document.getElementById('google-search-link');
-      const domainInput = document.getElementById('edit-domain-input');
+      const editInput = document.getElementById('edit-domain-input');
 
-      if (pill) pill.textContent = domain;
+      if (tickerPill) tickerPill.textContent = domain;
       if (headerTag) headerTag.textContent = domain;
-      if (heroBadge) {
-        heroBadge.textContent = `${slug} • ${domain} • 50/50 LEFT • Drag 3D 'D' Monolith`;
-      }
-      if (storyLabel) storyLabel.textContent = `${slug} (${domain})`;
-      if (footerSlug) footerSlug.textContent = `${slug} • ${domain}`;
+      if (heroBadge) heroBadge.textContent = `${slug} • ${domain} • 50/50 LEFT • Drag 3D 'D' Monolith`;
+      if (storyLabel) storyLabel.textContent = domain;
+      if (footerSlug) footerSlug.textContent = slug;
       if (activeLink) {
         activeLink.textContent = fullUrl;
         activeLink.href = fullUrl;
       }
       if (statusNote) {
         statusNote.textContent = state.domainApplied
-          ? `(Active custom domain for ${slug} — point DNS A/CNAME to GitHub Pages)`
-          : `(Default preview domain for ${slug} — click Set Custom Domain once registered)`;
+          ? `(Active custom domain: ${domain})`
+          : '(Ready for DNS & GitHub Pages binding)';
       }
       if (googleLink) {
-        googleLink.href = `https://www.google.com/search?q=${encodeURIComponent(`${slug} ${domain} THE DAM LINE`)}`;
+        googleLink.href = `https://www.google.com/search?q=${encodeURIComponent(`${slug} ${domain}`)}`;
       }
-      if (domainInput) domainInput.value = domain;
+      if (editInput) editInput.value = domain;
     }
 
     function toggleDomainEditor(forceState) {
@@ -999,22 +1025,89 @@
     }
 
     function copyShareLink() {
-      const shareUrl = getShareUrl();
+      const url = getShareUrl();
       const label = document.getElementById('copy-link-label');
-      const finish = () => {
+      const setCopiedFeedback = () => {
         if (label) {
-          label.textContent = 'Link Copied';
+          label.textContent = 'Copied Link';
           setTimeout(() => { label.textContent = 'Copy Share Link'; }, 1800);
         }
       };
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(shareUrl).then(finish).catch(() => {
-          prompt('Copy your THE DAM LINE share link:', shareUrl);
-          finish();
+        navigator.clipboard.writeText(url).then(setCopiedFeedback).catch(() => {
+          try {
+            const ta = document.createElement('textarea');
+            ta.value = url;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            setCopiedFeedback();
+          } catch (_) {}
         });
       } else {
-        prompt('Copy your THE DAM LINE share link:', shareUrl);
-        finish();
+        setCopiedFeedback();
+      }
+    }
+
+    function formatPrice(usdAmount, currencyCode) {
+      const code = currencyCode || state.currency;
+      const cfg = CURRENCY_RATES[code] || CURRENCY_RATES.USD;
+      const converted = usdAmount * cfg.rate;
+      const formatted = cfg.decimals === 0
+        ? Math.round(converted).toLocaleString('en-US')
+        : converted.toLocaleString('en-US', { minimumFractionDigits: cfg.decimals, maximumFractionDigits: cfg.decimals });
+      return `${cfg.symbol}${formatted}`;
+    }
+
+    function setCurrency(code) {
+      if (CURRENCY_RATES[code]) {
+        state.currency = code;
+        state.billingCurrency = code;
+        const headerSelect = document.getElementById('currency-select');
+        const billingSelect = document.getElementById('billing-currency-select');
+        if (headerSelect) headerSelect.value = code;
+        if (billingSelect) billingSelect.value = code;
+        renderProducts();
+        renderBag();
+        syncBillingUsdEquivalent();
+        if (state.activePDPId) {
+          const item = PRODUCTS.find(p => p.id === state.activePDPId);
+          if (item) document.getElementById('modal-price').textContent = formatPrice(item.priceUSD);
+        }
+      }
+    }
+
+    function setBillingCurrency(code) {
+      if (!CURRENCY_RATES[code]) return;
+      const prevCfg = CURRENCY_RATES[state.billingCurrency] || CURRENCY_RATES.USD;
+      const amtInput = document.getElementById('billing-amount-input');
+      const currentRaw = Number(amtInput && amtInput.value ? amtInput.value : 0);
+      const currentUSD = currentRaw > 0 ? currentRaw / prevCfg.rate : 1000;
+
+      state.billingCurrency = code;
+      const nextCfg = CURRENCY_RATES[code];
+      if (amtInput) {
+        const converted = currentUSD * nextCfg.rate;
+        amtInput.value = nextCfg.decimals === 0
+          ? String(Math.max(1, Math.round(converted)))
+          : String(Number(converted.toFixed(nextCfg.decimals)));
+      }
+      syncBillingUsdEquivalent();
+    }
+
+    function syncBillingUsdEquivalent() {
+      const code = state.billingCurrency || state.currency || 'USD';
+      const cfg = CURRENCY_RATES[code] || CURRENCY_RATES.USD;
+      const amtInput = document.getElementById('billing-amount-input');
+      const labelEl = document.getElementById('billing-currency-label');
+      const equivEl = document.getElementById('billing-usd-equiv');
+      const rawVal = Number(amtInput && amtInput.value ? amtInput.value : 0);
+      const usdVal = rawVal > 0 ? rawVal / cfg.rate : 0;
+
+      if (labelEl) labelEl.textContent = `${code} (${cfg.symbol})`;
+      if (equivEl) {
+        equivEl.textContent = `Equivalent to $${usdVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
       }
     }
 
@@ -1191,27 +1284,6 @@
       </svg>`;
 
       return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
-    }
-
-    function formatPrice(usdAmount) {
-      const cfg = CURRENCY_RATES[state.currency] || CURRENCY_RATES.USD;
-      const converted = usdAmount * cfg.rate;
-      const formatted = state.currency === 'NGN'
-        ? Math.round(converted).toLocaleString('en-US')
-        : converted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      return `${cfg.symbol}${formatted}`;
-    }
-
-    function setCurrency(code) {
-      if (CURRENCY_RATES[code]) {
-        state.currency = code;
-        renderProducts();
-        renderBag();
-        if (state.activePDPId) {
-          const item = PRODUCTS.find(p => p.id === state.activePDPId);
-          if (item) document.getElementById('modal-price').textContent = formatPrice(item.priceUSD);
-        }
-      }
     }
 
     function dispatchNotification(channel, subject, body) {
@@ -1523,9 +1595,22 @@
     }
 
     function openCardBillingModal(amountUSD, label) {
+      const targetUSD = Math.max(1, Number(amountUSD || 1000));
+      const code = state.billingCurrency || state.currency || 'USD';
+      const cfg = CURRENCY_RATES[code] || CURRENCY_RATES.USD;
+      const billingSelect = document.getElementById('billing-currency-select');
+      const amtInput = document.getElementById('billing-amount-input');
+
       document.getElementById('billing-title').textContent = label || 'Pay with Card';
-      document.getElementById('billing-amount-usd').value = String(Math.max(1, Math.round(amountUSD || 1000)));
+      if (billingSelect) billingSelect.value = code;
+      if (amtInput) {
+        const converted = targetUSD * cfg.rate;
+        amtInput.value = cfg.decimals === 0
+          ? String(Math.max(1, Math.round(converted)))
+          : String(Number(converted.toFixed(cfg.decimals)));
+      }
       document.getElementById('billing-receipt').classList.add('hidden');
+      syncBillingUsdEquivalent();
       const m = document.getElementById('card-billing-modal');
       m.classList.remove('hidden');
       m.classList.add('flex');
@@ -1684,10 +1769,18 @@
         receiptEl.innerHTML = '<p class="font-bold">Session Locked</p><p>Unlock your session in Site Security &amp; Shield before authorizing card payments.</p>';
         return;
       }
-      const amount = Number(document.getElementById('billing-amount-usd').value || 0);
+      const code = state.billingCurrency || state.currency || 'USD';
+      const cfg = CURRENCY_RATES[code] || CURRENCY_RATES.USD;
+      const enteredAmount = Number(document.getElementById('billing-amount-input').value || 0);
       const rawCard = document.getElementById('billing-number').value || '';
-      if (amount <= 0) return;
-      state.settledUSD += amount;
+      if (enteredAmount <= 0) return;
+
+      const amountUSD = enteredAmount / cfg.rate;
+      const formattedPaid = cfg.decimals === 0
+        ? `${cfg.symbol}${Math.round(enteredAmount).toLocaleString('en-US')}`
+        : `${cfg.symbol}${enteredAmount.toLocaleString('en-US', { minimumFractionDigits: cfg.decimals, maximumFractionDigits: cfg.decimals })}`;
+
+      state.settledUSD += amountUSD;
       state.shieldPassed = true;
       const txId = `DL-${Math.floor(100000 + Math.random() * 900000)}`;
       const receiptEl = document.getElementById('billing-receipt');
@@ -1703,10 +1796,10 @@
       }
 
       recordSecurityEvent(
-        `CARD SETTLED (${state.cardNetwork})`,
-        `Card ${maskCardNumber(rawCard)} settled $${amount.toLocaleString('en-US')} USD (Ref ${txId}).`
+        `CARD SETTLED (${state.cardNetwork} • ${code})`,
+        `Card ${maskCardNumber(rawCard)} settled ${formattedPaid} (${code} / $${amountUSD.toFixed(2)} USD, Ref ${txId}).`
       );
-      receiptEl.innerHTML = `<p class="font-bold">Payment Approved (${state.cardNetwork})</p><p class="tabular-nums">Ref: ${txId} • Settled: $${amount.toLocaleString('en-US')} USD${extraNote}</p>`;
+      receiptEl.innerHTML = `<p class="font-bold">Payment Approved (${state.cardNetwork} • ${code})</p><p class="tabular-nums">Ref: ${txId} • Paid: ${formattedPaid} ($${amountUSD.toFixed(2)} USD equiv.)${extraNote}</p>`;
       refreshVaultStatusUI();
       refreshShieldUI();
     });
