@@ -1021,6 +1021,7 @@
       EXPRESS: { label: 'Priority Express Courier', feeUSD: 35 }
     };
     const VAULT_THRESHOLD_USD = 1000;
+    const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
 
     const PRODUCTS = [
       {
@@ -1278,6 +1279,7 @@
       billingCurrency: 'USD',
       deliveryTier: 'EXPRESS',
       filter: 'ALL',
+      cardSizes: {},
       bag: [],
       customDomain: 'thedamline.ng',
       domainApplied: false,
@@ -1954,6 +1956,43 @@
       renderProducts();
     }
 
+    function getSelectedCardSize(itemId) {
+      return state.cardSizes[itemId] || 'M';
+    }
+
+    function selectCardSize(itemId, size, isPrivate) {
+      if (!SIZES.includes(size)) return;
+      state.cardSizes[itemId] = size;
+      if (isPrivate) {
+        renderPrivateClientPieces();
+      } else {
+        renderProducts();
+      }
+    }
+
+    function buildCardSizePillsHTML(itemId, isPrivate) {
+      const chosen = getSelectedCardSize(itemId);
+      return `
+        <div class="pt-1">
+          <div class="flex items-center justify-between text-[10px] tracking-[0.16em] uppercase text-neutral-400 mb-1.5">
+            <span>Quick Size</span>
+            <span class="text-gold-300 tabular-nums">${chosen}</span>
+          </div>
+          <div class="grid grid-cols-5 gap-1">
+            ${SIZES.map(sz => {
+              const active = sz === chosen;
+              return `<button type="button" onclick="selectCardSize('${itemId}', '${sz}', ${isPrivate ? 'true' : 'false'})"
+                class="py-1 rounded-md text-[10px] tracking-[0.08em] uppercase border tabular-nums spring-btn ${
+                  active
+                    ? 'border-gold-400 bg-gold-500/20 text-gold-300 font-semibold'
+                    : 'border-white/10 bg-obsidian-950/90 text-neutral-300 hover:border-white/30'
+                }">${sz}</button>`;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
     function renderProducts() {
       const grid = document.getElementById('product-grid');
       const items = state.filter === 'ALL' ? PRODUCTS : PRODUCTS.filter(p => p.category === state.filter);
@@ -1995,6 +2034,7 @@
                     <span class="px-2 py-0.5 rounded bg-obsidian-950 border border-gold-500/30 text-gold-300">${escapeHTML(item.weight || '50/50 Weave')}</span>
                   </div>
                   <p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">${item.description}</p>
+                  ${buildCardSizePillsHTML(item.id, false)}
                 </div>
               </div>
 
@@ -2045,6 +2085,7 @@
                   <span class="px-2 py-0.5 rounded bg-obsidian-950 border border-gold-500/30 text-gold-300">${escapeHTML(item.weight || 'Luxury Weave')}</span>
                 </div>
                 <p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">${item.hook}</p>
+                ${buildCardSizePillsHTML(item.id, true)}
               </div>
             </div>
 
@@ -2069,7 +2110,8 @@
       state.activePDPId = id;
       state.activePDPAngle = 'FRONT';
       state.activePDPColorIndex = 0;
-      state.activePDPSize = 'M';
+      state.activePDPSize = getSelectedCardSize(id);
+      selectPDPSize(state.activePDPSize);
       refreshPDPModal();
       const modal = document.getElementById('pdp-modal');
       modal.classList.remove('hidden');
@@ -2187,7 +2229,7 @@
 
     function quickAddFromCard(id) {
       const item = ALL_CATALOG.find(p => p.id === id);
-      if (item) addToBag(item, 'M', item.colorways[0].name, 1);
+      if (item) addToBag(item, getSelectedCardSize(id), item.colorways[0].name, 1);
     }
 
     function removeBagItem(index) {
