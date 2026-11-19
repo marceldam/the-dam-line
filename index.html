@@ -544,6 +544,7 @@
         <div class="space-y-3 pr-6">
           <div class="flex flex-wrap items-center gap-2 text-[10px] tracking-[0.18em] uppercase">
             <span id="modal-tag" class="text-amethyst-400"></span>
+            <span id="modal-fit-weight" class="px-2 py-0.5 rounded bg-obsidian-950 border border-amethyst-400/35 text-amethyst-300 tabular-nums"></span>
             <span id="modal-stock" class="px-2 py-0.5 rounded bg-obsidian-950 border border-white/10 text-gold-300 tabular-nums"></span>
           </div>
 
@@ -1026,6 +1027,8 @@
         id: 'dl-jkt-01',
         category: 'JACKETS',
         tag: 'OUTERWEAR • 50/50 LEFT',
+        fit: 'Cropped Boxy Fit',
+        weight: '420 GSM Twill',
         name: 'Obsidian Cropped Atelier Jacket',
         priceUSD: 640,
         stock: '50/50 LEFT',
@@ -1046,6 +1049,8 @@
         id: 'dl-jkt-02',
         category: 'JACKETS',
         tag: 'TECHNICAL SHELL • 50/50 LEFT',
+        fit: 'Structured Boxy Fit',
+        weight: '380 GSM Shell',
         name: 'Aegis Storm Bomber Jacket',
         priceUSD: 580,
         stock: '50/50 LEFT',
@@ -1066,6 +1071,8 @@
         id: 'dl-trs-01',
         category: 'TROUSERS',
         tag: 'SIGNATURE DRAPE • 50/50 LEFT',
+        fit: 'Wide Baggy Cut',
+        weight: '360 GSM Gabardine',
         name: 'Monolith Wide Baggy Trouser',
         priceUSD: 490,
         stock: '50/50 LEFT',
@@ -1086,6 +1093,8 @@
         id: 'dl-trs-02',
         category: 'TROUSERS',
         tag: 'RELAXED FIT • 50/50 LEFT',
+        fit: 'Oversized Wide Cut',
+        weight: '360 GSM Drape',
         name: 'Vortex Pleated Baggy Pant',
         priceUSD: 520,
         stock: '50/50 LEFT',
@@ -1106,6 +1115,8 @@
         id: 'dl-jrt-01',
         category: 'JORTS',
         tag: 'EXTENDED KNEE CUT • 50/50 LEFT',
+        fit: 'Extended Knee Cut',
+        weight: '13.5 oz Denim',
         aboveLabel: '50/50 LEFT',
         name: 'Longline Jogger Jorts',
         priceUSD: 340,
@@ -1127,6 +1138,8 @@
         id: 'dl-plc-01',
         category: 'POLOS_CAPS',
         tag: 'KNIT POLO • 50/50 LEFT',
+        fit: 'Tailored Relaxed Fit',
+        weight: '290 GSM Knit',
         name: 'Gilded Knit Polo',
         priceUSD: 280,
         stock: '50/50 LEFT',
@@ -1147,6 +1160,8 @@
         id: 'dl-cap-02',
         category: 'POLOS_CAPS',
         tag: 'STRUCTURED CAP • 50/50 LEFT',
+        fit: '6-Panel Structured',
+        weight: 'Brushed Twill',
         name: 'Gilded Structured Cap',
         priceUSD: 85,
         stock: '50/50 LEFT',
@@ -1170,6 +1185,8 @@
         id: 'dl-pc-baggy-01',
         category: 'TROUSERS',
         tag: 'PRIVATE CLIENT BAGGY • 50/50 LEFT',
+        fit: 'Sweeping Baggy Cut',
+        weight: '410 GSM Wool-Cashmere',
         name: 'Sovereign Drape Baggy',
         priceUSD: 1450,
         stock: '50/50 LEFT',
@@ -1190,6 +1207,8 @@
         id: 'dl-pc-suit-02',
         category: 'JACKETS',
         tag: 'BESPOKE TAILORING • 50/50 LEFT',
+        fit: 'Roped Shoulder Cut',
+        weight: 'Super 150s Wool',
         name: 'Dam Line Monolith Suit',
         priceUSD: 2850,
         stock: '50/50 LEFT',
@@ -1210,6 +1229,8 @@
         id: 'dl-pc-polo-03',
         category: 'POLOS_CAPS',
         tag: 'PRIVATE CLIENT KNIT • 50/50 LEFT',
+        fit: 'Refined Drape Fit',
+        weight: '270 GSM Silk-Merino',
         name: 'Imperial Silk-Merino Polo',
         priceUSD: 920,
         stock: '50/50 LEFT',
@@ -1230,6 +1251,8 @@
         id: 'dl-pc-shoe-04',
         category: 'POLOS_CAPS',
         tag: 'HANDWELTED FOOTWEAR • 50/50 LEFT',
+        fit: 'Sculpted Derby Last',
+        weight: 'Goodyear Welt',
         name: 'Obsidian Goodyear Derby Shoe',
         priceUSD: 1680,
         stock: '50/50 LEFT',
@@ -1967,6 +1990,10 @@
                     <h3 class="text-lg text-white leading-snug">${item.name}</h3>
                     <span class="text-sm font-semibold text-gold-400 tabular-nums shrink-0">${formatPrice(item.priceUSD)}</span>
                   </div>
+                  <div class="flex flex-wrap items-center gap-1.5 text-[10px] tracking-[0.14em] uppercase tabular-nums">
+                    <span class="px-2 py-0.5 rounded bg-obsidian-950 border border-amethyst-400/30 text-amethyst-300">${escapeHTML(item.fit || 'Architectural Fit')}</span>
+                    <span class="px-2 py-0.5 rounded bg-obsidian-950 border border-gold-500/30 text-gold-300">${escapeHTML(item.weight || '50/50 Weave')}</span>
+                  </div>
                   <p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">${item.description}</p>
                 </div>
               </div>
@@ -2012,6 +2039,10 @@
                 <div class="flex items-start justify-between gap-2">
                   <h4 class="text-base text-white leading-snug">${item.name}</h4>
                   <span class="text-sm font-semibold text-gold-300 tabular-nums shrink-0">${formatPrice(item.priceUSD)}</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5 text-[10px] tracking-[0.14em] uppercase tabular-nums">
+                  <span class="px-2 py-0.5 rounded bg-obsidian-950 border border-amethyst-400/30 text-amethyst-300">${escapeHTML(item.fit || 'Private Fit')}</span>
+                  <span class="px-2 py-0.5 rounded bg-obsidian-950 border border-gold-500/30 text-gold-300">${escapeHTML(item.weight || 'Luxury Weave')}</span>
                 </div>
                 <p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">${item.hook}</p>
               </div>
@@ -2078,6 +2109,10 @@
       const cw = item.colorways[state.activePDPColorIndex] || item.colorways[0];
 
       document.getElementById('modal-tag').textContent = item.tag;
+      const fitWeightEl = document.getElementById('modal-fit-weight');
+      if (fitWeightEl) {
+        fitWeightEl.textContent = `${item.fit || 'Architectural Fit'} • ${item.weight || '50/50 Weave'}`;
+      }
       document.getElementById('modal-stock').textContent = item.stock;
       document.getElementById('modal-title').textContent = item.name;
       document.getElementById('modal-price').textContent = formatPrice(item.priceUSD);
