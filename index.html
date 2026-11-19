@@ -121,6 +121,13 @@
     .bag-3d-shell {
       animation: bagFloat 3.6s ease-in-out infinite;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55), inset 0 0 22px rgba(192, 132, 252, 0.14);
+      transition: border-color 0.28s ease, box-shadow 0.28s ease, transform 0.28s ease;
+    }
+
+    .bag-3d-shell.is-pulsing {
+      border-color: rgba(243, 220, 139, 0.85);
+      box-shadow: 0 0 28px rgba(212, 175, 55, 0.35), inset 0 0 24px rgba(192, 132, 252, 0.26);
+      transform: scale(1.015);
     }
   </style>
 </head>
@@ -309,7 +316,7 @@
 
     <!-- Curated Silhouettes Grid -->
     <section id="collection" class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
         <div>
           <p class="text-[11px] tracking-[0.22em] uppercase text-gold-400 mb-2">50/50 Edition • 50/50 Left</p>
           <h2 class="text-2xl sm:text-4xl text-white">Curated Silhouettes</h2>
@@ -336,6 +343,26 @@
             class="filter-pill px-4 py-2 rounded-full text-xs tracking-[0.14em] uppercase border border-white/15 bg-obsidian-900 text-neutral-300 hover:border-gold-400/50 spring-btn">
             Polos &amp; Caps
           </button>
+        </div>
+      </div>
+
+      <!-- Search & Price/Fit Sort Bar -->
+      <div class="mb-8 rounded-2xl border border-white/10 bg-obsidian-900/85 p-3.5 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
+        <div class="relative flex-1">
+          <label for="catalog-search-input" class="sr-only">Search silhouettes</label>
+          <input id="catalog-search-input" type="search" value="" oninput="setCatalogSearch(this.value)"
+            placeholder="Search by silhouette, fit, or fabric (e.g. Baggy, Twill, Polo, Cap)..."
+            class="w-full rounded-xl bg-obsidian-950 border border-white/15 px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-gold-400" />
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <label for="catalog-sort-select" class="text-[10px] tracking-[0.16em] uppercase text-neutral-400">Sort</label>
+          <select id="catalog-sort-select" onchange="setCatalogSort(this.value)"
+            class="rounded-xl bg-obsidian-950 border border-white/15 px-3 py-2.5 text-xs text-white focus:outline-none focus:border-gold-400 cursor-pointer">
+            <option value="FEATURED">Featured</option>
+            <option value="PRICE_ASC">Price: Low to High</option>
+            <option value="PRICE_DESC">Price: High to Low</option>
+            <option value="WEIGHT_DESC">Heavyweight First</option>
+          </select>
         </div>
       </div>
 
@@ -493,8 +520,33 @@
             class="px-3 py-2 rounded-lg border border-white/15 bg-obsidian-950 hover:border-gold-400/50 text-[11px] tracking-[0.12em] uppercase text-neutral-200 spring-btn">
             <span id="copy-link-label">Copy Share Link</span>
           </button>
+          <a id="google-search-link" href="https://www.google.com/search?q=thedamline+thedamline.ng" target="_blank" rel="noopener noreferrer"
+            class="px-3 py-2 rounded-lg border border-gold-400/40 bg-obsidian-950 hover:border-gold-300 text-[11px] tracking-[0.12em] uppercase text-gold-300 spring-btn">
+            Search on Google
+          </a>
+          <button type="button" onclick="toggleDomainEditor()"
+            class="px-3 py-2 rounded-lg border border-amethyst-400/45 bg-obsidian-950 hover:border-amethyst-300 text-[11px] tracking-[0.12em] uppercase text-amethyst-300 spring-btn">
+            Set Domain
+          </button>
         </div>
       </div>
+
+      <!-- Editable Domain Form -->
+      <form id="domain-edit-form" class="hidden rounded-xl border border-white/10 bg-obsidian-900/95 p-4 grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <label class="block sm:col-span-2 text-neutral-300">
+          Custom Domain (e.g. thedamline.ng or yourdomain.com)
+          <input id="edit-domain-input" type="text" required value="thedamline.ng"
+            class="mt-1 w-full rounded-lg bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-400" />
+        </label>
+        <div class="flex items-end gap-2">
+          <button type="submit" class="flex-1 py-2.5 px-3 rounded-lg gold-cta text-xs font-bold tracking-[0.12em] uppercase spring-btn">
+            Apply Domain
+          </button>
+          <button type="button" onclick="toggleDomainEditor(false)" class="py-2.5 px-3 rounded-lg border border-white/15 text-neutral-300 hover:text-white">
+            Cancel
+          </button>
+        </div>
+      </form>
 
       <!-- Direct Gmail & Phone Contact Bar -->
       <div class="rounded-xl border border-white/10 bg-obsidian-900/90 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs">
@@ -530,7 +582,48 @@
             </div>
           </div>
         </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="toggleContactEditor()"
+            class="px-3 py-2 rounded-lg border border-white/15 bg-obsidian-950 hover:border-gold-400/50 text-[11px] tracking-[0.12em] uppercase text-neutral-200 spring-btn">
+            Edit Contact
+          </button>
+          <button type="button" onclick="removeContactGmail()"
+            class="px-3 py-2 rounded-lg border border-white/15 bg-obsidian-950 hover:border-amber-400/60 text-[11px] tracking-[0.12em] uppercase text-amber-300 spring-btn">
+            Remove Gmail
+          </button>
+          <button type="button" onclick="removeContactPhone()"
+            class="px-3 py-2 rounded-lg border border-white/15 bg-obsidian-950 hover:border-amber-400/60 text-[11px] tracking-[0.12em] uppercase text-amber-300 spring-btn">
+            Remove Number
+          </button>
+          <button type="button" onclick="removeAllContactInfo()"
+            class="px-3 py-2 rounded-lg border border-red-500/35 bg-obsidian-950 hover:border-red-400 text-[11px] tracking-[0.12em] uppercase text-red-300 spring-btn">
+            Remove All
+          </button>
+        </div>
       </div>
+
+      <!-- Editable Gmail & Phone Form -->
+      <form id="contact-edit-form" class="hidden rounded-xl border border-white/10 bg-obsidian-900/95 p-4 grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <label class="block text-neutral-300">
+          Direct Gmail
+          <input id="edit-gmail-input" type="email" required value="yungstar20204@gmail.com"
+            class="mt-1 w-full rounded-lg bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-400" />
+        </label>
+        <label class="block text-neutral-300">
+          Direct Phone Number
+          <input id="edit-phone-input" type="tel" required value="+234 906 188 9039"
+            class="mt-1 w-full rounded-lg bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-400" />
+        </label>
+        <div class="flex items-end gap-2">
+          <button type="submit" class="flex-1 py-2.5 px-3 rounded-lg gold-cta text-xs font-bold tracking-[0.12em] uppercase spring-btn">
+            Save Contact
+          </button>
+          <button type="button" onclick="toggleContactEditor(false)" class="py-2.5 px-3 rounded-lg border border-white/15 text-neutral-300 hover:text-white">
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
   </footer>
 
@@ -588,6 +681,23 @@
             <p id="modal-fabric" class="text-xs text-neutral-200"></p>
           </div>
 
+          <!-- Size & Fit Guide Toggle -->
+          <div class="rounded-xl border border-amethyst-500/25 bg-obsidian-950/85 p-3 text-xs space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] tracking-[0.18em] uppercase text-amethyst-400">Size &amp; Fit Guide</span>
+              <button type="button" onclick="toggleFitGuide()" class="text-[10px] tracking-[0.14em] uppercase text-gold-300 hover:underline">
+                <span id="fit-guide-toggle-label">Show Measurements</span>
+              </button>
+            </div>
+            <div id="modal-fit-guide-panel" class="hidden pt-1 space-y-1.5 text-[11px] text-neutral-300 tabular-nums border-t border-white/10">
+              <p><strong class="text-white">XS:</strong> Chest 38" • Waist 28" • Cut for lean/trimmed drape</p>
+              <p><strong class="text-white">S:</strong> Chest 40" • Waist 30" • Clean structured proportion</p>
+              <p><strong class="text-white">M:</strong> Chest 42" • Waist 32" • Standard signature drape</p>
+              <p><strong class="text-white">L:</strong> Chest 44" • Waist 34" • Relaxed wide-cut flow</p>
+              <p><strong class="text-white">XL:</strong> Chest 47" • Waist 37" • Maximum volume &amp; stack</p>
+            </div>
+          </div>
+
           <!-- Angle Switcher -->
           <div>
             <p class="text-[10px] tracking-[0.18em] uppercase text-neutral-400 mb-2">View Angle</p>
@@ -626,6 +736,25 @@
               <button type="button" data-size="XL" onclick="selectPDPSize('XL')" class="size-btn py-2 rounded-lg text-xs border border-white/15 bg-obsidian-950 text-neutral-200 spring-btn">XL</button>
             </div>
           </div>
+
+          <!-- Complete-the-Look Pairing -->
+          <div id="modal-pairing-box" class="rounded-xl border border-gold-500/30 bg-obsidian-950/90 p-3 flex items-center justify-between gap-3 text-xs">
+            <div class="min-w-0">
+              <p class="text-[10px] tracking-[0.18em] uppercase text-gold-400">Complete the Look</p>
+              <p id="modal-pairing-name" class="text-white font-semibold truncate mt-0.5"></p>
+              <p id="modal-pairing-price" class="text-[11px] text-neutral-400 tabular-nums"></p>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button id="modal-pairing-inspect-btn" type="button"
+                class="px-2.5 py-1.5 rounded-lg border border-white/15 bg-obsidian-900 hover:border-gold-400 text-[10px] tracking-[0.12em] uppercase text-neutral-200 spring-btn">
+                Inspect
+              </button>
+              <button id="modal-pairing-add-btn" type="button"
+                class="px-2.5 py-1.5 rounded-lg gold-cta text-[10px] font-bold tracking-[0.12em] uppercase spring-btn">
+                + Pair
+              </button>
+            </div>
+          </div>
         </div>
 
         <button id="modal-add-btn" type="button"
@@ -644,7 +773,13 @@
           <h3 class="text-lg text-white">Reservation Bag</h3>
           <p class="text-[11px] tracking-[0.16em] uppercase text-gold-400 tabular-nums">50/50 LEFT ALLOCATION</p>
         </div>
-        <button type="button" onclick="closeBagDrawer()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300 hover:text-white">✕</button>
+        <div class="flex items-center gap-2">
+          <button id="clear-bag-btn" type="button" onclick="clearBag()"
+            class="hidden px-2.5 py-1 rounded-lg border border-white/15 bg-obsidian-950 hover:border-amethyst-400 text-[10px] tracking-[0.14em] uppercase text-neutral-300 spring-btn">
+            Clear
+          </button>
+          <button type="button" onclick="closeBagDrawer()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300 hover:text-white">✕</button>
+        </div>
       </div>
 
       <!-- Live Progress Toward $1,000 USD Vault Unlock -->
@@ -664,7 +799,7 @@
       <div id="bag-items" class="flex-1 overflow-y-auto py-4 space-y-3"></div>
 
       <!-- Live 3D 'D' Monolith Stage inside Reservation Bag Drawer -->
-      <div class="bag-3d-shell rounded-xl border border-amethyst-400/35 bg-obsidian-950/95 p-3 mb-3">
+      <div id="bag-3d-shell" class="bag-3d-shell rounded-xl border border-amethyst-400/35 bg-obsidian-950/95 p-3 mb-3">
         <div class="flex items-center justify-between text-[10px] tracking-[0.18em] uppercase text-gold-300 mb-1.5 px-1">
           <span>THE DAM LINE • 3D 'D'</span>
           <span id="bag-3d-status" class="text-amethyst-400 tabular-nums">0 Pieces • 50/50 Active</span>
@@ -1044,6 +1179,7 @@
     };
     const VAULT_THRESHOLD_USD = 1000;
     const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
+    const BAG_STORAGE_KEY = 'thedamline_bag_state_v1';
 
     const PRODUCTS = [
       {
@@ -1055,6 +1191,7 @@
         name: 'Obsidian Cropped Atelier Jacket',
         priceUSD: 640,
         stock: '50/50 LEFT',
+        pairId: 'dl-trs-01',
         hook: 'Boxy cropped shoulders and crisp lapel structure that give every outfit immediate authority.',
         description: 'Structured mid-weight technical twill jacket tailored with a clean boxy crop, concealed placket, and satin-lined interior.',
         fabric: '68% Structured Cotton Twill, 32% Recycled Poly-Weave • Matte Gunmetal Hardware',
@@ -1077,6 +1214,7 @@
         name: 'Aegis Storm Bomber Jacket',
         priceUSD: 580,
         stock: '50/50 LEFT',
+        pairId: 'dl-jrt-01',
         hook: 'Clean structured shoulders and a sharp cropped cut that command attention in any room.',
         description: 'High-density woven bomber jacket with articulated sleeves, welt utility pockets, and tonal gold zipper pulls.',
         fabric: '100% Water-Repellent Micro-Twill • Custom Brushed Gold Pulls',
@@ -1099,6 +1237,7 @@
         name: 'Monolith Wide Baggy Trouser',
         priceUSD: 490,
         stock: '50/50 LEFT',
+        pairId: 'dl-plc-01',
         hook: 'Deep flowing pleats and wide leg volume that stack naturally with effortless presence.',
         description: 'Relaxed high-rise baggy trousers crafted from fluid suiting gabardine with deep front pleats and generous leg opening.',
         fabric: '74% Combed Wool-Blend Gabardine, 26% Viscose • Horn Waist Clasp',
@@ -1121,6 +1260,7 @@
         name: 'Vortex Pleated Baggy Pant',
         priceUSD: 520,
         stock: '50/50 LEFT',
+        pairId: 'dl-cap-02',
         hook: 'Full-cut architectural trousers with fluid movement that hold their shape all day.',
         description: 'Oversized wide-leg trousers featuring extended tab waistbands, deep side entry pockets, and clean unfinished-look hems.',
         fabric: '360 GSM Heavy Cotton-Tencel Drape • Reinforced Seam Tape',
@@ -1144,6 +1284,7 @@
         name: 'Longline Jogger Jorts',
         priceUSD: 340,
         stock: '50/50 LEFT',
+        pairId: 'dl-jkt-01',
         hook: 'Longer-length denim cut past the knee with a relaxed jogger waist built for standout daily wear.',
         description: 'Longer-length denim jogger jorts cut past the knee with an elasticated drawcord waist, gusseted crotch, and clean raw hems.',
         fabric: '13.5 oz Ring-Spun Indigo Denim • Cotton Grosgrain Drawcord',
@@ -1166,6 +1307,7 @@
         name: 'Gilded Knit Polo',
         priceUSD: 280,
         stock: '50/50 LEFT',
+        pairId: 'dl-cap-02',
         hook: 'Textured knit polo with clean collar tension that sharpens your silhouette from the first wear.',
         description: 'Breathable fine-gauge knit polo featuring a structured collar placket, ribbed cuffs, and subtle gold thread trim.',
         fabric: 'Mercerized Pima Knit • Gold Thread Placket Trim',
@@ -1188,6 +1330,7 @@
         name: 'Gilded Structured Cap',
         priceUSD: 85,
         stock: '50/50 LEFT',
+        pairId: 'dl-plc-01',
         hook: 'Clean structured brim and subtle gold crest built to finish any outfit without excess.',
         description: 'Structured six-panel cap crafted from brushed cotton twill with an adjustable strap and tonal gold embroidery.',
         fabric: 'Brushed Cotton Twill • Gold Monogram Stitch',
@@ -1213,6 +1356,7 @@
         name: 'Sovereign Drape Baggy',
         priceUSD: 1450,
         stock: '50/50 LEFT',
+        pairId: 'dl-pc-polo-03',
         hook: 'Expansive architectural wide leg cut from heavyweight virgin wool-cashmere that moves like liquid shadow.',
         description: 'Signature private-client baggy silhouette engineered with deep double pleats, extended waist tab, and sweeping floor drape.',
         fabric: '88% Virgin Wool, 12% Cashmere • Horn Hardware & Hand-Finished Hem',
@@ -1235,6 +1379,7 @@
         name: 'Dam Line Monolith Suit',
         priceUSD: 2850,
         stock: '50/50 LEFT',
+        pairId: 'dl-pc-shoe-04',
         hook: 'Sharp roped shoulders and a commanding double-breasted drape reserved for private-client evenings.',
         description: 'Two-piece architectural suit tailored with structured peak lapels, pick-stitched edges, and matching fluid trousers.',
         fabric: 'Super 150s Italian Worsted Wool • Bemberg Cupro Lining',
@@ -1257,6 +1402,7 @@
         name: 'Imperial Silk-Merino Polo',
         priceUSD: 920,
         stock: '50/50 LEFT',
+        pairId: 'dl-pc-baggy-01',
         hook: 'Lustrous silk-merino knit with clean collar tension that elevates tailored or baggy bottoms effortlessly.',
         description: 'Fine-gauge luxury knit polo featuring a crisp structured collar, mother-of-pearl buttons, and subtle gold thread crest.',
         fabric: '65% Extrafine Merino Wool, 35% Mulberry Silk • Gold Thread Monogram',
@@ -1279,6 +1425,7 @@
         name: 'Obsidian Goodyear Derby Shoe',
         priceUSD: 1680,
         stock: '50/50 LEFT',
+        pairId: 'dl-pc-suit-02',
         hook: 'Sculpted last and mirror-burnished calfskin built to anchor a full suit or wide baggy silhouette.',
         description: 'Handwelted luxury leather derby shoe with stacked leather sole, storm-welt edge detail, and gold-stamped footbed.',
         fabric: 'Full-Grain Box Calfskin Leather • Goodyear Storm-Welted Sole',
@@ -1301,6 +1448,8 @@
       billingCurrency: 'USD',
       deliveryTier: 'EXPRESS',
       filter: 'ALL',
+      searchQuery: '',
+      sortBy: 'FEATURED',
       cardSizes: {},
       bag: [],
       customDomain: 'thedamline.ng',
@@ -1328,10 +1477,93 @@
       activePDPId: null,
       activePDPAngle: 'FRONT',
       activePDPColorIndex: 0,
-      activePDPSize: 'M'
+      activePDPSize: 'M',
+      bagPulseUntil: 0,
+      lastActivityAt: Date.now()
     };
 
     const ADMIN_PASSWORD_SHA256 = '3754473d3d4b887a02a0d3877b4c24a84d60336303d6106650934f4419645224';
+
+    function persistBagPreferences() {
+      try {
+        window.localStorage.setItem(BAG_STORAGE_KEY, JSON.stringify({
+          bag: state.bag,
+          deliveryTier: state.deliveryTier,
+          currency: state.currency
+        }));
+      } catch (_) {}
+    }
+
+    function restoreBagPreferences() {
+      try {
+        const raw = window.localStorage.getItem(BAG_STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.bag)) {
+          state.bag = parsed.bag.filter(entry => entry && entry.id && entry.name && Number(entry.priceUSD) > 0).map(entry => ({
+            id: String(entry.id),
+            name: String(entry.name),
+            priceUSD: Number(entry.priceUSD),
+            size: SIZES.includes(entry.size) ? entry.size : 'M',
+            color: String(entry.color || 'Signature Finish'),
+            qty: Math.max(1, parseInt(entry.qty, 10) || 1)
+          }));
+        }
+        if (parsed && parsed.deliveryTier && DELIVERY_TIERS[parsed.deliveryTier]) {
+          state.deliveryTier = parsed.deliveryTier;
+        }
+        if (parsed && parsed.currency && CURRENCY_RATES[parsed.currency]) {
+          state.currency = parsed.currency;
+          state.billingCurrency = parsed.currency;
+          const headerSelect = document.getElementById('currency-select');
+          const billingSelect = document.getElementById('billing-currency-select');
+          if (headerSelect) headerSelect.value = parsed.currency;
+          if (billingSelect) billingSelect.value = parsed.currency;
+        }
+      } catch (_) {}
+    }
+
+    function triggerBag3DPulse() {
+      state.bagPulseUntil = Date.now() + 900;
+      const shell = document.getElementById('bag-3d-shell');
+      if (shell) {
+        shell.classList.add('is-pulsing');
+        setTimeout(() => {
+          if (Date.now() >= state.bagPulseUntil) {
+            shell.classList.remove('is-pulsing');
+          }
+        }, 920);
+      }
+    }
+
+    function getWeightScore(item) {
+      const w = String(item.weight || '');
+      const gsmMatch = /(\d+)\s*GSM/i.exec(w);
+      if (gsmMatch) return Number(gsmMatch[1]);
+      const ozMatch = /([\d.]+)\s*oz/i.exec(w);
+      if (ozMatch) return Number(ozMatch[1]) * 30;
+      if (/150s|Welt/i.test(w)) return 460;
+      return 250;
+    }
+
+    function setCatalogSearch(q) {
+      state.searchQuery = String(q || '').trim().toLowerCase();
+      renderProducts();
+    }
+
+    function setCatalogSort(sortKey) {
+      state.sortBy = sortKey || 'FEATURED';
+      renderProducts();
+    }
+
+    function toggleFitGuide() {
+      const panel = document.getElementById('modal-fit-guide-panel');
+      const label = document.getElementById('fit-guide-toggle-label');
+      if (!panel) return;
+      const isHidden = panel.classList.contains('hidden');
+      panel.classList.toggle('hidden', !isHidden);
+      if (label) label.textContent = isHidden ? 'Hide Measurements' : 'Show Measurements';
+    }
 
     function escapeHTML(str) {
       return String(str ?? '')
@@ -1687,13 +1919,17 @@
         const billingSelect = document.getElementById('billing-currency-select');
         if (headerSelect) headerSelect.value = code;
         if (billingSelect) billingSelect.value = code;
+        persistBagPreferences();
         renderProducts();
         renderPrivateClientPieces();
         renderBag();
         syncBillingUsdEquivalent();
         if (state.activePDPId) {
           const item = ALL_CATALOG.find(p => p.id === state.activePDPId);
-          if (item) document.getElementById('modal-price').textContent = formatPrice(item.priceUSD);
+          if (item) {
+            document.getElementById('modal-price').textContent = formatPrice(item.priceUSD);
+            refreshPDPModal();
+          }
         }
       }
     }
@@ -1734,8 +1970,6 @@
     function renderContactInfo() {
       const gmailLink = document.getElementById('contact-gmail-link');
       const phoneLink = document.getElementById('contact-phone-link');
-      const inquiryGmail = document.getElementById('inquiry-gmail-preview');
-      const inquiryPhone = document.getElementById('inquiry-phone-preview');
       const gmailInput = document.getElementById('edit-gmail-input');
       const phoneInput = document.getElementById('edit-phone-input');
 
@@ -1755,24 +1989,6 @@
         } else {
           phoneLink.textContent = 'Not set (Removed)';
           phoneLink.removeAttribute('href');
-        }
-      }
-      if (inquiryGmail) {
-        if (state.contactGmail) {
-          inquiryGmail.textContent = state.contactGmail;
-          inquiryGmail.href = `mailto:${state.contactGmail}`;
-        } else {
-          inquiryGmail.textContent = 'Not configured';
-          inquiryGmail.removeAttribute('href');
-        }
-      }
-      if (inquiryPhone) {
-        if (state.contactPhone) {
-          inquiryPhone.textContent = state.contactPhone;
-          inquiryPhone.href = `tel:${state.contactPhone.replace(/[^+\d]/g, '')}`;
-        } else {
-          inquiryPhone.textContent = 'Not configured';
-          inquiryPhone.removeAttribute('href');
         }
       }
       if (gmailInput) gmailInput.value = state.contactGmail || '';
@@ -2065,7 +2281,32 @@
 
     function renderProducts() {
       const grid = document.getElementById('product-grid');
-      const items = state.filter === 'ALL' ? PRODUCTS : PRODUCTS.filter(p => p.category === state.filter);
+      let items = state.filter === 'ALL' ? [...PRODUCTS] : PRODUCTS.filter(p => p.category === state.filter);
+
+      if (state.searchQuery) {
+        items = items.filter(p => {
+          const hay = `${p.name} ${p.fit || ''} ${p.weight || ''} ${p.fabric || ''} ${p.description || ''}`.toLowerCase();
+          return hay.includes(state.searchQuery);
+        });
+      }
+
+      if (state.sortBy === 'PRICE_ASC') {
+        items.sort((a, b) => a.priceUSD - b.priceUSD);
+      } else if (state.sortBy === 'PRICE_DESC') {
+        items.sort((a, b) => b.priceUSD - a.priceUSD);
+      } else if (state.sortBy === 'WEIGHT_DESC') {
+        items.sort((a, b) => getWeightScore(b) - getWeightScore(a));
+      }
+
+      if (!items.length) {
+        grid.innerHTML = `
+          <div class="col-span-full rounded-2xl border border-white/10 bg-obsidian-900/80 p-8 text-center space-y-2">
+            <p class="text-sm text-white">No silhouettes match your current filter or search.</p>
+            <p class="text-xs text-neutral-400">Clear your search query or switch back to <span class="text-gold-300">All Pieces</span>.</p>
+          </div>
+        `;
+        return;
+      }
 
       grid.innerHTML = items.map(item => {
         const defaultCw = item.colorways[0];
@@ -2233,6 +2474,28 @@
       document.getElementById('modal-fabric').textContent = item.fabric;
       document.getElementById('modal-color-name').textContent = cw.name;
 
+      const pairItem = (item.pairId && ALL_CATALOG.find(p => p.id === item.pairId))
+        || ALL_CATALOG.find(p => p.id !== item.id);
+      const pairBox = document.getElementById('modal-pairing-box');
+      const pairName = document.getElementById('modal-pairing-name');
+      const pairPrice = document.getElementById('modal-pairing-price');
+      const pairInspect = document.getElementById('modal-pairing-inspect-btn');
+      const pairAdd = document.getElementById('modal-pairing-add-btn');
+      if (pairBox && pairItem) {
+        pairBox.classList.remove('hidden');
+        if (pairName) pairName.textContent = pairItem.name;
+        if (pairPrice) pairPrice.textContent = `${formatPrice(pairItem.priceUSD)} • ${pairItem.fit || 'Signature Fit'}`;
+        if (pairInspect) {
+          pairInspect.onclick = () => openPDPModal(pairItem.id);
+        }
+        if (pairAdd) {
+          pairAdd.onclick = () => {
+            addToBag(pairItem, state.activePDPSize, pairItem.colorways[0].name, 1);
+            closePDPModal();
+          };
+        }
+      }
+
       const imgEl = document.getElementById('modal-garment-img');
       const studioFallback = buildGarmentStudioDataUrl(item, cw);
       imgEl.src = item.images[state.activePDPAngle] || item.images.FRONT;
@@ -2274,6 +2537,8 @@
           qty: inc
         });
       }
+      persistBagPreferences();
+      triggerBag3DPulse();
       renderBag();
       openBagDrawer();
     }
@@ -2282,6 +2547,8 @@
       const entry = state.bag[index];
       if (!entry) return;
       entry.qty = (entry.qty || 1) + 1;
+      persistBagPreferences();
+      triggerBag3DPulse();
       renderBag();
     }
 
@@ -2294,6 +2561,16 @@
       } else {
         entry.qty = nextQty;
       }
+      persistBagPreferences();
+      triggerBag3DPulse();
+      renderBag();
+    }
+
+    function clearBag() {
+      if (!state.bag.length) return;
+      state.bag = [];
+      persistBagPreferences();
+      triggerBag3DPulse();
       renderBag();
     }
 
@@ -2304,6 +2581,8 @@
 
     function removeBagItem(index) {
       state.bag.splice(index, 1);
+      persistBagPreferences();
+      triggerBag3DPulse();
       renderBag();
     }
 
@@ -2329,6 +2608,7 @@
     function setDeliveryTier(tier) {
       if (!DELIVERY_TIERS[tier]) return;
       state.deliveryTier = tier;
+      persistBagPreferences();
       renderBag();
     }
 
@@ -2371,6 +2651,10 @@
     function renderBag() {
       const totalUnits = getTotalBagUnits();
       document.getElementById('bag-count').textContent = String(totalUnits);
+      const clearBtn = document.getElementById('clear-bag-btn');
+      if (clearBtn) {
+        clearBtn.classList.toggle('hidden', totalUnits === 0);
+      }
       const bag3DStatus = document.getElementById('bag-3d-status');
       if (bag3DStatus) {
         bag3DStatus.textContent = totalUnits === 1
@@ -3148,10 +3432,13 @@
         requestAnimationFrame(animateBag);
         const t = bagClock.getElapsedTime();
         const boost = 1 + Math.min(getTotalBagUnits(), 6) * 0.12;
-        emblemGroup.rotation.y = t * 0.85 * boost;
+        const pulseActive = Date.now() < state.bagPulseUntil;
+        const pulseScale = pulseActive ? 1.12 : 1.0;
+        emblemGroup.scale.setScalar(pulseScale);
+        emblemGroup.rotation.y = t * (pulseActive ? 2.4 : 0.85) * boost;
         emblemGroup.rotation.x = Math.sin(t * 1.1) * 0.22;
-        goldHalo.rotation.z = -t * 0.7;
-        starPoints.rotation.y = -t * 0.35;
+        goldHalo.rotation.z = -t * (pulseActive ? 2.1 : 0.7);
+        starPoints.rotation.y = -t * (pulseActive ? 1.1 : 0.35);
         renderer.render(scene, camera);
       }
       animateBag();
@@ -3243,6 +3530,8 @@
         if (sel) sel.value = 'NGN';
       }
     } catch (_) {}
+
+    restoreBagPreferences();
 
     const queryDomain = new URLSearchParams(window.location.search).get('domain');
     if (queryDomain) {
