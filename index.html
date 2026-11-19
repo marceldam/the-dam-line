@@ -652,13 +652,30 @@
       </div>
 
       <div class="border-t border-white/10 pt-4 space-y-4">
+        <!-- Delivery Tier Choice -->
+        <div class="space-y-1.5">
+          <p class="text-[10px] tracking-[0.16em] uppercase text-neutral-400">Delivery Tier</p>
+          <div class="grid grid-cols-2 gap-2 text-[11px] tabular-nums">
+            <button type="button" data-tier="STANDARD" onclick="setDeliveryTier('STANDARD')"
+              class="delivery-tier-btn py-2 px-2.5 rounded-xl border border-white/15 bg-obsidian-950 text-neutral-300 hover:border-gold-400/50 spring-btn text-left">
+              <span class="block font-semibold text-white">Standard Dispatch</span>
+              <span id="delivery-standard-price" class="text-[10px] text-neutral-400">$20.00</span>
+            </button>
+            <button type="button" data-tier="EXPRESS" onclick="setDeliveryTier('EXPRESS')"
+              class="delivery-tier-btn py-2 px-2.5 rounded-xl border border-gold-400 bg-gold-500 text-obsidian-950 font-semibold spring-btn text-left">
+              <span class="block">Priority Express</span>
+              <span id="delivery-express-price" class="text-[10px]">$35.00</span>
+            </button>
+          </div>
+        </div>
+
         <div class="space-y-1.5 text-xs">
           <div class="flex items-center justify-between text-neutral-400">
             <span>Items Subtotal</span>
             <span id="bag-items-subtotal" class="tabular-nums">$0.00</span>
           </div>
           <div class="flex items-center justify-between text-neutral-400">
-            <span>Express Atelier Delivery</span>
+            <span id="bag-delivery-label">Priority Express Delivery</span>
             <span id="bag-delivery-fee" class="text-amethyst-400 tabular-nums">$0.00</span>
           </div>
         </div>
@@ -998,7 +1015,10 @@
       ZAR: { symbol: 'R', rate: 18.2, decimals: 2 }
     };
 
-    const DELIVERY_FEE_USD = 35;
+    const DELIVERY_TIERS = {
+      STANDARD: { label: 'Standard Atelier Dispatch', feeUSD: 20 },
+      EXPRESS: { label: 'Priority Express Courier', feeUSD: 35 }
+    };
     const VAULT_THRESHOLD_USD = 1000;
 
     const PRODUCTS = [
@@ -1233,6 +1253,7 @@
     const state = {
       currency: 'USD',
       billingCurrency: 'USD',
+      deliveryTier: 'EXPRESS',
       filter: 'ALL',
       bag: [],
       customDomain: 'thedamline.ng',
@@ -2158,8 +2179,16 @@
       d.classList.remove('flex');
     }
 
+    function setDeliveryTier(tier) {
+      if (!DELIVERY_TIERS[tier]) return;
+      state.deliveryTier = tier;
+      renderBag();
+    }
+
     function getDeliveryFeeUSD() {
-      return getTotalBagUnits() > 0 ? DELIVERY_FEE_USD : 0;
+      if (getTotalBagUnits() <= 0) return 0;
+      const tierCfg = DELIVERY_TIERS[state.deliveryTier] || DELIVERY_TIERS.EXPRESS;
+      return tierCfg.feeUSD;
     }
 
     function getBagTotalUSD() {
@@ -2203,11 +2232,27 @@
       }
       const container = document.getElementById('bag-items');
       const itemsUSD = state.bag.reduce((sum, entry) => sum + entry.priceUSD * (entry.qty || 1), 0);
+      const activeTierCfg = DELIVERY_TIERS[state.deliveryTier] || DELIVERY_TIERS.EXPRESS;
       const deliveryUSD = getDeliveryFeeUSD();
       const totalUSD = itemsUSD + deliveryUSD;
+
+      const stdPriceEl = document.getElementById('delivery-standard-price');
+      const expPriceEl = document.getElementById('delivery-express-price');
+      if (stdPriceEl) stdPriceEl.textContent = formatPrice(DELIVERY_TIERS.STANDARD.feeUSD);
+      if (expPriceEl) expPriceEl.textContent = formatPrice(DELIVERY_TIERS.EXPRESS.feeUSD);
+
+      document.querySelectorAll('.delivery-tier-btn').forEach(btn => {
+        const isSelected = btn.dataset.tier === state.deliveryTier;
+        btn.className = isSelected
+          ? 'delivery-tier-btn py-2 px-2.5 rounded-xl border border-gold-400 bg-gold-500 text-obsidian-950 font-semibold spring-btn text-left'
+          : 'delivery-tier-btn py-2 px-2.5 rounded-xl border border-white/15 bg-obsidian-950 text-neutral-300 hover:border-gold-400/50 spring-btn text-left';
+      });
+
       const itemsSubEl = document.getElementById('bag-items-subtotal');
+      const deliveryLabelEl = document.getElementById('bag-delivery-label');
       const deliveryEl = document.getElementById('bag-delivery-fee');
       if (itemsSubEl) itemsSubEl.textContent = formatPrice(itemsUSD);
+      if (deliveryLabelEl) deliveryLabelEl.textContent = activeTierCfg.label;
       if (deliveryEl) deliveryEl.textContent = formatPrice(deliveryUSD);
       document.getElementById('bag-subtotal').textContent = formatPrice(totalUSD);
       renderVaultProgressInBag(itemsUSD);
@@ -2247,8 +2292,9 @@
 
     function checkoutBagWithCard() {
       const totalUSD = getBagTotalUSD();
+      const tierCfg = DELIVERY_TIERS[state.deliveryTier] || DELIVERY_TIERS.EXPRESS;
       closeBagDrawer();
-      openCardBillingModal(totalUSD > 0 ? totalUSD : 1000, 'Bag Allocation & Delivery Settlement');
+      openCardBillingModal(totalUSD > 0 ? totalUSD : 1000, `Bag Settlement (${tierCfg.label})`);
     }
 
     function openAuthModal(mode) {
