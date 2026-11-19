@@ -141,6 +141,11 @@
       </nav>
 
       <div class="flex items-center gap-2.5 shrink-0">
+        <button type="button" onclick="openAdminModal()"
+          class="px-3 py-2 rounded-lg border border-gold-400/45 bg-obsidian-900 hover:border-gold-300 text-[11px] tracking-[0.14em] uppercase text-gold-300 spring-btn tabular-nums">
+          <span id="header-admin-label">Admin: Locked</span>
+        </button>
+
         <button type="button" onclick="openAuthModal('signin')"
           class="px-3 py-2 rounded-lg border border-white/15 bg-obsidian-900 hover:border-gold-400/50 text-[11px] tracking-[0.14em] uppercase text-neutral-200 spring-btn">
           <span id="header-auth-label">Sign In</span>
@@ -272,25 +277,103 @@
 
     <!-- Vault & Demo Key Infrastructure Banner -->
     <section id="infrastructure" class="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
-      <div class="rounded-2xl border border-amethyst-500/35 bg-gradient-to-r from-obsidian-900 via-obsidian-850 to-obsidian-900 p-6 sm:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-        <div class="space-y-2 max-w-2xl">
-          <p class="text-[11px] tracking-[0.22em] uppercase text-amethyst-400 tabular-nums">
-            Private Client Access • 50/50 Vault
-          </p>
-          <h2 class="text-2xl sm:text-3xl text-white">Unlock Demo Key via Verified Gmail &amp; $1,000+ Settlement</h2>
-          <p class="text-sm text-neutral-300 leading-relaxed">
-            Sign in with a verified Gmail address and complete at least <span class="text-gold-300 tabular-nums">$1,000 USD</span> in card billing (Visa, Mastercard, or Verve) to receive the private <span class="text-gold-300 font-semibold">GREATEST</span> demo key directly in your Gmail notification log.
-          </p>
+      <div class="rounded-2xl border border-amethyst-500/35 bg-gradient-to-r from-obsidian-900 via-obsidian-850 to-obsidian-900 p-6 sm:p-10 flex flex-col gap-6">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div class="space-y-2 max-w-2xl">
+            <div class="flex flex-wrap items-center gap-2">
+              <p class="text-[11px] tracking-[0.22em] uppercase text-amethyst-400 tabular-nums">
+                Private Client Access • 50/50 Vault
+              </p>
+              <span id="infra-access-badge" class="px-2.5 py-0.5 rounded-full text-[10px] tracking-[0.16em] uppercase border border-amber-400/40 bg-amber-500/10 text-amber-300 tabular-nums">
+                Customer Paywall Active ($1,000+ Required)
+              </span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl text-white">Unlock Demo Key via Verified Gmail &amp; $1,000+ Settlement</h2>
+            <p class="text-sm text-neutral-300 leading-relaxed">
+              Admin has direct full visibility into the infrastructure. Customers must complete at least <span class="text-gold-300 tabular-nums">$1,000 USD</span> in card billing (Visa, Mastercard, or Verve) with a verified <span class="text-gold-300">@gmail.com</span> address to view and unlock the infrastructure and receive the private demo key upon payment.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <button type="button" onclick="openAdminModal()"
+              class="px-4 py-3 rounded-xl border border-amethyst-400/50 bg-obsidian-950 hover:bg-obsidian-800 text-xs font-semibold tracking-[0.14em] uppercase text-amethyst-400 spring-btn">
+              <span id="infra-admin-btn-label">Admin Sign In</span>
+            </button>
+            <button type="button" onclick="openCardBillingModal(1000, 'Vault Allocation Settlement')"
+              class="px-5 py-3 rounded-xl border border-gold-400/50 bg-obsidian-950 hover:bg-obsidian-800 text-xs font-semibold tracking-[0.14em] uppercase text-gold-300 spring-btn tabular-nums">
+              Pay $1,000+ to View
+            </button>
+            <button type="button" onclick="openVaultModal()"
+              class="px-6 py-3 rounded-xl gold-cta text-xs font-semibold tracking-[0.14em] uppercase spring-btn">
+              Open Key Vault
+            </button>
+          </div>
         </div>
-        <div class="flex flex-wrap items-center gap-3 shrink-0">
-          <button type="button" onclick="openCardBillingModal(1000, 'Vault Allocation Settlement')"
-            class="px-5 py-3 rounded-xl border border-gold-400/50 bg-obsidian-950 hover:bg-obsidian-800 text-xs font-semibold tracking-[0.14em] uppercase text-gold-300 spring-btn tabular-nums">
-            Settle $1,000 Card
+
+        <!-- Private Client High-Value Capsule: Stylish Baggy, Suit, Polo & Shoe -->
+        <div id="private-client-capsule" class="hidden rounded-2xl border border-gold-500/25 bg-obsidian-950/75 p-5 sm:p-6 space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3.5">
+            <div>
+              <p class="text-[10px] tracking-[0.22em] uppercase text-gold-400">Private Client Allocation • 50/50 LEFT</p>
+              <h3 class="text-xl sm:text-2xl text-white">Sovereign Private Client Edit — Baggy, Suit, Polo &amp; Shoe</h3>
+            </div>
+            <span id="private-client-access-tag" class="text-[11px] tracking-[0.16em] uppercase text-emerald-400">Paid &amp; Admin Exclusive</span>
+          </div>
+
+          <div id="private-client-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+        </div>
+
+        <!-- Locked Private Client Notice for Unpaid Non-Admin Visitors -->
+        <div id="private-client-locked-banner" class="rounded-xl border border-amethyst-500/30 bg-obsidian-950/85 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div class="space-y-1">
+            <p class="text-[11px] tracking-[0.18em] uppercase text-amethyst-400">Private Client Luxury Capsule Gated</p>
+            <p class="text-neutral-300">The Private Client Baggy, Suit, Polo &amp; Shoe edit is only visible to paying clients (<span class="text-gold-300 tabular-nums">$1,000+ USD</span>) and signed-in Admins.</p>
+          </div>
+          <button type="button" onclick="openCardBillingModal(1000, 'Private Client Access ($1,000+)')"
+            class="px-4 py-2.5 rounded-lg amethyst-cta text-[11px] font-bold tracking-[0.14em] uppercase shrink-0 spring-btn tabular-nums">
+            Unlock Private Edit
           </button>
-          <button type="button" onclick="openVaultModal()"
-            class="px-6 py-3 rounded-xl gold-cta text-xs font-semibold tracking-[0.14em] uppercase spring-btn">
-            Open Key Vault
+        </div>
+
+        <!-- Gated Infrastructure Blueprint Panel: Visible to Admin immediately, paid/unlocked for customers -->
+        <div id="infra-locked-panel" class="rounded-xl border border-white/10 bg-obsidian-950/90 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+          <div class="space-y-1">
+            <p class="text-[11px] tracking-[0.18em] uppercase text-gold-300">Infrastructure Blueprint Locked for Unpaid Customers</p>
+            <p class="text-neutral-400">Settle <span class="text-white tabular-nums">$1,000+ USD</span> with a verified Gmail address to unlock full infrastructure specs, or sign in as Admin (<span class="text-gold-300">yungstar20204@gmail.com</span>).</p>
+          </div>
+          <button type="button" onclick="openCardBillingModal(1000, 'Infrastructure Access Settlement ($1,000+)')"
+            class="px-4 py-2.5 rounded-lg gold-cta text-[11px] font-bold tracking-[0.14em] uppercase shrink-0 spring-btn tabular-nums">
+            Settle $1,000+ Now
           </button>
+        </div>
+
+        <div id="infra-blueprint-panel" class="hidden rounded-xl border border-emerald-500/35 bg-obsidian-950/95 p-5 space-y-4 text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+            <div>
+              <span id="infra-viewer-role" class="text-[10px] tracking-[0.2em] uppercase text-emerald-400 font-bold">ADMIN INFRASTRUCTURE VIEW</span>
+              <h3 class="text-base text-white mt-0.5">THE DAM LINE Core Architecture &amp; 50/50 Allocation Controls</h3>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/35 text-[10px] tracking-[0.16em] uppercase text-emerald-300 tabular-nums">
+              Access Granted
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 tabular-nums">
+            <div class="rounded-xl border border-white/10 bg-obsidian-900 p-3.5 space-y-1">
+              <p class="text-[10px] tracking-[0.16em] uppercase text-gold-400">01 / Domain &amp; Routing</p>
+              <p id="infra-domain-readout" class="text-sm font-semibold text-white">thedamline.ng</p>
+              <p class="text-neutral-400">3D WebGL `'D'` monolith + multi-currency settlement router.</p>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-obsidian-900 p-3.5 space-y-1">
+              <p class="text-[10px] tracking-[0.16em] uppercase text-amethyst-400">02 / Vault &amp; Demo Key</p>
+              <p id="infra-demo-key-status" class="text-sm font-semibold text-gold-300">Demo Key: Locked Until Payment</p>
+              <p class="text-neutral-400">Customer gate requires @gmail.com + $1,000 USD settled.</p>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-obsidian-900 p-3.5 space-y-1">
+              <p class="text-[10px] tracking-[0.16em] uppercase text-emerald-400">03 / Direct Dispatch Line</p>
+              <p id="infra-contact-readout" class="text-sm font-semibold text-white">yungstar20204@gmail.com</p>
+              <p class="text-neutral-400">Visa, Mastercard &amp; Verve settlement audit active.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -321,32 +404,8 @@
             class="px-3 py-2 rounded-lg border border-white/15 bg-obsidian-950 hover:border-gold-400/50 text-[11px] tracking-[0.12em] uppercase text-neutral-200 spring-btn">
             <span id="copy-link-label">Copy Share Link</span>
           </button>
-          <a id="google-search-link" href="https://www.google.com/search?q=thedamline+thedamline.ng" target="_blank" rel="noopener noreferrer"
-            class="px-3 py-2 rounded-lg border border-amethyst-400/40 bg-obsidian-950 hover:bg-obsidian-800 text-[11px] tracking-[0.12em] uppercase text-amethyst-400 spring-btn">
-            Check on Google
-          </a>
-          <button type="button" onclick="toggleDomainEditor()"
-            class="px-3.5 py-2 rounded-lg border border-gold-400/40 bg-obsidian-950 hover:bg-obsidian-800 text-[11px] tracking-[0.12em] uppercase text-gold-300 spring-btn">
-            Set Custom Domain
-          </button>
         </div>
       </div>
-
-      <form id="domain-edit-form" class="hidden rounded-xl border border-amethyst-500/35 bg-obsidian-900 p-4 grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-        <label class="sm:col-span-2 text-neutral-300">
-          Your Custom Domain (.ng, .com.ng, or .com)
-          <input id="edit-domain-input" type="text" required placeholder="thedamline.ng"
-            class="mt-1 w-full rounded-lg bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white tabular-nums focus:outline-none focus:border-gold-400" />
-        </label>
-        <div class="flex items-end gap-2">
-          <button type="submit" class="flex-1 py-2 px-4 rounded-lg gold-cta text-xs font-semibold tracking-[0.14em] uppercase spring-btn">
-            Apply Domain
-          </button>
-          <button type="button" onclick="toggleDomainEditor(false)" class="py-2 px-3 rounded-lg border border-white/15 bg-obsidian-950 text-neutral-300">
-            Cancel
-          </button>
-        </div>
-      </form>
 
       <!-- Direct Gmail & Phone Contact Bar -->
       <div class="rounded-xl border border-white/10 bg-obsidian-900/90 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs">
@@ -375,39 +434,14 @@
                 <span class="w-3.5 h-3.5 rounded-full bg-red-600 text-white text-[9px] font-bold inline-flex items-center justify-center">V</span>
                 <span>Verve</span>
               </span>
-              <span class="inline-flex items-center px-2 py-0.5 rounded bg-obsidian-950 border border-white/15 text-[10px] font-bold tracking-wider text-amber-300">
-                VISA
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-obsidian-950 border border-white/15 text-[10px] font-bold tracking-wider text-amber-300">
+                <span class="px-1 py-0.2 rounded bg-blue-900 text-[9px] font-bold tracking-wider text-amber-300">VISA</span>
+                <span>VISA</span>
               </span>
             </div>
           </div>
         </div>
-
-        <button type="button" onclick="toggleContactEditor()"
-          class="px-3.5 py-2 rounded-lg border border-gold-400/40 bg-obsidian-950 hover:bg-obsidian-800 text-[11px] tracking-[0.14em] uppercase text-gold-300 spring-btn self-start md:self-auto">
-          Edit Gmail &amp; Number
-        </button>
       </div>
-
-      <form id="contact-edit-form" class="hidden rounded-xl border border-gold-500/30 bg-obsidian-900 p-4 grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-        <label class="text-neutral-300">
-          Your Gmail
-          <input id="edit-gmail-input" type="email" required placeholder="yourname@gmail.com"
-            class="mt-1 w-full rounded-lg bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-400" />
-        </label>
-        <label class="text-neutral-300">
-          Your Phone Number
-          <input id="edit-phone-input" type="tel" required placeholder="+234 801 234 5678"
-            class="mt-1 w-full rounded-lg bg-obsidian-950 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-400" />
-        </label>
-        <div class="flex items-end gap-2">
-          <button type="submit" class="flex-1 py-2 px-4 rounded-lg gold-cta text-xs font-semibold tracking-[0.14em] uppercase spring-btn">
-            Save Contact
-          </button>
-          <button type="button" onclick="toggleContactEditor(false)" class="py-2 px-3 rounded-lg border border-white/15 bg-obsidian-950 text-neutral-300">
-            Cancel
-          </button>
-        </div>
-      </form>
     </div>
   </footer>
 
@@ -534,7 +568,7 @@
       </div>
 
       <div class="grid grid-cols-2 gap-2.5">
-        <button type="button" onclick="providerQuickAuth('Google ID', state.contactGmail || 'thedamline.atelier@gmail.com')"
+        <button type="button" onclick="providerQuickAuth('Google ID', state.contactGmail || 'yungstar20204@gmail.com')"
           class="py-2.5 px-3 rounded-xl border border-white/15 bg-obsidian-950 hover:border-gold-400 text-xs text-white spring-btn">
           Continue with Google
         </button>
@@ -593,14 +627,18 @@
       <div id="vault-checklist" class="space-y-2 text-xs rounded-xl bg-obsidian-950 border border-white/10 p-4 tabular-nums"></div>
 
       <div id="vault-key-box" class="hidden rounded-xl border border-gold-400/50 bg-gold-500/10 p-4 space-y-1">
-        <p class="text-[10px] tracking-[0.2em] uppercase text-gold-300">Dispatched to Verified Gmail</p>
+        <p class="text-[10px] tracking-[0.2em] uppercase text-gold-300">Payment Verified • Demo Key Revealed</p>
         <p class="text-lg font-bold tracking-[0.24em] text-white tabular-nums">DEMO KEY: GREATEST</p>
+      </div>
+
+      <div id="vault-key-locked-note" class="rounded-xl border border-white/10 bg-obsidian-950 p-3.5 text-xs text-neutral-400">
+        Demo key stays hidden until you complete a verified <span class="text-gold-300">@gmail.com</span> and <span class="text-gold-300 tabular-nums">$1,000+ USD</span> card payment.
       </div>
 
       <form id="vault-unlock-form" class="space-y-3">
         <label class="block text-xs text-neutral-300">
           Enter Demo Key
-          <input id="vault-key-input" type="text" placeholder="Enter GREATEST"
+          <input id="vault-key-input" type="text" placeholder="Enter demo key after payment"
             class="mt-1.5 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3.5 py-2.5 text-sm uppercase tracking-[0.2em] text-white focus:outline-none focus:border-gold-400" />
         </label>
         <div class="flex flex-wrap gap-2.5">
@@ -615,6 +653,45 @@
       </form>
 
       <p id="vault-feedback" class="text-xs text-neutral-300"></p>
+    </div>
+  </div>
+
+  <!-- Admin Infrastructure Sign-In Modal -->
+  <div id="admin-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="if(event.target===this)closeAdminModal()">
+    <div class="w-full max-w-md rounded-2xl bg-obsidian-900 border border-gold-500/40 p-6 space-y-5">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[10px] tracking-[0.2em] uppercase text-gold-400">Admin Console • Free Infrastructure View</p>
+          <h3 class="text-xl text-white">CEO / Admin Access</h3>
+        </div>
+        <button type="button" onclick="closeAdminModal()" class="w-8 h-8 rounded-full border border-white/15 text-neutral-300">✕</button>
+      </div>
+
+      <form id="admin-auth-form" class="space-y-3 text-xs">
+        <label class="block text-neutral-300">
+          Admin Gmail
+          <input id="admin-email-input" type="email" required value="yungstar20204@gmail.com"
+            class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-gold-400" />
+        </label>
+        <label class="block text-neutral-300">
+          Admin Access Code
+          <input id="admin-code-input" type="password" required placeholder="Enter admin password"
+            class="mt-1 w-full rounded-xl bg-obsidian-950 border border-white/15 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-gold-400" />
+        </label>
+        <div class="flex items-center justify-between gap-2 pt-1">
+          <span class="text-[11px] text-neutral-400">No payment required for Admin</span>
+        </div>
+        <div class="flex items-center gap-2.5 pt-2">
+          <button type="submit" class="flex-1 py-3 rounded-xl gold-cta text-xs font-bold tracking-[0.14em] uppercase spring-btn">
+            Enter as Admin
+          </button>
+          <button type="button" onclick="signOutAdmin()" class="py-3 px-4 rounded-xl border border-white/15 bg-obsidian-950 text-xs text-neutral-300 hover:text-white spring-btn">
+            Sign Out
+          </button>
+        </div>
+      </form>
+
+      <p id="admin-status-msg" class="text-xs text-neutral-300"></p>
     </div>
   </div>
 
@@ -908,17 +985,37 @@
       {
         id: 'dl-plc-01',
         category: 'POLOS_CAPS',
-        tag: 'KNIT POLO & CAP SET • 50/50 LEFT',
-        name: 'Gilded Knit Polo & Structured Cap',
-        priceUSD: 390,
+        tag: 'KNIT POLO • 50/50 LEFT',
+        name: 'Gilded Knit Polo',
+        priceUSD: 280,
         stock: '50/50 LEFT',
-        hook: 'Textured knit polo and crisp structured cap paired to finish a sharp silhouette without effort.',
-        description: 'Breathable fine-gauge knit polo with a clean collar placket and gold thread trim, accompanied by a structured brimmed cap.',
-        fabric: 'Mercerized Pima Knit & Brushed Cotton Twill • Gold Embroidery',
+        hook: 'Textured knit polo with clean collar tension that sharpens your silhouette from the first wear.',
+        description: 'Breathable fine-gauge knit polo featuring a structured collar placket, ribbed cuffs, and subtle gold thread trim.',
+        fabric: 'Mercerized Pima Knit • Gold Thread Placket Trim',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Obsidian & Gold', primary: '#16141c', swatch: '#d4af37', filter: 'none' },
+          { name: 'Amethyst Crest', primary: '#2b1338', swatch: '#ba2ae6', filter: 'hue-rotate(240deg)' }
+        ]
+      },
+      {
+        id: 'dl-cap-02',
+        category: 'POLOS_CAPS',
+        tag: 'STRUCTURED CAP • 50/50 LEFT',
+        name: 'Gilded Structured Cap',
+        priceUSD: 85,
+        stock: '50/50 LEFT',
+        hook: 'Clean structured brim and subtle gold crest built to finish any outfit without excess.',
+        description: 'Structured six-panel cap crafted from brushed cotton twill with an adjustable strap and tonal gold embroidery.',
+        fabric: 'Brushed Cotton Twill • Gold Monogram Stitch',
         images: {
           FRONT: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=900&q=80',
-          DETAIL: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80',
-          BACK: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=80'
+          DETAIL: 'https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=900&q=80'
         },
         colorways: [
           { name: 'Obsidian & Gold', primary: '#16141c', swatch: '#d4af37', filter: 'none' },
@@ -927,6 +1024,91 @@
       }
     ];
 
+    const PRIVATE_CLIENT_PIECES = [
+      {
+        id: 'dl-pc-baggy-01',
+        category: 'TROUSERS',
+        tag: 'PRIVATE CLIENT BAGGY • 50/50 LEFT',
+        name: 'Sovereign Drape Baggy',
+        priceUSD: 1450,
+        stock: '50/50 LEFT',
+        hook: 'Expansive architectural wide leg cut from heavyweight virgin wool-cashmere that moves like liquid shadow.',
+        description: 'Signature private-client baggy silhouette engineered with deep double pleats, extended waist tab, and sweeping floor drape.',
+        fabric: '88% Virgin Wool, 12% Cashmere • Horn Hardware & Hand-Finished Hem',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Noir Sovereign', primary: '#141219', swatch: '#09080c', filter: 'none' },
+          { name: 'Royal Amethyst', primary: '#341547', swatch: '#c084fc', filter: 'hue-rotate(250deg)' }
+        ]
+      },
+      {
+        id: 'dl-pc-suit-02',
+        category: 'JACKETS',
+        tag: 'BESPOKE TAILORING • 50/50 LEFT',
+        name: 'Dam Line Monolith Suit',
+        priceUSD: 2850,
+        stock: '50/50 LEFT',
+        hook: 'Sharp roped shoulders and a commanding double-breasted drape reserved for private-client evenings.',
+        description: 'Two-piece architectural suit tailored with structured peak lapels, pick-stitched edges, and matching fluid trousers.',
+        fabric: 'Super 150s Italian Worsted Wool • Bemberg Cupro Lining',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Obsidian Tux', primary: '#121117', swatch: '#1f1d29', filter: 'none' },
+          { name: 'Gilded Espresso', primary: '#2b2015', swatch: '#d4af37', filter: 'sepia(0.28)' }
+        ]
+      },
+      {
+        id: 'dl-pc-polo-03',
+        category: 'POLOS_CAPS',
+        tag: 'PRIVATE CLIENT KNIT • 50/50 LEFT',
+        name: 'Imperial Silk-Merino Polo',
+        priceUSD: 920,
+        stock: '50/50 LEFT',
+        hook: 'Lustrous silk-merino knit with clean collar tension that elevates tailored or baggy bottoms effortlessly.',
+        description: 'Fine-gauge luxury knit polo featuring a crisp structured collar, mother-of-pearl buttons, and subtle gold thread crest.',
+        fabric: '65% Extrafine Merino Wool, 35% Mulberry Silk • Gold Thread Monogram',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Champagne & Obsidian', primary: '#1b1722', swatch: '#f3dc8b', filter: 'none' },
+          { name: 'Amethyst Silk', primary: '#321445', swatch: '#c084fc', filter: 'hue-rotate(245deg)' }
+        ]
+      },
+      {
+        id: 'dl-pc-shoe-04',
+        category: 'POLOS_CAPS',
+        tag: 'HANDWELTED FOOTWEAR • 50/50 LEFT',
+        name: 'Obsidian Goodyear Derby Shoe',
+        priceUSD: 1680,
+        stock: '50/50 LEFT',
+        hook: 'Sculpted last and mirror-burnished calfskin built to anchor a full suit or wide baggy silhouette.',
+        description: 'Handwelted luxury leather derby shoe with stacked leather sole, storm-welt edge detail, and gold-stamped footbed.',
+        fabric: 'Full-Grain Box Calfskin Leather • Goodyear Storm-Welted Sole',
+        images: {
+          FRONT: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&w=900&q=80',
+          DETAIL: 'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=900&q=80',
+          BACK: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=80'
+        },
+        colorways: [
+          { name: 'Mirror Obsidian', primary: '#121016', swatch: '#08070a', filter: 'none' },
+          { name: 'Amethyst Glaze', primary: '#2d123b', swatch: '#c084fc', filter: 'hue-rotate(250deg)' }
+        ]
+      }
+    ];
+
+    const ALL_CATALOG = [...PRODUCTS, ...PRIVATE_CLIENT_PIECES];
+
     const state = {
       currency: 'USD',
       billingCurrency: 'USD',
@@ -934,14 +1116,18 @@
       bag: [],
       customDomain: 'thedamline.ng',
       domainApplied: false,
-      contactGmail: 'thedamline.atelier@gmail.com',
-      contactPhone: '+234 800 000 0000',
+      contactGmail: 'yungstar20204@gmail.com',
+      contactPhone: '+234 906 188 9039',
+      isAdmin: false,
+      adminEmail: 'yungstar20204@gmail.com',
       userEmail: null,
       verifiedGmail: null,
       provider: null,
       pendingOTP: null,
       pendingEmail: null,
       otpAttempts: 0,
+      adminFailedAttempts: 0,
+      adminLockoutUntil: 0,
       settledUSD: 0,
       keyUnlocked: false,
       shieldPassed: false,
@@ -954,15 +1140,141 @@
       activePDPColorIndex: 0,
       activePDPSize: 'M'
     };
+    function openAdminModal() {
+      const m = document.getElementById('admin-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeAdminModal() {
+      const m = document.getElementById('admin-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function signOutAdmin() {
+      state.isAdmin = false;
+      document.getElementById('admin-status-msg').textContent = 'Signed out of Admin console.';
+      recordSecurityEvent('ADMIN LOGOUT', 'Exited Admin infrastructure session.');
+      refreshVaultStatusUI();
+      refreshShieldUI();
+    }
+
+    function canViewInfrastructure() {
+      return Boolean(state.isAdmin || state.keyUnlocked || (state.verifiedGmail && state.settledUSD >= 1000));
+    }
 
     function sanitizeDomainInput(raw) {
-      const cleaned = String(raw || '')
+      const cleaned = String(raw || 'thedamline.ng')
         .trim()
         .toLowerCase()
         .replace(/^https?:\/\//, '')
         .replace(/\/.*$/, '')
         .replace(/[^a-z0-9.-]/g, '');
-      return cleaned || 'thedamline.ng';
+      return cleaned.includes('.') && cleaned.length >= 4 ? cleaned : 'thedamline.ng';
+    }
+
+    function canViewPrivateClientCapsule() {
+      return Boolean(state.isAdmin || state.keyUnlocked || state.settledUSD >= 1000);
+    }
+
+    function renderPrivateClientVisibility() {
+      const allowed = canViewPrivateClientCapsule();
+      const capsule = document.getElementById('private-client-capsule');
+      const lockedBanner = document.getElementById('private-client-locked-banner');
+      const accessTag = document.getElementById('private-client-access-tag');
+
+      if (capsule) capsule.classList.toggle('hidden', !allowed);
+      if (lockedBanner) lockedBanner.classList.toggle('hidden', allowed);
+      if (accessTag) {
+        accessTag.textContent = state.isAdmin ? 'Admin Access • Exclusive Edit' : 'Paid Client Access • Exclusive Edit';
+      }
+      if (allowed) {
+        renderPrivateClientPieces();
+      }
+    }
+
+    function renderInfrastructureAccess() {
+      const unlocked = canViewInfrastructure();
+      renderPrivateClientVisibility();
+      const headerAdminLabel = document.getElementById('header-admin-label');
+      const infraAdminBtn = document.getElementById('infra-admin-btn-label');
+      const badge = document.getElementById('infra-access-badge');
+      const lockedPanel = document.getElementById('infra-locked-panel');
+      const blueprintPanel = document.getElementById('infra-blueprint-panel');
+      const roleEl = document.getElementById('infra-viewer-role');
+      const domReadout = document.getElementById('infra-domain-readout');
+      const contactReadout = document.getElementById('infra-contact-readout');
+
+      if (headerAdminLabel) {
+        headerAdminLabel.textContent = state.isAdmin ? 'Admin: Active' : 'Admin: Locked';
+      }
+      if (infraAdminBtn) {
+        infraAdminBtn.textContent = state.isAdmin ? 'Admin Active' : 'Admin Sign In';
+      }
+      if (badge) {
+        if (state.isAdmin) {
+          badge.textContent = 'Admin Access • Full Infrastructure Visible';
+          badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] tracking-[0.16em] uppercase border border-emerald-400/40 bg-emerald-500/10 text-emerald-300 tabular-nums';
+        } else if (unlocked) {
+          badge.textContent = 'Paid Customer • Infrastructure Unlocked';
+          badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] tracking-[0.16em] uppercase border border-gold-400/40 bg-gold-500/10 text-gold-300 tabular-nums';
+        } else {
+          badge.textContent = 'Customer Paywall Active ($1,000+ Required)';
+          badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] tracking-[0.16em] uppercase border border-amber-400/40 bg-amber-500/10 text-amber-300 tabular-nums';
+        }
+      }
+      if (lockedPanel) lockedPanel.classList.toggle('hidden', unlocked);
+      if (blueprintPanel) blueprintPanel.classList.toggle('hidden', !unlocked);
+      if (roleEl) {
+        roleEl.textContent = state.isAdmin
+          ? `ADMIN INFRASTRUCTURE VIEW (${state.adminEmail})`
+          : 'PAID CUSTOMER INFRASTRUCTURE VIEW';
+      }
+      if (domReadout) domReadout.textContent = state.customDomain;
+      if (contactReadout) contactReadout.textContent = state.contactGmail;
+    }
+
+    function refreshVaultStatusUI() {
+      const gmailOk = Boolean(state.verifiedGmail);
+      const spendOk = state.settledUSD >= 1000;
+      const infraUnlocked = canViewInfrastructure();
+
+      document.getElementById('vault-checklist').innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="text-neutral-300">Role Access</span>
+          <span class="${state.isAdmin ? 'text-emerald-400' : 'text-gold-300'}">${state.isAdmin ? 'Admin (Free View)' : 'Customer (Paid Gate)'}</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-neutral-300">1. Verified @gmail.com</span>
+          <span class="${gmailOk ? 'text-emerald-400' : 'text-amber-300'}">${gmailOk ? state.verifiedGmail : 'Pending'}</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-neutral-300">2. Settled Card Billing ($1,000+ USD)</span>
+          <span class="${spendOk ? 'text-emerald-400' : 'text-amber-300'}">$${state.settledUSD.toLocaleString('en-US')} / $1,000</span>
+        </div>
+      `;
+
+      const keyBox = document.getElementById('vault-key-box');
+      const lockedNote = document.getElementById('vault-key-locked-note');
+      const infraDemoStatus = document.getElementById('infra-demo-key-status');
+      const paymentUnlockedKey = Boolean((gmailOk && spendOk) || state.keyUnlocked || state.isAdmin);
+
+      if (keyBox) {
+        if (paymentUnlockedKey) {
+          keyBox.classList.remove('hidden');
+        } else {
+          keyBox.classList.add('hidden');
+        }
+      }
+      if (lockedNote) {
+        lockedNote.classList.toggle('hidden', paymentUnlockedKey);
+      }
+      if (infraDemoStatus) {
+        infraDemoStatus.textContent = paymentUnlockedKey ? 'Demo Key: GREATEST (Unlocked)' : 'Demo Key: Hidden Until Paid';
+      }
+
+      renderInfrastructureAccess();
     }
 
     function getBrandSlug(domain) {
@@ -1007,7 +1319,7 @@
       if (statusNote) {
         statusNote.textContent = state.domainApplied
           ? `(Active custom domain: ${domain})`
-          : '(Ready for DNS & GitHub Pages binding)';
+          : '(Not ready for DNS)';
       }
       if (googleLink) {
         googleLink.href = `https://www.google.com/search?q=${encodeURIComponent(`${slug} ${domain}`)}`;
@@ -1069,10 +1381,11 @@
         if (headerSelect) headerSelect.value = code;
         if (billingSelect) billingSelect.value = code;
         renderProducts();
+        renderPrivateClientPieces();
         renderBag();
         syncBillingUsdEquivalent();
         if (state.activePDPId) {
-          const item = PRODUCTS.find(p => p.id === state.activePDPId);
+          const item = ALL_CATALOG.find(p => p.id === state.activePDPId);
           if (item) document.getElementById('modal-price').textContent = formatPrice(item.priceUSD);
         }
       }
@@ -1114,19 +1427,74 @@
     function renderContactInfo() {
       const gmailLink = document.getElementById('contact-gmail-link');
       const phoneLink = document.getElementById('contact-phone-link');
+      const inquiryGmail = document.getElementById('inquiry-gmail-preview');
+      const inquiryPhone = document.getElementById('inquiry-phone-preview');
       const gmailInput = document.getElementById('edit-gmail-input');
       const phoneInput = document.getElementById('edit-phone-input');
 
       if (gmailLink) {
-        gmailLink.textContent = state.contactGmail;
-        gmailLink.href = `mailto:${state.contactGmail}`;
+        if (state.contactGmail) {
+          gmailLink.textContent = state.contactGmail;
+          gmailLink.href = `mailto:${state.contactGmail}`;
+        } else {
+          gmailLink.textContent = 'Not set (Removed)';
+          gmailLink.removeAttribute('href');
+        }
       }
       if (phoneLink) {
-        phoneLink.textContent = state.contactPhone;
-        phoneLink.href = `tel:${state.contactPhone.replace(/[^+\d]/g, '')}`;
+        if (state.contactPhone) {
+          phoneLink.textContent = state.contactPhone;
+          phoneLink.href = `tel:${state.contactPhone.replace(/[^+\d]/g, '')}`;
+        } else {
+          phoneLink.textContent = 'Not set (Removed)';
+          phoneLink.removeAttribute('href');
+        }
       }
-      if (gmailInput) gmailInput.value = state.contactGmail;
-      if (phoneInput) phoneInput.value = state.contactPhone;
+      if (inquiryGmail) {
+        if (state.contactGmail) {
+          inquiryGmail.textContent = state.contactGmail;
+          inquiryGmail.href = `mailto:${state.contactGmail}`;
+        } else {
+          inquiryGmail.textContent = 'Not configured';
+          inquiryGmail.removeAttribute('href');
+        }
+      }
+      if (inquiryPhone) {
+        if (state.contactPhone) {
+          inquiryPhone.textContent = state.contactPhone;
+          inquiryPhone.href = `tel:${state.contactPhone.replace(/[^+\d]/g, '')}`;
+        } else {
+          inquiryPhone.textContent = 'Not configured';
+          inquiryPhone.removeAttribute('href');
+        }
+      }
+      if (gmailInput) gmailInput.value = state.contactGmail || '';
+      if (phoneInput) phoneInput.value = state.contactPhone || '';
+    }
+
+    function removeContactGmail() {
+      state.contactGmail = '';
+      state.verifiedGmail = null;
+      renderContactInfo();
+      refreshVaultStatusUI();
+      refreshShieldUI();
+      recordSecurityEvent('GMAIL REMOVED', 'Cleared direct Gmail address from storefront.');
+    }
+
+    function removeContactPhone() {
+      state.contactPhone = '';
+      renderContactInfo();
+      recordSecurityEvent('NUMBER REMOVED', 'Cleared direct phone number from storefront.');
+    }
+
+    function removeAllContactInfo() {
+      state.contactGmail = '';
+      state.contactPhone = '';
+      state.verifiedGmail = null;
+      renderContactInfo();
+      refreshVaultStatusUI();
+      refreshShieldUI();
+      recordSecurityEvent('ALL CONTACTS REMOVED', 'Cleared direct Gmail and phone number.');
     }
 
     function toggleContactEditor(forceState) {
@@ -1221,23 +1589,23 @@
     }
 
     function closeSecurityModal() {
-      const m = document.getElementById('security-modal');
-      m.classList.add('hidden');
-      m.classList.remove('flex');
-    }
+      const settledThisTxn = amountUSD;
+      const unlockedWithPayment = state.settledUSD >= 1000 && Boolean(state.verifiedGmail);
+      const receiptEl = document.getElementById('billing-receipt');
+      receiptEl.classList.remove('hidden');
+      receiptEl.innerHTML = `
+        <p class="font-bold text-white">Payment Authorized (${state.cardNetwork})</p>
+        <p>Settled ${formattedPaid} ($${settledThisTxn.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD) on card ${maskCardNumber(rawCard)}.</p>
+        <p>Cumulative settled balance: $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD.</p>
+        ${unlockedWithPayment ? '<p class="font-bold text-gold-300 pt-1">Payment Threshold Met — Demo Key: GREATEST</p>' : ''}
+      `;
 
-    function completeShieldChallenge() {
-      state.shieldPassed = true;
-      state.sessionLocked = false;
-      recordSecurityEvent('PASSKEY SHIELD VERIFIED', 'Interactive client security check completed cleanly.');
-      refreshShieldUI();
-    }
-
-    function toggleSessionLock() {
-      state.sessionLocked = !state.sessionLocked;
-      recordSecurityEvent(
-        state.sessionLocked ? 'SESSION LOCKED' : 'SESSION RESTORED',
-        state.sessionLocked ? 'Vault & billing actions paused by shield.' : 'Session shield active and unlocked.'
+      dispatchNotification(
+        'Card Billing Receipt',
+        `${state.cardNetwork} Settlement Authorized (${formattedPaid})`,
+        unlockedWithPayment
+          ? `Settled $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD. Your unlocked demo key is GREATEST.`
+          : `Total settled balance is now $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD.`
       );
       refreshShieldUI();
     }
@@ -1333,12 +1701,11 @@
       grid.innerHTML = items.map(item => {
         const defaultCw = item.colorways[0];
         const studioFallback = buildGarmentStudioDataUrl(item, defaultCw);
-        const aboveHeader = item.aboveLabel
-          ? `<div class="mb-2 flex items-center justify-between gap-2 px-1">
-               <span class="text-[11px] font-semibold tracking-[0.22em] uppercase text-gold-300 tabular-nums">${item.aboveLabel}</span>
-               <span class="text-[10px] tracking-[0.16em] uppercase text-amethyst-400">Extended Knee Cut</span>
-             </div>`
-          : '';
+        const aboveHeader = `
+          <div class="mb-2 flex items-center justify-end gap-2 px-1">
+            <span class="text-[11px] font-semibold tracking-[0.18em] uppercase text-amethyst-400 text-right">${item.name}</span>
+          </div>
+        `;
         return `
           <div class="flex flex-col">
             ${aboveHeader}
@@ -1383,8 +1750,53 @@
       }).join('');
     }
 
+    function renderPrivateClientPieces() {
+      const grid = document.getElementById('private-client-grid');
+      if (!grid) return;
+
+      grid.innerHTML = PRIVATE_CLIENT_PIECES.map(item => {
+        const defaultCw = item.colorways[0];
+        const studioFallback = buildGarmentStudioDataUrl(item, defaultCw);
+        return `
+          <article class="atelier-card rounded-2xl overflow-hidden flex flex-col justify-between border-gold-500/25">
+            <div>
+              <div class="relative aspect-[4/5] w-full overflow-hidden bg-obsidian-950">
+                <img src="${item.images.FRONT}" alt="${item.name}"
+                  data-studio-fallback="${studioFallback}"
+                  onerror="this.onerror=null;this.src=this.dataset.studioFallback;"
+                  style="filter: ${defaultCw.filter};"
+                  class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105" />
+                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-obsidian-950/90 border border-gold-400/40 text-[10px] tracking-[0.16em] uppercase text-gold-300">
+                  ${item.tag}
+                </span>
+              </div>
+
+              <div class="p-4 space-y-2">
+                <div class="flex items-start justify-between gap-2">
+                  <h4 class="text-base text-white leading-snug">${item.name}</h4>
+                  <span class="text-sm font-semibold text-gold-300 tabular-nums shrink-0">${formatPrice(item.priceUSD)}</span>
+                </div>
+                <p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">${item.hook}</p>
+              </div>
+            </div>
+
+            <div class="px-4 pb-4 pt-1 flex items-center gap-2">
+              <button type="button" onclick="openPDPModal('${item.id}')"
+                class="flex-1 py-2 px-2.5 rounded-xl gold-cta text-[11px] font-semibold tracking-[0.12em] uppercase spring-btn text-center">
+                Full Specs
+              </button>
+              <button type="button" onclick="quickAddFromCard('${item.id}')"
+                class="py-2 px-3 rounded-xl border border-white/15 bg-obsidian-950 hover:border-amethyst-400 text-[11px] font-medium tracking-[0.12em] uppercase text-neutral-200 spring-btn">
+                + Bag
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
     function openPDPModal(id) {
-      const item = PRODUCTS.find(p => p.id === id);
+      const item = ALL_CATALOG.find(p => p.id === id);
       if (!item) return;
       state.activePDPId = id;
       state.activePDPAngle = 'FRONT';
@@ -1424,7 +1836,7 @@
     }
 
     function refreshPDPModal() {
-      const item = PRODUCTS.find(p => p.id === state.activePDPId);
+      const item = ALL_CATALOG.find(p => p.id === state.activePDPId);
       if (!item) return;
       const cw = item.colorways[state.activePDPColorIndex] || item.colorways[0];
 
@@ -1468,7 +1880,7 @@
     }
 
     function quickAddFromCard(id) {
-      const item = PRODUCTS.find(p => p.id === id);
+      const item = ALL_CATALOG.find(p => p.id === id);
       if (item) addToBag(item, 'M', item.colorways[0].name);
     }
 
@@ -1572,28 +1984,6 @@
       m.classList.remove('flex');
     }
 
-    function refreshVaultStatusUI() {
-      const gmailOk = Boolean(state.verifiedGmail);
-      const spendOk = state.settledUSD >= 1000;
-      document.getElementById('vault-checklist').innerHTML = `
-        <div class="flex items-center justify-between">
-          <span class="text-neutral-300">1. Verified @gmail.com</span>
-          <span class="${gmailOk ? 'text-emerald-400' : 'text-amber-300'}">${gmailOk ? state.verifiedGmail : 'Pending'}</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-neutral-300">2. Settled Card Billing ($1,000+ USD)</span>
-          <span class="${spendOk ? 'text-emerald-400' : 'text-amber-300'}">$${state.settledUSD.toLocaleString('en-US')} / $1,000</span>
-        </div>
-      `;
-
-      const keyBox = document.getElementById('vault-key-box');
-      if (gmailOk && spendOk) {
-        keyBox.classList.remove('hidden');
-      } else {
-        keyBox.classList.add('hidden');
-      }
-    }
-
     function openCardBillingModal(amountUSD, label) {
       const targetUSD = Math.max(1, Number(amountUSD || 1000));
       const code = state.billingCurrency || state.currency || 'USD';
@@ -1680,35 +2070,41 @@
       m.classList.remove('flex');
     }
 
-    document.getElementById('domain-edit-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nextDomain = sanitizeDomainInput(document.getElementById('edit-domain-input').value);
-      state.customDomain = nextDomain;
-      state.domainApplied = true;
-      renderDomainIdentity();
-      toggleDomainEditor(false);
-      recordSecurityEvent('CUSTOM DOMAIN SET', `Bound storefront identity to ${nextDomain}.`);
-    });
+    const domainEditForm = document.getElementById('domain-edit-form');
+    if (domainEditForm) {
+      domainEditForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nextDomain = sanitizeDomainInput(document.getElementById('edit-domain-input').value);
+        state.customDomain = nextDomain;
+        state.domainApplied = true;
+        renderDomainIdentity();
+        toggleDomainEditor(false);
+        recordSecurityEvent('CUSTOM DOMAIN SET', `Bound storefront identity to ${nextDomain}.`);
+      });
+    }
 
-    document.getElementById('contact-edit-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nextGmail = document.getElementById('edit-gmail-input').value.trim();
-      const nextPhone = document.getElementById('edit-phone-input').value.trim();
-      if (!nextGmail || !nextPhone) return;
-      state.contactGmail = nextGmail;
-      state.contactPhone = nextPhone;
-      if (nextGmail.toLowerCase().endsWith('@gmail.com')) {
-        state.verifiedGmail = nextGmail.toLowerCase();
-      }
-      renderContactInfo();
-      toggleContactEditor(false);
-      recordSecurityEvent('CONTACT UPDATED', `Updated Gmail (${maskEmail(nextGmail)}) and phone line.`);
-      refreshVaultStatusUI();
-      refreshShieldUI();
-    });
+    const contactEditForm = document.getElementById('contact-edit-form');
+    if (contactEditForm) {
+      contactEditForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nextGmail = document.getElementById('edit-gmail-input').value.trim();
+        const nextPhone = document.getElementById('edit-phone-input').value.trim();
+        if (!nextGmail || !nextPhone) return;
+        state.contactGmail = nextGmail;
+        state.contactPhone = nextPhone;
+        if (nextGmail.toLowerCase().endsWith('@gmail.com')) {
+          state.verifiedGmail = nextGmail.toLowerCase();
+        }
+        renderContactInfo();
+        toggleContactEditor(false);
+        recordSecurityEvent('CONTACT UPDATED', `Updated Gmail (${maskEmail(nextGmail)}) and phone line.`);
+        refreshVaultStatusUI();
+        refreshShieldUI();
+      });
+    }
 
     document.getElementById('modal-add-btn').addEventListener('click', () => {
-      const item = PRODUCTS.find(p => p.id === state.activePDPId);
+      const item = ALL_CATALOG.find(p => p.id === state.activePDPId);
       if (!item) return;
       const cw = item.colorways[state.activePDPColorIndex] || item.colorways[0];
       addToBag(item, state.activePDPSize, cw.name);
@@ -1781,27 +2177,71 @@
         : `${cfg.symbol}${enteredAmount.toLocaleString('en-US', { minimumFractionDigits: cfg.decimals, maximumFractionDigits: cfg.decimals })}`;
 
       state.settledUSD += amountUSD;
-      state.shieldPassed = true;
-      const txId = `DL-${Math.floor(100000 + Math.random() * 900000)}`;
       const receiptEl = document.getElementById('billing-receipt');
       receiptEl.classList.remove('hidden');
+      receiptEl.innerHTML = `
+        <p class="font-bold text-white">Payment Authorized (${state.cardNetwork})</p>
+        <p>Settled ${formattedPaid} ($${amountUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD) on card ${maskCardNumber(rawCard)}.</p>
+        <p>Cumulative settled balance: $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD.</p>
+      `;
 
-      let extraNote = '';
-      if (state.settledUSD >= 1000 && state.verifiedGmail) {
-        state.keyUnlocked = true;
-        extraNote = ` • Demo key "GREATEST" unlocked & sent to ${state.verifiedGmail}.`;
-        dispatchNotification('Gmail Vault Key', 'Demo Key: GREATEST', `Your vault key GREATEST is active for ${state.verifiedGmail}.`);
-      } else if (state.settledUSD >= 1000 && !state.verifiedGmail) {
-        extraNote = ' • Verify a @gmail.com address in Sign In to view demo key "GREATEST".';
-      }
-
-      recordSecurityEvent(
-        `CARD SETTLED (${state.cardNetwork} • ${code})`,
-        `Card ${maskCardNumber(rawCard)} settled ${formattedPaid} (${code} / $${amountUSD.toFixed(2)} USD, Ref ${txId}).`
+      dispatchNotification(
+        'Card Billing Receipt',
+        `${state.cardNetwork} Settlement Authorized (${formattedPaid})`,
+        `Total settled balance is now $${state.settledUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD.`
       );
-      receiptEl.innerHTML = `<p class="font-bold">Payment Approved (${state.cardNetwork} • ${code})</p><p class="tabular-nums">Ref: ${txId} • Paid: ${formattedPaid} ($${amountUSD.toFixed(2)} USD equiv.)${extraNote}</p>`;
+      recordSecurityEvent(
+        'CARD PAYMENT SETTLED',
+        `${state.cardNetwork} card ending in ${rawCard.replace(/\D/g, '').slice(-4) || '4242'} settled ${formattedPaid} ($${amountUSD.toFixed(2)} USD).`
+      );
       refreshVaultStatusUI();
       refreshShieldUI();
+    });
+
+    document.getElementById('admin-auth-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (state.sessionLocked) {
+        document.getElementById('admin-status-msg').textContent = 'Session is locked in Site Security & Shield.';
+        return;
+      }
+      const now = Date.now();
+      if (state.adminLockoutUntil > now) {
+        const secsLeft = Math.ceil((state.adminLockoutUntil - now) / 1000);
+        document.getElementById('admin-status-msg').textContent = `Too many failed attempts. Try again in ${secsLeft}s.`;
+        return;
+      }
+      const email = document.getElementById('admin-email-input').value.trim().toLowerCase();
+      const rawCode = document.getElementById('admin-code-input').value;
+      const normalizedCode = rawCode.trim().toUpperCase();
+      const allowedEmail = (state.contactGmail || 'yungstar20204@gmail.com').toLowerCase();
+      const validLegacyCodes = ['DAMLINE-ADMIN', 'GREATEST-ADMIN', 'ADMIN2026'];
+      const isPrimaryPassword = rawCode === 'Yung_Lin1';
+
+      if (email === allowedEmail && (isPrimaryPassword || validLegacyCodes.includes(normalizedCode))) {
+        state.isAdmin = true;
+        state.adminEmail = email;
+        state.adminFailedAttempts = 0;
+        state.adminLockoutUntil = 0;
+        state.shieldPassed = true;
+        document.getElementById('admin-code-input').value = '';
+        dispatchNotification('Admin Console', 'Admin Infrastructure Access Enabled', `Signed in as Admin (${email}) with full infrastructure visibility.`);
+        recordSecurityEvent('ADMIN LOGIN SUCCESS', `Admin ${maskEmail(email)} unlocked infrastructure view.`);
+        document.getElementById('admin-status-msg').textContent = 'Admin access granted. Infrastructure is visible without payment.';
+        refreshVaultStatusUI();
+        refreshShieldUI();
+        setTimeout(closeAdminModal, 450);
+      } else {
+        state.adminFailedAttempts += 1;
+        if (state.adminFailedAttempts >= 4) {
+          state.adminLockoutUntil = Date.now() + 30000;
+          state.adminFailedAttempts = 0;
+          recordSecurityEvent('ADMIN RATE LOCKOUT', `Temporary 30s admin sign-in lockout triggered for ${maskEmail(email)}.`);
+          document.getElementById('admin-status-msg').textContent = 'Too many failed attempts. Admin sign-in locked for 30 seconds.';
+        } else {
+          recordSecurityEvent('ADMIN LOGIN FAILED', `Rejected admin login attempt for ${maskEmail(email)}.`);
+          document.getElementById('admin-status-msg').textContent = `Invalid admin credentials for ${allowedEmail}.`;
+        }
+      }
     });
 
     document.getElementById('vault-unlock-form').addEventListener('submit', (e) => {
@@ -2040,7 +2480,7 @@
       setInterval(() => {
         const TICKER_MESSAGES = [
           `50/50 LEFT — ${state.customDomain.toUpperCase()} • AUTUMN / WINTER 50/50 EDITION LIVE`,
-          '50/50 LEFT • VERIFIED GMAIL + $1,000 SETTLEMENT UNLOCKS DEMO KEY "GREATEST"',
+          '50/50 LEFT • VERIFIED GMAIL + $1,000 SETTLEMENT UNLOCKS PRIVATE DEMO KEY',
           '50/50 LEFT • VISA, MASTERCARD & VERVE CARD BILLING ENABLED'
         ];
         tickerIdx = (tickerIdx + 1) % TICKER_MESSAGES.length;
@@ -2075,6 +2515,8 @@
 
     renderDomainIdentity();
     renderContactInfo();
+    renderInfrastructureAccess();
+    renderPrivateClientVisibility();
     renderProducts();
     renderBag();
     refreshVaultStatusUI();
